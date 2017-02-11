@@ -1,0 +1,23 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "description": "alexa lambda function",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nixer89/lottery_v2.git"
+  },
+  "author": "Daniel Siedentopf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nixer89/lottery_v2/issues"
+  },
+  "homepage": "https://github.com/nixer89/lottery_v2#readme",
+  "dependencies": {
+    "dynasty": "^0.2.6",
+    "node-fetch": "^1.6.3"
+  }
+}

@@ -1,0 +1,26 @@
+HelloIntent hi
+HelloIntent hallo
+AddLotteryNumbers Feld hinzufügen für {lotteryName}
+AddLotteryNumbers füge ein Feld für {lotteryName} hinzu
+MyCurrentNumbers wie lauten meine aktuellen Zahlen für {lotteryName}
+MyCurrentNumbers wie lauten meine aktuellen {lotteryName} Zahlen
+MyCurrentNumbers wie lauten meine aktuellen Gewinnzahlen für {lotteryName}
+MyCurrentNumbers wie meine aktuellen Zahlen für {lotteryName} lauten
+MyCurrentNumbers was meine Zahlen für {lotteryName} sind
+MyCurrentNumbers nach meinen aktuellen Zahlen für {lotteryName}
+MyCurrentNumbers nach meinen Zahlen für {lotteryName}
+MyCurrentNumbers was sind meine aktuell hinterlegten Zahlen für {lotteryName}
+MyCurrentNumbers wie lauten meine aktuell hinterlegten Zahlen für {lotteryName}
+RemoveLotteryNumbers Lösche meine Zahlen von {lotteryName}
+AskForLotteryWinIntent habe ich in {lotteryName} gewonnen
+AskForLotteryWinIntent ob ich in {lotteryName} gewonnen habe
+AskForLotteryWinIntent habe ich in {lotteryName} gewonnen
+AskForLotteryWinIntent ob ich in {lotteryName} gewonnen habe
+AskForLotteryWinIntent prüfe ob ich in {lotteryName} gewonnen habe
+AskForLotteryWinIntent prüfe ob ich in {lotteryName} gewonnen habe
+NewNumber {lotteryNumber}
+AskForLatestLotteryNumbers was sind die Gewinnzahlen der letzten Ziehung von {lotteryName}
+AskForLatestLotteryNumbers was sind die aktuellen Gewinnzahlen von {lotteryName}
+AskForLatestLotteryNumbers nach den aktuellen Gewinnzahlen von {lotteryName}
+ThanksIntent Danke
+EndIntent Beenden
