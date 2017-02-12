@@ -39,14 +39,18 @@ EuroJackpotDbHelper.prototype.removeLotteryNumbers = function(userId) {
 };
 
 EuroJackpotDbHelper.prototype.createSSMLOutputForField = function(field) {
-  var speakOutput = "";
-  var mainNumbers = field[0];
-  var addNumbers = field[1];
+  return this.createSSMLOutputForNumbers(field[0], field[1]);
+};
 
-  for(var i = 0; i <= mainNumbers.length; i++)
-      speakOutput+=mainNumbers[i] + "<break time=\"500ms\"/> ";
+EuroJackpotDbHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+  var speakOutput = "";
+
+  for(var i = 0; i < mainNumbers.length; i++)
+      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
   
   speakOutput+=". Eurozahlen: " + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
+
+  console.log("generated output: " + speakOutput);
 
   return speakOutput;
 };

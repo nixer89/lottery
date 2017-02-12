@@ -39,12 +39,14 @@ GermanLotteryDbHelper.prototype.removeLottoNumbers = function(userId) {
 };
 
 GermanLotteryDbHelper.prototype.createSSMLOutputForField = function(field) {
-  var speakOutput = "";
-  var mainNumbers = field[0];
-  var addNumbers = field[1];
+  return this.createSSMLOutputForNumbers(field[0], field[1]);
+};
 
-  for(var i = 0; i <= mainNumbers.length; i++)
-      speakOutput+=mainNumbers[i] + "<break time=\"500ms\"/> ";
+GermanLotteryDbHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+  var speakOutput = "";
+
+  for(var i = 0; i < mainNumbers.length; i++)
+      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
   
   speakOutput+=". Superzahl: " + addNumbers[0] + "<break time=\"500ms\"/>";
 

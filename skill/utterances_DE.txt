@@ -2,6 +2,7 @@ HelloIntent hi
 HelloIntent hallo
 AddLotteryNumbers Feld hinzufügen für {lotteryName}
 AddLotteryNumbers füge ein Feld für {lotteryName} hinzu
+AddLotteryNumbers füge ein {lotteryName} Feld hinzu
 MyCurrentNumbers wie lauten meine aktuellen Zahlen für {lotteryName}
 MyCurrentNumbers wie lauten meine aktuellen {lotteryName} Zahlen
 MyCurrentNumbers wie lauten meine aktuellen Gewinnzahlen für {lotteryName}
