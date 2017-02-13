@@ -156,7 +156,7 @@ var DE_Intent_Handler  = {
 
                             getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
                                 var moneySpeech = ""
-                                if(money)
+                                if(money && money.length > 0)
                                     moneySpeech = "Dein Gewinn beträgt " + money + " Euro.";
                                 else
                                     moneySpeech = "Die Gewinnsumme steht noch nicht fest."

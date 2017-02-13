@@ -48,9 +48,12 @@ EuroJackpotApiHelper.prototype.getLastLotteryNumbers =function() {
 EuroJackpotApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.odds['rank'+myRank]) {
-            var price = json.last.odds['rank'+myRank].prize + "";
-
-            return price.substring(0, price.length-2) + "," + price.substring(price.length-2);
+            if(json.last.odds['rank'+myRank] > 0) {
+                var price = json.last.odds['rank'+myRank].prize + "";
+                return price.substring(0, price.length-2) + "," + price.substring(price.length-2);
+            } else {
+                return null;
+            }
         }
     }).catch(function(err) {
         console.log(err);
