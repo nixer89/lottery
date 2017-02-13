@@ -71,7 +71,7 @@ EuroJackpotApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers
   for(var i = 0; i < mainNumbers.length; i++)
       speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
   
-  speakOutput+=". Eurozahlen: " + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
+  speakOutput+=". Eurozahlen: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
 
   console.log("generated output: " + speakOutput);
 
@@ -83,7 +83,7 @@ EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank) {
 
     switch(myRank) {
         case 1000:
-            speechOutput += "In der letzten Ziehung hast du leider nichts gewonnen.";
+            speechOutput += "In der letzten Ziehung von Eurojackpott hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             break;
         case 1:
             speechOutput += "In der letzten Ziehung hast du den JackPott geknackt! Alle Zahlen und auch die Superzahl hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch!";

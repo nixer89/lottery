@@ -66,7 +66,7 @@ GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbe
   for(var i = 0; i < mainNumbers.length; i++)
       speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
   
-  speakOutput+=". Superzahl: " + addNumbers[0] + "<break time=\"500ms\"/>";
+  speakOutput+=". Superzahl:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
 
   return speakOutput;
 };
@@ -76,7 +76,7 @@ GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank)
 
     switch(myRank) {
         case 1000:
-            speechOutput += "In der letzten Ziehung hast du leider nichts gewonnen.";
+            speechOutput += "In der letzten Ziehung von 6 aus 49 hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             break;
         case 1:
             speechOutput += "In der letzten Ziehung hast du den JackPott geknackt! Alle Zahlen und auch die Superzahl hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch!";

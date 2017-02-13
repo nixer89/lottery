@@ -32,7 +32,7 @@ GermanLotteryDbHelper.prototype.updateLotteryNumbers = function(userId, lottoNum
   });
 };
 
-GermanLotteryDbHelper.prototype.removeLottoNumbers = function(userId) {
+GermanLotteryDbHelper.prototype.removeLotteryNumbers = function(userId) {
   return lottoDbTable().update(userId,{ german6aus49: []}).catch(function(error) {
     return lottoDbTable().insert({
       echoUserId: userId,
