@@ -33,24 +33,12 @@ GermanLotteryDbHelper.prototype.updateLotteryNumbers = function(userId, lottoNum
 };
 
 GermanLotteryDbHelper.prototype.removeLottoNumbers = function(userId) {
-  return lottoDbTable().remove(userId, {range: german6aus49}).then(function(result) {
-    return result;
+  return lottoDbTable().update(userId,{ german6aus49: []}).catch(function(error) {
+    return lottoDbTable().insert({
+      echoUserId: userId,
+      german6aus49: []
+    });
   });
-};
-
-GermanLotteryDbHelper.prototype.createSSMLOutputForField = function(field) {
-  return this.createSSMLOutputForNumbers(field[0], field[1]);
-};
-
-GermanLotteryDbHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
-  var speakOutput = "";
-
-  for(var i = 0; i < mainNumbers.length; i++)
-      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
-  
-  speakOutput+=". Superzahl: " + addNumbers[0] + "<break time=\"500ms\"/>";
-
-  return speakOutput;
 };
 
 module.exports = GermanLotteryDbHelper;

@@ -1,7 +1,7 @@
 'use strict';
 
 var nodeFetch = require('node-fetch');
-var LOTTOLAND_API_URL = "https://media.lottoland.com/api/drawings/german6aus49";
+var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/german6aus49";
 var germanOdds = {"rank1": [6,1], "rank2": [6,0], "rank3": [5,1], "rank4": [5,0], "rank5": [4,1], "rank6": [4,0], "rank7": [3,1], "rank8": [3,0], "rank9": [2,1]};
 
 function GermanLotteryApiHelper() {}
@@ -15,12 +15,28 @@ function invokeBackend(url) {
     });
 };
 
+GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers =function() {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
+        if(json) {
+            var numbersAndDate = [];
+            var lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+            numbersAndDate[0] = stringifyArray(json.last.numbers);
+            numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.superzahl));
+            numbersAndDate[2] = lotteryDateString;
+
+            return numbersAndDate;
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
 GermanLotteryApiHelper.prototype.getLastLotteryNumbers =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbers = [];
-            numbers[0] = json.last.numbers;
-            numbers[1] = Array(1).fill(json.last.superzahl);            
+            numbers[0] = stringifyArray(json.last.numbers);
+            numbers[1] = stringifyArray(Array(1).fill(json.last.superzahl));
 
             return numbers;
         }
@@ -40,21 +56,45 @@ GermanLotteryApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMai
     return 1000;
 };
 
+GermanLotteryApiHelper.prototype.createSSMLOutputForField = function(field) {
+  return this.createSSMLOutputForNumbers(field[0], field[1]);
+};
+
+GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+  var speakOutput = "";
+
+  for(var i = 0; i < mainNumbers.length; i++)
+      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
+  
+  speakOutput+=". Superzahl: " + addNumbers[0] + "<break time=\"500ms\"/>";
+
+  return speakOutput;
+};
+
 GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank) {
     var speechOutput = "<speak>";
 
     switch(myRank) {
-        case "":
+        case 1000:
             speechOutput += "In der letzten Ziehung hast du leider nichts gewonnen.";
-        case "rank1":
+            break;
+        case 1:
             speechOutput += "In der letzten Ziehung hast du den JackPott geknackt! Alle Zahlen und auch die Superzahl hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch!";
+            break;
         default:
-            speechOutput += "In der letzten Ziehung hast du " + germanOdds[myRank][0] + " richtige Zahlen" + (germanOdds[myRank][1] == 1 ? " und sogar die Superzahl richtig!" : "!") + " Herzlichen Glückwunsch!";
+            speechOutput += "In der letzten Ziehung hast du " + germanOdds['rank'+myRank][0] + " richtige Zahlen" + (germanOdds['rank'+myRank][1] == 1 ? " und sogar die Superzahl richtig!" : "!") + " Herzlichen Glückwunsch!";
     }
 
     speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";
 
     return speechOutput;
 };
+
+function stringifyArray(numberArray) {
+    for(var i = 0; i < numberArray.length; i++) {
+        numberArray[i] = numberArray[i]+"";
+    }
+    return numberArray;
+}
 
 module.exports = GermanLotteryApiHelper;

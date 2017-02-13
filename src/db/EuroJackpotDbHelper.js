@@ -33,26 +33,12 @@ EuroJackpotDbHelper.prototype.updateLotteryNumbers = function(userId, lottoNumbe
 };
 
 EuroJackpotDbHelper.prototype.removeLotteryNumbers = function(userId) {
-  return lottoDbTable().remove(userId, {range: euroJackpot}).then(function(result) {
-    return result;
+  return lottoDbTable().update(userId,{euroJackpot: []}).catch(function(error) {
+    return lottoDbTable().insert({
+      echoUserId: userId,
+      euroJackpot: []
+    });
   });
-};
-
-EuroJackpotDbHelper.prototype.createSSMLOutputForField = function(field) {
-  return this.createSSMLOutputForNumbers(field[0], field[1]);
-};
-
-EuroJackpotDbHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
-  var speakOutput = "";
-
-  for(var i = 0; i < mainNumbers.length; i++)
-      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
-  
-  speakOutput+=". Eurozahlen: " + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
-
-  console.log("generated output: " + speakOutput);
-
-  return speakOutput;
 };
 
 module.exports = EuroJackpotDbHelper;

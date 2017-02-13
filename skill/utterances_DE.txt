@@ -17,6 +17,7 @@ AskForLotteryWinIntent habe ich in {lotteryName} gewonnen
 AskForLotteryWinIntent ob ich in {lotteryName} gewonnen habe
 AskForLotteryWinIntent habe ich in {lotteryName} gewonnen
 AskForLotteryWinIntent ob ich in {lotteryName} gewonnen habe
+AskForLotteryWinIntent ob ich in der letzten {lotteryName} Ziehung gewonnen habe
 AskForLotteryWinIntent prüfe ob ich in {lotteryName} gewonnen habe
 AskForLotteryWinIntent prüfe ob ich in {lotteryName} gewonnen habe
 NewNumber {lotteryNumber}
