@@ -15,7 +15,7 @@ function invokeBackend(url) {
     });
 };
 
-GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers =function() {
+GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
@@ -31,7 +31,7 @@ GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers =function() {
     });
 };
 
-GermanLotteryApiHelper.prototype.getLastLotteryNumbers =function() {
+GermanLotteryApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbers = [];
@@ -39,6 +39,18 @@ GermanLotteryApiHelper.prototype.getLastLotteryNumbers =function() {
             numbers[1] = stringifyArray(Array(1).fill(json.last.superzahl));
 
             return numbers;
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
+GermanLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
+        if(json && json.last.odds['rank'+myRank]) {
+            var price = json.last.odds['rank'+myRank].prize + "";
+
+            return price.substring(0, price.length-2) + "," + price.substring(price.length-2);
         }
     }).catch(function(err) {
         console.log(err);
@@ -71,7 +83,7 @@ GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbe
   return speakOutput;
 };
 
-GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank) {
+GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech) {
     var speechOutput = "<speak>";
 
     switch(myRank) {
@@ -79,10 +91,10 @@ GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank)
             speechOutput += "In der letzten Ziehung von 6 aus 49 hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             break;
         case 1:
-            speechOutput += "In der letzten Ziehung hast du den JackPott geknackt! Alle Zahlen und auch die Superzahl hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch!";
+            speechOutput += "In der letzten Ziehung hast du den JackPott geknackt! Alle Zahlen und auch die Superzahl hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             break;
         default:
-            speechOutput += "In der letzten Ziehung hast du " + germanOdds['rank'+myRank][0] + " richtige Zahlen" + (germanOdds['rank'+myRank][1] == 1 ? " und sogar die Superzahl richtig!" : "!") + " Herzlichen Glückwunsch!";
+            speechOutput += "In der letzten Ziehung hast du " + germanOdds['rank'+myRank][0] + " richtige Zahlen" + (germanOdds['rank'+myRank][1] == 1 ? " und sogar die Superzahl richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
     }
 
     speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";

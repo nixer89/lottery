@@ -154,9 +154,18 @@ var DE_Intent_Handler  = {
                                 }
                             }
 
-                            var speechOutput = getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutput(rank);
-
-                            response.tell({type:"SSML",speech: speechOutput});
+                            getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
+                                var moneySpeech = ""
+                                if(money)
+                                    moneySpeech = "Dein Gewinn beträgt " + money + " Euro.";
+                                else
+                                    moneySpeech = "Die Gewinnsumme steht noch nicht fest."
+                                    
+                                var speechOutput = getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutput(rank,moneySpeech);
+                                response.tell({type:"SSML",speech: speechOutput});
+                            }).catch(function(err) {
+                                response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");    
+                            });
                         } else {
                             response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");
                         }
@@ -241,7 +250,7 @@ var DE_Intent_Handler  = {
         var help = "Ich habe ein paar Beispiel-Kommandos an die Alexa App gesendet. Öffne die App und schaue dir die Kommandos an!";
         var cardTitle = "MeinLotto Kommandos";
         var cardContent = "Hier sind ein paar nützliche Kommandos. Du musst immer den Lotterie-Namen mit angeben!:\n- Feld hinzufügen {LotterieName} \n- habe ich in {LotterieName} gewonnen? \n" +
-         "- was sind meine aktuell hinterlegten Zahlen für {LotterieName}\n- was sind die aktuellen Gewinnzahlen von {LotterieName}";
+         "- was sind meine aktuell hinterlegten Zahlen für {LotterieName}\n- was sind die aktuellen Gewinnzahlen von {LotterieName}\n- lösche meine Zahlen von {LotterieName}";
         response.tellWithCard(help, cardTitle,cardContent);
     },
     "AMAZON.CancelIntent": function (intent, session, response) {

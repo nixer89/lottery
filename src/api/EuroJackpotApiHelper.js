@@ -45,6 +45,18 @@ EuroJackpotApiHelper.prototype.getLastLotteryNumbers =function() {
     });
 };
 
+EuroJackpotApiHelper.prototype.getLastPrizeByRank = function(myRank) {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
+        if(json && json.last.odds['rank'+myRank]) {
+            var price = json.last.odds['rank'+myRank].prize + "";
+
+            return price.substring(0, price.length-2) + "," + price.substring(price.length-2);
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
 EuroJackpotApiHelper.prototype.getOdds = function() {
     return euroJackpotOdds;
 };
@@ -78,7 +90,7 @@ EuroJackpotApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers
   return speakOutput;
 };
 
-EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank) {
+EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech) {
     var speechOutput = "<speak>";
 
     switch(myRank) {
@@ -86,14 +98,14 @@ EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank) {
             speechOutput += "In der letzten Ziehung von Eurojackpott hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             break;
         case 1:
-            speechOutput += "In der letzten Ziehung hast du den JackPott geknackt! Alle Zahlen und auch die Superzahl hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch!";
+            speechOutput += "In der letzten Ziehung hast du den JackPott geknackt! Alle Zahlen und auch die beiden Eurozahlen hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech ;
             break;
         default:
             speechOutput += "In der letzten Ziehung hast du ";
             speechOutput += euroJackpotOdds['rank'+myRank][0] == 1 ? "eine richtige Zahl" : euroJackpotOdds['rank'+myRank][0] + " richtige Zahlen";
             speechOutput += (euroJackpotOdds['rank'+myRank][1] == 1 ? " und eine Eurozahl richtig!" : "");
             speechOutput += (euroJackpotOdds['rank'+myRank][1] == 2 ? " und zwei Eurozahlen richtig!" : "");
-            speechOutput += "! Herzlichen Glückwunsch!";
+            speechOutput += "! Herzlichen Glückwunsch! " + moneySpeech;
             break;
     }
 

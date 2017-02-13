@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var LOTTO_DATA_TABLE_NAME = 'lotteryNumbers';
+var LOTTO_DATA_TABLE_NAME = process.env.DB_TABLE;
 
 var credentials = {
     accessKeyId: process.env.DB_ACCESS_KEY_ID,
