@@ -48,7 +48,7 @@ EuroJackpotApiHelper.prototype.getLastLotteryNumbers =function() {
 EuroJackpotApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.odds['rank'+myRank]) {
-            if(json.last.odds['rank'+myRank] > 0) {
+            if(json.last.odds['rank'+myRank].prize > 0) {
                 var price = json.last.odds['rank'+myRank].prize + "";
                 return price.substring(0, price.length-2) + "," + price.substring(price.length-2);
             } else {
@@ -101,10 +101,10 @@ EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, m
             speechOutput += "In der letzten Ziehung von Eurojackpott hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             break;
         case 1:
-            speechOutput += "In der letzten Ziehung hast du den JackPott geknackt! Alle Zahlen und auch die beiden Eurozahlen hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech ;
+            speechOutput += "In der letzten Ziehung von Eurojackpott hast du den JackPott geknackt! Alle Zahlen und auch die beiden Eurozahlen hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech ;
             break;
         default:
-            speechOutput += "In der letzten Ziehung hast du ";
+            speechOutput += "In der letzten Ziehung von Eurojackpott hast du ";
             speechOutput += euroJackpotOdds['rank'+myRank][0] == 1 ? "eine richtige Zahl" : euroJackpotOdds['rank'+myRank][0] + " richtige Zahlen";
             speechOutput += (euroJackpotOdds['rank'+myRank][1] == 1 ? " und eine Eurozahl richtig!" : "");
             speechOutput += (euroJackpotOdds['rank'+myRank][1] == 2 ? " und zwei Eurozahlen richtig!" : "");
