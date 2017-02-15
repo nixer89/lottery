@@ -133,16 +133,16 @@ var DE_Intent_Handler  = {
 
             readLotteryNumbers(session, response).then(function(myNumbers) {
                 if(myNumbers && myNumbers.length > 0) {
-                    getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastLotteryNumbers().then(function(lotteryNumbers) {
-                        if(lotteryNumbers) {
+                    getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastLotteryDateAndNumbers().then(function(lotteryNumbersAndDate) {
+                        if(lotteryNumbersAndDate) {
                             //check how many matches we have with the given numbers!
                             var numberOfMatchesMain = 0;
                             var numberOfMatchesAdditional= 0;
                             var rank = 1000;
 
                             for(var i = 0; i < myNumbers.length; i++) {
-                                var numberOfMatchesMainTmp = getMatchingNumbers(lotteryNumbers[0], myNumbers[i][0]).length;
-                                var numberOfMatchesAdditionalTmp = getMatchingNumbers(lotteryNumbers[1], myNumbers[i][1]).length;
+                                var numberOfMatchesMainTmp = getMatchingNumbers(lotteryNumbersAndDate[0], myNumbers[i][0]).length;
+                                var numberOfMatchesAdditionalTmp = getMatchingNumbers(lotteryNumbersAndDate[1], myNumbers[i][1]).length;
 
                                 var rankTemp = getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLotteryOddRank(numberOfMatchesMainTmp,numberOfMatchesAdditionalTmp);
 
@@ -161,7 +161,7 @@ var DE_Intent_Handler  = {
                                 else
                                     moneySpeech = "Die Gewinnsumme steht noch nicht fest."
                                     
-                                var speechOutput = getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutput(rank,moneySpeech);
+                                var speechOutput = getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutput(rank,moneySpeech, lotteryNumbersAndDate[2]);
                                 response.tell({type:"SSML",speech: speechOutput});
                             }).catch(function(err) {
                                 response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");    
