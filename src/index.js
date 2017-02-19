@@ -227,7 +227,7 @@ var DE_Intent_Handler  = {
         }
      },
      "SupportedLotteries": function (intent, session, response) {
-         response.tell("Aktuell werden nur die Lotteriesysteme 6aus49 und Eurojackpot unterstützt");
+         response.ask("Aktuell werden nur die Lotteriesysteme 6aus49 und Eurojackpot unterstützt. Sage: Füge ein Feld für 6aus49 hinzu, um deine Lottozahlen zu speichern oder sage: Beenden, um den Skill zu schließen.");
      },
      "NullNumberIntent": function (intent, session, response) {
          if(session.attributes.isAddingField) {
@@ -238,7 +238,7 @@ var DE_Intent_Handler  = {
          response.ask("Entschuldige, ich habe dich nicht verstanden.");
      },
      "EndIntent": function (intent, session, response) {
-         response.tell("Tschüss und viel Glück!");
+         response.tell("Tschüss und weiterhin viel Glück!");
      },
      "ThanksIntent": function (intent, session, response) {
          checkIntentStatus(session, response);
@@ -247,11 +247,15 @@ var DE_Intent_Handler  = {
     "AMAZON.HelpIntent": function (intent, session, response) {
         checkIntentStatus(session,response);
 
-        var help = "Ich habe ein paar Beispiel-Kommandos an die Alexa App gesendet. Öffne die App und schaue dir die Kommandos an!";
+        var help = "Mit diesem Skill kannst du deine Lottozahlen hinterlegen und abfragen, ob du gewonnen hast. Deine Zahlen werden dann gegen die letzten Ziehung der angegebenen Lotterie verglichen. Ich habe ein paar Beispiel-Kommandos an die Alexa App gesendet. Öffne die App und schaue dir die Kommandos an. Um zu erfahren, welche Lotteriesysteme unterstüzt werden, frage einfach: Welche Lotterien werden unterstützt?";
+        var repromt = "Sage: Feld hinzufügen 6aus49, um deine Lottozahlen zu hinterlegen."
         var cardTitle = "MeinLotto Kommandos";
-        var cardContent = "Hier sind ein paar nützliche Kommandos. Du musst immer den Lotterie-Namen mit angeben!:\n- Feld hinzufügen {LotterieName} \n- habe ich in {LotterieName} gewonnen? \n" +
-         "- was sind meine aktuell hinterlegten Zahlen für {LotterieName}\n- was sind die aktuellen Gewinnzahlen von {LotterieName}\n- lösche meine Zahlen von {LotterieName}";
-        response.tellWithCard(help, cardTitle,cardContent);
+        var cardContent = "Hier sind ein paar nützliche Kommandos. Du musst immer den Lotterie-Namen mit angeben!:\n- füge ein Feld für 6aus49 hinzu\n- habe ich in Euro Jackpot gewonnen?\n" +
+         "- was sind meine aktuell hinterlegten Zahlen für 6aus49\n- was sind die aktuellen Gewinnzahlen von 6aus49\n- lösche meine Zahlen von Euro Jackpot";
+        response.askWithCard(help, repromt, cardTitle, cardContent);
+    },
+    "AMAZON.StopIntent": function (intent, session, response) {
+        response.tell("Tschüss und weiterhin viel Glück!");
     },
     "AMAZON.CancelIntent": function (intent, session, response) {
         response.tell("Tschüss und weiterhin viel Glück!");
