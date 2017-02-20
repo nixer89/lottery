@@ -69,7 +69,7 @@ var DE_Intent_Handler  = {
         checkIntentStatus(session, response);
         if(intent.slots.lotteryName.value) {
             setUpForNewField(session, intent.slots.lotteryName.value);
-            response.ask("Ein neues Feld wird für " + intent.slots.lotteryName.value + " angelegt. Wie lautet deine erste Zahl?", "Wie lautet deine erste Zahl?");
+            response.ask("Ein neues Feld wird für " + session.attributes.currentConfig.speechLotteryName + " angelegt. Wie lautet deine erste Zahl?", "Wie lautet deine erste Zahl?");
         } else {
             response.ask("Tut mir leid, diese Lotterie kenne ich nicht. Frage mich, welche Lotterien unterstützt werden, um eine Übersicht in der Alexa App zu erhalten");
         }
