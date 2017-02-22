@@ -25,6 +25,8 @@ AskForLotteryWinIntent ob ich in der letzten Ziehung von {lotteryName} gewonnen 
 AskForLotteryWinIntent prüfe ob ich in {lotteryName} gewonnen habe
 AskForLotteryWinIntent prüfe ob ich in der letzten Ziehung von {lotteryName} gewonnen habe
 NewNumber {lotteryNumber}
+ChangeLotteryNumberIntent korrigieren
+ChangeLotteryNumberIntent ändern
 AskForLatestLotteryNumbers was sind die Gewinnzahlen der letzten Ziehung von {lotteryName}
 AskForLatestLotteryNumbers was sind die aktuellen Gewinnzahlen von {lotteryName}
 AskForLatestLotteryNumbers nach den aktuellen Gewinnzahlen von {lotteryName}

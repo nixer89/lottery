@@ -6,35 +6,35 @@ var GermanLotteryDb = require('./db/GermanLotteryDbHelper');
 var germanLottoyApi = new GermanLotteryApi();
 var germanLottoyDb = new GermanLotteryDb();
 var GERMAN_LOTTERY = "sechs aus neun und vierzig";
-var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "6aus49", "additionalNumberName": "Superzahl", "numberCountMain": 6, "numberCountAdditional": 1, "maxRangeMain": 49, "maxRangeAdditional": 9};
+var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "6aus49", "additionalNumberName": "Superzahl", "numberCountMain": 6, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 49, "minRangeAdditional": 0, "maxRangeAdditional": 9};
 
 var EuroJackpotApi = require('./api/EuroJackpotApiHelper');
 var EuroJackpotDb = require('./db/EuroJackpotDbHelper');
 var euroJackPottApi = new EuroJackpotApi();
 var euroJackPottDb = new EuroJackpotDb();
 var EUROJACKPOT = "euro jackpot";
-var EuroJackpotConfig = { "lotteryName": EUROJACKPOT, "speechLotteryName": "Eurojackpott", "additionalNumberName": "Eurozahl", "numberCountMain": 5, "numberCountAdditional": 2, "maxRangeMain": 50, "maxRangeAdditional": 10};
+var EuroJackpotConfig = { "lotteryName": EUROJACKPOT, "speechLotteryName": "Eurojackpott", "additionalNumberName": "Eurozahl", "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50, "minRangeAdditional": 1, "maxRangeAdditional": 10};
 
 var EuroMillionsApi = require('./api/EuroMillionsApiHelper');
 var EuroMillionsDb = require('./db/EuroMillionsDbHelper');
 var euroMillionsApi = new EuroMillionsApi();
 var euroMillionsDb = new EuroMillionsDb();
 var EUROMILLIONS = "euro millions";
-var EuroMillionsConfig = { "lotteryName": EUROMILLIONS, "speechLotteryName": "Euromillions", "additionalNumberName": "Sternzahl", "numberCountMain": 5, "numberCountAdditional": 2, "maxRangeMain": 50, "maxRangeAdditional": 12};
+var EuroMillionsConfig = { "lotteryName": EUROMILLIONS, "speechLotteryName": "Euromillions", "additionalNumberName": "Sternzahl", "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50,"minRangeAdditional": 1, "maxRangeAdditional": 12};
 
 var PowerBallApi = require('./api/PowerBallApiHelper');
 var PowerBallDb = require('./db/PowerBallDbHelper');
 var powerBallApi = new PowerBallApi();
 var powerBallDb = new PowerBallDb();
 var POWERBALL = "powerball";
-var PowerBallConfig = { "lotteryName": POWERBALL, "speechLotteryName": "PowerBall", "additionalNumberName": "Powerball", "numberCountMain": 5, "numberCountAdditional": 1, "maxRangeMain": 69, "maxRangeAdditional": 26};
+var PowerBallConfig = { "lotteryName": POWERBALL, "speechLotteryName": "PowerBall", "additionalNumberName": "Powerball", "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 69,"minRangeAdditional": 1, "maxRangeAdditional": 26};
 
 var MegaMillionsApi = require('./api/MegaMillionsApiHelper');
 var MegaMillionsDb = require('./db/MegaMillionsDbHelper');
 var megaMillionsApi = new MegaMillionsApi();
 var megaMillionsDb = new MegaMillionsDb();
 var MEGAMILLIONS = "mega millions";
-var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "MegaMillions", "additionalNumberName": "Megaball", "numberCountMain": 5, "numberCountAdditional": 1, "maxRangeMain": 75, "maxRangeAdditional": 15};
+var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "MegaMillions", "additionalNumberName": "Megaball", "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 75,"minRangeAdditional": 1, "maxRangeAdditional": 15};
 //LOTTERY CONFIG END
 
 function SkillHelper() {}
@@ -46,15 +46,19 @@ SkillHelper.prototype.getCorrectNamingOfNumber = function(number) {
         case 3: return "dritte";
         case 4: return "vierte";
         case 5: return "fünfte";
+        case 6: return "sechste";
+        case 7: return "siebte";
+        case 8: return "achte";
+        case 9: return "neunte";
+        case 10: return "zehnte";
     }
 }
 
 SkillHelper.prototype.getCorrectPreWordAdditionalNumber = function(lotteryName) {
     switch(lotteryName) {
-        case GERMAN_LOTTERY: return "deine ";
         case POWERBALL:
         case MEGAMILLIONS: return "dein ";
-        default: return "deine";
+        default: return "deine ";
     }
 }
 
@@ -95,7 +99,7 @@ SkillHelper.prototype.convertNewNumbersForStoring = function(newNumbers) {
     var convertedNumbers = [[],[]];
     for(var i = 0; i < newNumbers.length;i++)
         for(var j = 0; j < newNumbers[i].length; j++)
-            convertedNumbers[i][j] = newNumbers[i][j].toString();
+            convertedNumbers[i].push(newNumbers[i][j].toString());
 
     return convertedNumbers;
 }
@@ -117,7 +121,7 @@ function sortLotteryNumbersSub(lotteryNumbers) {
 
         //convert string values from db to numbers to sort them later!
         for(var k = 0; k < lotteryNumbers[i].length; k++) {
-            tempArray[tempArray.length] = Number(lotteryNumbers[i][k]);
+            tempArray.push(Number(lotteryNumbers[i][k]));
         }
 
         //sort by numbers
@@ -128,7 +132,7 @@ function sortLotteryNumbersSub(lotteryNumbers) {
 
         //set numbers to new array and convert them to string to make it easier to compare and save
         for(var j = 0; j < tempArray.length; j++)
-            sortedLotteryArray[i][j] = tempArray[j].toString();
+            sortedLotteryArray[i].push(tempArray[j].toString());
     }
 
     return sortedLotteryArray;
