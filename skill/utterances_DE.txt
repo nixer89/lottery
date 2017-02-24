@@ -33,6 +33,11 @@ AskForLatestLotteryNumbers nach den aktuellen Gewinnzahlen von {lotteryName}
 SupportedLotteries welche Lotterien werden unterstützt
 SupportedLotteries welche Lotterien kann ich verwenden
 SupportedLotteries was sind die unterstützten Lotterien
+AskForLotteryJackpot was ist die aktuelle Gewinnsumme in {lotteryName}
+AskForLotteryJackpot nach der aktuellen Gewinnsumme in {lotteryName}
+AskForLotteryJackpot wie hoch ist der Jackpott von {lotteryName}
+AskForLotteryJackpot nach dem Jackpott von {lotteryName}
+AskForLotteryJackpot nach dem aktuellen Jackpott von {lotteryName}
 NullNumberIntent null
 ThanksIntent Danke
 EndIntent Beenden

@@ -45,6 +45,16 @@ MegaMillionsApiHelper.prototype.getLastLotteryNumbers = function() {
     });
 };
 
+MegaMillionsApiHelper.prototype.getCurrentJackpot =function() {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
+        if(json) {
+            return json.next.jackpot;
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
 MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
@@ -82,7 +92,7 @@ MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
 
 MegaMillionsApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
-    for(var i = 1; i <= 9; i++)
+    for(var i = 1; i <= megaMilltionsOdds.length; i++)
     {
         if(megaMilltionsOdds['rank'+i][0] == myRank[0] && megaMilltionsOdds['rank'+i][1] == myRank[1])
             return i;

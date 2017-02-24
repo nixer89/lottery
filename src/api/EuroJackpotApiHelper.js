@@ -45,6 +45,16 @@ EuroJackpotApiHelper.prototype.getLastLotteryNumbers =function() {
     });
 };
 
+EuroJackpotApiHelper.prototype.getCurrentJackpot =function() {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
+        if(json) {
+            return json.next.jackpot;
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
 EuroJackpotApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
@@ -67,7 +77,7 @@ EuroJackpotApiHelper.prototype.getOdds = function() {
 EuroJackpotApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
 
-    for(var i = 1; i <= 12; i++)
+    for(var i = 1; i <= euroJackpotOdds.length; i++)
     {
         if(euroJackpotOdds['rank'+i][0] == myRank[0] && euroJackpotOdds['rank'+i][1] == myRank[1])
             return i;

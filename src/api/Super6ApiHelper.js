@@ -2,9 +2,9 @@
 
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/german6aus49";
-var germanOdds = {"rank1": [6,1], "rank2": [6,0], "rank3": [5,1], "rank4": [5,0], "rank5": [4,1], "rank6": [4,0], "rank7": [3,1], "rank8": [3,0], "rank9": [2,1]};
+var super6Odds = {"rank1": [6,0], "rank2": [5,0], "rank3": [4,0], "rank4": [3,0], "rank5": [2,0], "rank6": [1,0]};
 
-function GermanLotteryApiHelper() {}
+function Spiel77ApiHelper() {}
 
 function invokeBackend(url) {
     return nodeFetch(url)
@@ -15,37 +15,16 @@ function invokeBackend(url) {
     });
 };
 
-GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
+Spiel77ApiHelper.prototype.getZusatzNumbers = function(lotteryName) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
-        if(json) {
-            var numbersAndDate = [];
-            var lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
-            numbersAndDate[0] = stringifyArray(json.last.numbers);
-            numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.superzahl));
-            numbersAndDate[2] = lotteryDateString;
-
-            return numbersAndDate;
-        }
+        if(json)
+            return json.last.super6.split("");
     }).catch(function(err) {
         console.log(err);
     });
 };
 
-GermanLotteryApiHelper.prototype.getLastLotteryNumbers = function() {
-    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
-        if(json) {
-            var numbers = [];
-            numbers[0] = stringifyArray(json.last.numbers);
-            numbers[1] = stringifyArray(Array(1).fill(json.last.superzahl));
-
-            return numbers;
-        }
-    }).catch(function(err) {
-        console.log(err);
-    });
-};
-
-GermanLotteryApiHelper.prototype.getCurrentJackpot =function() {
+Spiel77ApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             return json.next.jackpot;
@@ -55,7 +34,7 @@ GermanLotteryApiHelper.prototype.getCurrentJackpot =function() {
     });
 };
 
-GermanLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
+Spiel77ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
             if(json.last.odds['rank'+myRank].prize > 0) {
@@ -70,9 +49,9 @@ GermanLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     });
 };
 
-GermanLotteryApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
+Spiel77ApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
-    for(var i = 1; i <= germanOdds.length; i++)
+    for(var i = 1; i <= super6Odds.length; i++)
     {
         if(germanOdds['rank'+i][0] == myRank[0] && germanOdds['rank'+i][1] == myRank[1])
             return i;
@@ -81,22 +60,20 @@ GermanLotteryApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMai
     return 1000;
 };
 
-GermanLotteryApiHelper.prototype.createSSMLOutputForField = function(field) {
+Spiel77ApiHelper.prototype.createSSMLOutputForField = function(field) {
   return this.createSSMLOutputForNumbers(field[0], field[1]);
 };
 
-GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+Spiel77ApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
   var speakOutput = "";
 
   for(var i = 0; i < mainNumbers.length; i++)
       speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
-  
-  speakOutput+=". Superzahl:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
 
   return speakOutput;
 };
 
-GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
+Spiel77ApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
     var speechOutput = "<speak>";
 
     switch(myRank) {
@@ -122,4 +99,4 @@ function stringifyArray(numberArray) {
     return numberArray;
 }
 
-module.exports = GermanLotteryApiHelper;
+module.exports = Spiel77ApiHelper;

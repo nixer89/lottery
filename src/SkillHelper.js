@@ -1,12 +1,29 @@
 'use strict';
 
+//var overAllWinHelperPrototype = require('./OverAllWinHelper');
+//var overAllHelper = new overAllWinHelperPrototype();
+
 //LOTTERY CONFIG START
 var GermanLotteryApi = require('./api/GermanLotteryApiHelper');
 var GermanLotteryDb = require('./db/GermanLotteryDbHelper');
-var germanLottoyApi = new GermanLotteryApi();
-var germanLottoyDb = new GermanLotteryDb();
+var germanLottoApi = new GermanLotteryApi();
+var germanLottoDb = new GermanLotteryDb();
 var GERMAN_LOTTERY = "sechs aus neun und vierzig";
 var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "6aus49", "additionalNumberName": "Superzahl", "numberCountMain": 6, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 49, "minRangeAdditional": 0, "maxRangeAdditional": 9};
+
+var Spiel77Api = require('./api/Spiel77ApiHelper');
+var Spiel77Db = require('./db/Spiel77DbHelper');
+var spiel77Api = new Spiel77Api();
+var spiel77Db = new Spiel77Db();
+var SPIEL77 = "super sieben und siebzig";
+var Spiel77Config = { "lotteryName": SPIEL77, "speechLotteryName": SPIEL77, "isZusatzLottery": true, "additionalNumberName": "", "numberCountMain": 7, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
+
+var Super6Api = require('./api/Super6ApiHelper');
+var Super6Db = require('./db/Super6DbHelper');
+var super6Api = new Super6Api();
+var super6Db = new Super6Db();
+var SUPER6 = "super 6";
+var Super6Config = { "lotteryName": SUPER6, "speechLotteryName": SUPER6, "isZusatzLottery": true, "additionalNumberName": "", "numberCountMain": 7, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
 
 var EuroJackpotApi = require('./api/EuroJackpotApiHelper');
 var EuroJackpotDb = require('./db/EuroJackpotDbHelper');
@@ -54,6 +71,14 @@ SkillHelper.prototype.getCorrectNamingOfNumber = function(number) {
     }
 }
 
+SkillHelper.prototype.getGermanLotteryName = function() {
+    return GERMAN_LOTTERY;
+}
+
+SkillHelper.prototype.getGermanZusatzLotteryName = function() {
+    return GERMAN_ZUSATZ_LOTTERY;
+}
+
 SkillHelper.prototype.getCorrectPreWordAdditionalNumber = function(lotteryName) {
     switch(lotteryName) {
         case POWERBALL:
@@ -65,6 +90,8 @@ SkillHelper.prototype.getCorrectPreWordAdditionalNumber = function(lotteryName) 
 SkillHelper.prototype.getConfigByUtterance = function(lotteryName) {
     switch(lotteryName) {
         case GERMAN_LOTTERY: return GermanLottoConfig;
+        case SPIEL77: return Spiel77Config;
+        case SUPER6: return Ssuper6Config;
         case EUROJACKPOT: return EuroJackpotConfig;
         case EUROMILLIONS: return EuroMillionsConfig;
         case POWERBALL: return PowerBallConfig;
@@ -75,7 +102,9 @@ SkillHelper.prototype.getConfigByUtterance = function(lotteryName) {
 
 SkillHelper.prototype.getLotteryApiHelper = function(lotteryName) {
     switch(lotteryName) {
-        case GERMAN_LOTTERY: return germanLottoyApi;
+        case GERMAN_LOTTERY: return germanLottoApi;
+        case SPIEL77: return spiel77Api;
+        case SUPER6: return super6Api;
         case EUROJACKPOT: return euroJackPottApi;
         case EUROMILLIONS: return euroMillionsApi;
         case POWERBALL: return powerBallApi;
@@ -86,7 +115,9 @@ SkillHelper.prototype.getLotteryApiHelper = function(lotteryName) {
 
 SkillHelper.prototype.getLotteryDbHelper = function(lotteryName) {
     switch(lotteryName) {
-        case GERMAN_LOTTERY: return germanLottoyDb;
+        case GERMAN_LOTTERY: return germanLottoDb;
+        case SPIEL77: return spiel77Db;
+        case SUPER6: return super6Db;
         case EUROJACKPOT: return euroJackPottDb;
         case EUROMILLIONS: return euroMillionsDb;
         case POWERBALL: return powerBallDb;
@@ -102,6 +133,37 @@ SkillHelper.prototype.convertNewNumbersForStoring = function(newNumbers) {
             convertedNumbers[i].push(newNumbers[i][j].toString());
 
     return convertedNumbers;
+}
+
+SkillHelper.prototype.convertTippscheinnummer = function(lotteryNumbers) {
+    var convertedArray = [[[]]];
+    console.log("What to convert: " + lotteryNumbers);
+    for(var i = 0; i < lotteryNumbers.length; i++) {
+        console.log("Send to sub: " + lotteryNumbers[i]);
+        convertedArray[i] = convertTippscheinnummerSub(lotteryNumbers[i]);
+    }
+
+    return convertedArray;
+}
+
+function convertTippscheinnummerSub(lotteryNumbers) {
+    var convertedArray = [[]];
+    for(var i = 0; i < lotteryNumbers.length; i++) {
+
+        var tempArray = [];
+
+        //convert string values from db to numbers to sort them later!
+        for(var k = 0; k < lotteryNumbers[i].length; k++) {
+            tempArray = lotteryNumbers[i][k].split("");
+        }
+
+        //set array to index
+        convertedArray[i] = tempArray;
+    }
+
+    console.log("returned from sub: " + convertedArray);
+
+    return convertedArray;
 }
 
 SkillHelper.prototype.sortLotteryNumbers = function(lotteryNumbers) {
@@ -137,5 +199,9 @@ function sortLotteryNumbersSub(lotteryNumbers) {
 
     return sortedLotteryArray;
 }
+
+//SkillHelper.prototype.generateOverAllWinOutput = function(session, response) {
+//    overAllHelper.generateOverAllWinOutput(session, response);
+//}
 
 module.exports = SkillHelper;
