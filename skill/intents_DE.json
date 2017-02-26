@@ -7,6 +7,7 @@
     {"intent": "MyCurrentNumbers","slots": [{"name": "lotteryName","type": "CUSTOM_SLOT_TYPE_LotteryNames"}]},
     {"intent": "AskForLatestLotteryNumbers","slots": [{"name": "lotteryName","type": "CUSTOM_SLOT_TYPE_LotteryNames"}]},
     {"intent": "AskForLotteryJackpot","slots": [{"name": "lotteryName","type": "CUSTOM_SLOT_TYPE_LotteryNames"}]},
+    {"intent": "AskForNextLotteryDrawing","slots": [{"name": "lotteryName","type": "CUSTOM_SLOT_TYPE_LotteryNames"}]},
     {"intent": "NullNumberIntent"},
     {"intent": "ChangeLotteryNumberIntent"},
     {"intent": "SupportedLotteries"},

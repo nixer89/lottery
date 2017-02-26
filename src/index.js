@@ -55,9 +55,12 @@ var DE_Intent_Handler  = {
     },
     "NewNumber": function (intent, session, response) {
         checkRemoveNumbersIntent(session, response);
-        if(session.attributes.currentConfig.isZusatzLottery && intent.slots.lotteryNumber.value) {
+
+        if(session.attributes.isAddingField && intent.slots.lotteryNumber.value == "?") {
+            checkWhatNumberIsNext(response, session, null, "Die Zahl liegt nicht innerhalb meines Wertebereichs oder wurde nicht richtig erkannt. Bitte wiederhole ");
+        } else if(session.attributes.isAddingField && session.attributes.currentConfig && session.attributes.currentConfig.isZusatzLottery && intent.slots.lotteryNumber.value) {
             doZusatzLotteryNumberCheck(response, session, intent.slots.lotteryNumber.value);
-        } else if(session.attributes.isAddingField && intent.slots.lotteryNumber.value && !session.attributes.isAddingFieldSuper6) {
+        } else if(session.attributes.isAddingField && intent.slots.lotteryNumber.value && session.attributes.currentConfig && !session.attributes.currentConfig.isZusatzLottery) {
             doLotteryNumberCheck(response, session, intent.slots.lotteryNumber.value);
         } else if(intent.slots.lotteryNumber.value && !session.attributes.isAddingField) {
             response.ask("Wenn du deine Zahlen hinzufügen willst, musst du 'Feld hinzufügen und den Lotterie-Namen' sagen.");
@@ -74,7 +77,7 @@ var DE_Intent_Handler  = {
             else
                 session.attributes.newNumbersAdditional.pop();
 
-            checkWhatNumberIsNext(response, session, null, "Ok, ich habe deine letzte Zahl verworfen. Wie lautet ");
+            checkWhatNumberIsNext(response, session, null, "Ok, ich habe deine letzte Zahl verworfen. Bitte wiederhole ");
         } else if(session.attributes.isAddingField && (!session.attributes.newNumbers || session.attributes.newNumbers.length == 0)) {
             response.ask("Du musst erst Zahlen hinzufügen, bevor du korrigieren kannst. Wie lautet deine erste Zahl?");
         } else if(!session.attributes.isAddingField) {
@@ -87,7 +90,11 @@ var DE_Intent_Handler  = {
         checkIntentStatus(session, response);
         if(intent.slots.lotteryName.value) {
             setUpForNewField(session, intent.slots.lotteryName.value);
-            response.ask("Ein neues Feld wird für " + session.attributes.currentConfig.speechLotteryName + " angelegt. Sage korrigieren, um deine vorherige Zahl zu ändern. Wie lautet deine erste Zahl?", "Wie lautet deine erste Zahl?");
+            var speechStart = "Ein neues Feld wird für " + session.attributes.currentConfig.speechLotteryName + " angelegt. Sage korrigieren, um deine vorherige Zahl zu ändern.";
+            if(session.attributes.currentConfig.isZusatzLottery)
+                response.ask(speechStart+ " Bitte sage jede einzelne Zahl der Tippscheinnummer nacheinander von links startend an. Wie lautet die erste Zahl von links?", "Wie lautet deine erste Zahl?");
+            else
+                response.ask(speechStart + " Wie lautet deine erste Zahl?", "Wie lautet deine erste Zahl?");
         } else {
             response.ask("Tut mir leid, diese Lotterie kenne ich nicht. Frage mich, welche Lotterien unterstützt werden, um eine Übersicht in der Alexa App zu erhalten");
         }
@@ -103,10 +110,17 @@ var DE_Intent_Handler  = {
         }
     },
     "AMAZON.YesIntent": function (intent, session, response) {
-        if(session.attributes.askForSuper6 && !session.attributes.isAddingFieldSuper6) {
-            setUpForNewField(session, skillHelper.getGermanZusatzLotteryName());
-            session.attributes.isAddingFieldSuper6 = true;
-            response.ask("Bitte sage jede einzelne Zahl der Tippscheinnummer nacheinander, beginnend von links. Die gespeicherte Nummer gilt für die beiden Zusatzlotterien Spiel 77 und Super 6. Wie lautet die erste Zahl von links?");
+
+        if(session.attributes.addToSuper6 && session.attributes.isAddingField && lotteryFieldHasMaxLength(session)) {
+            //also add spiel77 number to super6
+            session.attributes.currentConfig = skillHelper.getConfigByUtterance(skillHelper.getSuper6LotteryName());
+            session.attributes.addToSpiel77 = true;
+            saveNewLottoNumbers(session, response);
+        } else if(session.attributes.addToSpiel77 && session.attributes.isAddingField && lotteryFieldHasMaxLength(session)) {
+            //also add super6 to spiel77
+            session.attributes.currentConfig = skillHelper.getConfigByUtterance(skillHelper.getSpiel77LotteryName());
+            session.attributes.addToSuper6 = true;
+            saveNewLottoNumbers(session, response);
         } else if(session.attributes.isAddingField && lotteryFieldHasMaxLength(session)) {
             //add new field
             saveNewLottoNumbers(session, response);
@@ -125,17 +139,13 @@ var DE_Intent_Handler  = {
         }
     },
     "AMAZON.NoIntent": function (intent, session, response) {
-        if(session.attributes.askForSuper6 && !session.attributes.isAddingFieldSuper6) {
+        if(session.attributes.addToSuper6 || session.attributes.addToSpiel77) {
             response.tell("Ok.");
-        } else if(session.attributes.isAddingField && session.attributes.isAddingFieldSuper6 && lotteryFieldHasMaxLength(session)) {
-            session.attributes.isAddingField = false;
-            session.attributes.isAddingFieldSuper6 = false;
+        } else if(session.attributes.isAddingField && session.attributes.isZusatzLottery && lotteryFieldHasMaxLength(session)) {
             response.tell("Ok, deine Tippscheinnummer wurde nicht gespeichert!");
         } else if(session.attributes.isAddingField && lotteryFieldHasMaxLength(session)) {
-            session.attributes.isAddingField = false;
             response.tell("Ok, deine " + session.attributes.currentConfig.speechLotteryName + " Zahlen werden nicht gespeichert!");
         } else if(session.attributes.isRemovingNumbers) {
-            session.attributes.isRemovingNumbers = false;
             response.tell("Ok, deine " + session.attributes.currentConfig.speechLotteryName + "  Zahlen werden nicht gelöscht!!");
         } else {
             checkAddFieldIntent(session, response);
@@ -158,8 +168,8 @@ var DE_Intent_Handler  = {
                             var rank = 1000;
 
                             for(var i = 0; i < myNumbers.length; i++) {
-                                var numberOfMatchesMainTmp = getMatchingNumbers(lotteryNumbersAndDate[0], myNumbers[i][0]).length;
-                                var numberOfMatchesAdditionalTmp = getMatchingNumbers(lotteryNumbersAndDate[1], myNumbers[i][1]).length;
+                                var numberOfMatchesMainTmp = getMatchingNumbers(session, lotteryNumbersAndDate[0], myNumbers[i][0]).length;
+                                var numberOfMatchesAdditionalTmp = getMatchingNumbers(session, lotteryNumbersAndDate[1], myNumbers[i][1]).length;
 
                                 var rankTemp = skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLotteryOddRank(numberOfMatchesMainTmp,numberOfMatchesAdditionalTmp);
 
@@ -179,7 +189,10 @@ var DE_Intent_Handler  = {
                                     moneySpeech = "Die Gewinnsumme steht noch nicht fest."
                                     
                                 var speechOutput = skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutput(rank, moneySpeech, lotteryNumbersAndDate[2]);
+
+                                speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";
                                 response.tell({type:"SSML",speech: speechOutput});
+
                             }).catch(function(err) {
                                 response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");    
                             });
@@ -265,13 +278,32 @@ var DE_Intent_Handler  = {
             response.ask("Entschuldige, ich habe dich nicht verstanden. Sage: Hilfe, um dir Kommandos an die Alexa App schicken zu lassen.");
         }
      },
+     "AskForNextLotteryDrawing": function (intent, session, response) {
+        checkIntentStatus(session,response);
+        if(intent.slots.lotteryName.value) {
+            var config = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
+            
+            skillHelper.getLotteryApiHelper(config.lotteryName).getNextLotteryDrawingDate().then(function(nextDrawing) {
+                if(nextDrawing) {
+                    response.tell("Die nächste Ziehung von " + config.speechLotteryName + " ist am " + nextDrawing);
+                } else {
+                    response.tell("Bei der Abfrage nach der nächsten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");
+                }
+            });
+        }
+        else {
+            response.ask("Entschuldige, ich habe dich nicht verstanden. Sage: Hilfe, um dir Kommandos an die Alexa App schicken zu lassen.");
+        }
+     },
      "SupportedLotteries": function (intent, session, response) {
-         response.ask("Aktuell werden nur die Lotteriesysteme 6aus49, Eurojackpot, EuroMillions, PowerBall und MegaMillions unterstützt. Sage: Füge ein Feld für 6aus49 hinzu, um deine Lottozahlen zu speichern oder sage: Beenden, um den Skill zu schließen.");
+         response.ask("Aktuell werden die Lotteriesysteme 6aus49, Eurojackpot, EuroMillions, PowerBall, MegaMillions und die Zusatzlotterien Spiel77 und Super6 unterstützt. Sage: Feld hinzufügen und den Lotterienamen, um deine Zahlen zu speichern oder sage: Beenden, um den Skill zu schließen.");
      },
      "NullNumberIntent": function (intent, session, response) {
         checkRemoveNumbersIntent(session, response);
 
-        if(session.attributes.isAddingField) {
+        if(session.attributes.isAddingField && session.attributes.currentConfig && session.attributes.currentConfig.isZusatzLottery) {
+            doZusatzLotteryNumberCheck(response, session, 0);
+        } else if(session.attributes.isAddingField && session.attributes.currentConfig && !session.attributes.currentConfig.isZusatzLottery) {
             doLotteryNumberCheck(response, session, 0);
         } else if(!session.attributes.isAddingField) {
             response.ask("Wenn du deine Zahlen hinzufügen willst, musst du 'Feld hinzufügen und den Lotterie-Namen' sagen.")
@@ -289,8 +321,8 @@ var DE_Intent_Handler  = {
     "AMAZON.HelpIntent": function (intent, session, response) {
         checkIntentStatus(session,response);
 
-        var help = "Mit diesem Skill kannst du deine Lottozahlen hinterlegen und abfragen, ob du gewonnen hast. Deine Zahlen werden dann gegen die letzten Ziehung der angegebenen Lotterie verglichen. Ich habe ein paar Beispiel-Kommandos an die Alexa App gesendet. Öffne die App und schaue dir die Kommandos an. Um zu erfahren, welche Lotteriesysteme unterstüzt werden, frage einfach: Welche Lotterien werden unterstützt?";
-        var repromt = "Sage: Feld hinzufügen 6aus49, um deine Lottozahlen zu hinterlegen."
+        var help = "Mit diesem Skill kannst du deine Lottozahlen hinterlegen und abfragen, ob du gewonnen hast. Deine Zahlen werden dann gegen die letzte Ziehung der angegebenen Lotterie verglichen. Ich habe ein paar Beispiel-Kommandos an die Alexa App gesendet. Öffne die App und schaue dir die Kommandos an. Um zu erfahren, welche Lotteriesysteme unterstüzt werden, frage einfach: Welche Lotterien werden unterstützt?";
+        var repromt = "Sage: Feld hinzufügen und den Lotterienamen, um deine Lottozahlen zu hinterlegen."
         var cardTitle = "MeinLotto Kommandos";
         var cardContent = "Hier sind ein paar nützliche Kommandos. Du musst immer den Lotterie-Namen mit angeben!:\n- füge ein Feld für 6aus49 hinzu\n- habe ich in Euro Jackpot gewonnen?\n" +
          "- was sind meine aktuell hinterlegten Zahlen für 6aus49\n- was sind die aktuellen Gewinnzahlen von 6aus49\n- lösche meine Zahlen von Euro Jackpot";
@@ -356,17 +388,31 @@ function saveNewLottoNumbers(session, response) {
 
             skillHelper.getLotteryDbHelper(session.attributes.currentConfig.lotteryName).updateLotteryNumbers(session.user.userId , oldNumbers).then(function(result) {
                 if(result) {
-                    if(session.attributes.currentConfig.lotteryName == skillHelper.getGermanLotteryName()) {
-                        session.attributes.askForSuper6 = true;
-                        response.ask("Deine Zahlen wurden erfolgreich gespeichert. Spielst du auch Super6 oder Spiel77? Dann sage: Feld hinzufügen Spiel77, oder: Feld hinzufügen Super6.");
+                    if(session.attributes.currentConfig.lotteryName == skillHelper.getSpiel77LotteryName() && !session.attributes.addToSuper6) {
+                        session.attributes.addToSuper6 = true;
+                        response.ask(getSaveSpeechOutput(session) + " Spielst du damit auch Super sechs?");
+                    } else if(session.attributes.currentConfig.lotteryName == skillHelper.getSuper6LotteryName() && !session.attributes.addToSpiel77) {
+                        session.attributes.addToSpiel77 = true;
+                        response.ask(getSaveSpeechOutput(session) + " Spielst du damit auch Spiel77?");
+                    } else {
+                        if(session.attributes.currentConfig.isZusatzLottery)
+                            response.tell(getSaveSpeechOutput(session));
+                        else
+                            response.tell(getSaveSpeechOutput(session));
                     }
-                    response.tell("Deine Zahlen wurden erfolgreich gespeichert.");
                 } else {
                     response.tell("Deine Zahlen konnten nicht gespeichert werden. Es kam zu einem Fehler.")
                 }
             });
         });
     }
+}
+
+function getSaveSpeechOutput(session, isZusatzLottery) {
+    if(session.attributes.currentConfig.isZusatzLottery)
+        return "Deine Tippscheinnummer wurde erfolgreich für " + session.attributes.currentConfig.speechLotteryName + " gespeichert.";
+    else
+        return "Deine Zahlen wurden erfolgreich für " + session.attributes.currentConfig.speechLotteryName + " gespeichert.";
 }
 
 function readLotteryNumbers(session, response) {
@@ -385,6 +431,7 @@ function readLotteryNumbers(session, response) {
                 return [];
             }
         }).catch(function(error) {
+            console.log(error);
             return [];
             //response.tell("Beim Lesen deiner Lottozahlen ist ein Fehler aufgetreten. Bitte versuche es später erneut.");
     });
@@ -438,8 +485,8 @@ function checkWhatNumberIsNext(response, session, newNumber, additionalSpeechInf
             response.ask(additionalSpeechInfo + outPut);
         }
     } else {
-        if(newNumber) {
-            var speechOutput = "<speak>" + newNumber + "<break time=\"200ms\"/>" + (session.attributes.newNumbersMain.length + 1) + ". Zahl?</speak>"
+        if(newNumber || newNumber == 0) {
+            var speechOutput = "<speak>" + (newNumber == 0 ? "null" : newNumber)+ "<break time=\"200ms\"/>" + (session.attributes.newNumbersMain.length + 1) + ". Zahl?</speak>"
             response.ask({type: "SSML", speech: speechOutput}, "Wie lautet deine " + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + " Zahl?");
         } else {
             response.ask(additionalSpeechInfo + "deine " + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + " Zahl?", "Wie lautet deine " + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + " Zahl?");
@@ -460,8 +507,25 @@ function doZusatzLotteryNumberCheck(response, session, newNumber) {
     }
 }
 
-function getMatchingNumbers(gewinnZahlen, myNumbers) {    
-    return gewinnZahlen.filter(n => myNumbers.indexOf(n) != -1);
+function getMatchingNumbers(session, gewinnZahlen, myNumbers) {
+    if(!session.attributes.currentConfig.isZusatzLottery) {
+        return gewinnZahlen.filter(n => myNumbers.indexOf(n) != -1);
+    } else {
+        var equalNumbers = [];
+
+        if(myNumbers[0] == "-") {
+            return equalNumbers;
+        }
+        
+        for(var i = myNumbers.length-1; i >= 0; i--) {
+
+            if(myNumbers[i] == gewinnZahlen[i])
+                equalNumbers.unshift(myNumbers[i]);
+            else
+                break;
+        }
+        return equalNumbers;
+    }
 }
 
 function checkIntentStatus(session, response) {

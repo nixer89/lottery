@@ -45,6 +45,16 @@ MegaMillionsApiHelper.prototype.getLastLotteryNumbers = function() {
     });
 };
 
+MegaMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
+        if(json) {
+            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + ":" + json.next.date.minute + " Uhr.";
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
 MegaMillionsApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
@@ -64,15 +74,7 @@ MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
                 var priceNoPowerPlay = price.substring(0, price.length-2) + "," + price.substring(price.length-2);
 
                 output += priceNoPowerPlay;
-
-                console.log("no MegaPlier: " + output);
-                console.log("MegaPlier: " + json.last.megaplier);
-
                 var multiplikator = myRank == 1 ? 0 : json.last.megaplier;
-
-                console.log("multiplikator: " + multiplikator);
-
-                console.log("price * multiplikator: " + price * multiplikator);
 
                 if(multiplikator > 0) {
                     output += " Euro. Wenn du zusätzlich noch MegaPlier aktiviert hast, beträgt dein Gewinn ";
@@ -92,7 +94,7 @@ MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
 
 MegaMillionsApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
-    for(var i = 1; i <= megaMilltionsOdds.length; i++)
+    for(var i = 1; i <= Object.keys(megaMilltionsOdds).length; i++)
     {
         if(megaMilltionsOdds['rank'+i][0] == myRank[0] && megaMilltionsOdds['rank'+i][1] == myRank[1])
             return i;
@@ -109,7 +111,7 @@ MegaMillionsApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumber
   var speakOutput = "";
 
   for(var i = 0; i < mainNumbers.length; i++)
-      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
+      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
   
   speakOutput+=". Megaball:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
 
@@ -129,8 +131,6 @@ MegaMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, 
         default:
             speechOutput += "In der letzten Ziehung MegaMillions von " + date + "  hast du " + megaMilltionsOdds['rank'+myRank][0] + " richtige Zahlen" + (megaMilltionsOdds['rank'+myRank][1] == 1 ? " und sogar den Megaball richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
     }
-
-    speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";
 
     return speechOutput;
 };

@@ -15,7 +15,7 @@ function invokeBackend(url) {
     });
 };
 
-EuroJackpotApiHelper.prototype.getLastLotteryDateAndNumbers =function() {
+EuroJackpotApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
@@ -31,7 +31,7 @@ EuroJackpotApiHelper.prototype.getLastLotteryDateAndNumbers =function() {
     });
 };
 
-EuroJackpotApiHelper.prototype.getLastLotteryNumbers =function() {
+EuroJackpotApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbers = [];
@@ -45,7 +45,17 @@ EuroJackpotApiHelper.prototype.getLastLotteryNumbers =function() {
     });
 };
 
-EuroJackpotApiHelper.prototype.getCurrentJackpot =function() {
+EuroJackpotApiHelper.prototype.getNextLotteryDrawingDate = function() {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
+        if(json) {
+            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + ":" + json.next.date.minute + " Uhr.";
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
+EuroJackpotApiHelper.prototype.getCurrentJackpot = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             return json.next.jackpot;
@@ -77,7 +87,7 @@ EuroJackpotApiHelper.prototype.getOdds = function() {
 EuroJackpotApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
 
-    for(var i = 1; i <= euroJackpotOdds.length; i++)
+    for(var i = 1; i <= Object.keys(euroJackpotOdds).length; i++)
     {
         if(euroJackpotOdds['rank'+i][0] == myRank[0] && euroJackpotOdds['rank'+i][1] == myRank[1])
             return i;
@@ -94,11 +104,9 @@ EuroJackpotApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers
   var speakOutput = "";
 
   for(var i = 0; i < mainNumbers.length; i++)
-      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
+      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
   
   speakOutput+=". Eurozahlen: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
-
-  console.log("generated output: " + speakOutput);
 
   return speakOutput;
 };
@@ -121,8 +129,6 @@ EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, m
             speechOutput += "! Herzlichen Glückwunsch! " + moneySpeech;
             break;
     }
-
-    speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";
 
     return speechOutput;
 };

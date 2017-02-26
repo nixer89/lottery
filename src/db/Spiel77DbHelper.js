@@ -33,7 +33,7 @@ Spiel77DbHelper.prototype.updateLotteryNumbers = function(userId, lottoNumbersVa
       lottoNumbersValue[i][1] = ["-1"];
     }
 
-  return lottoDbTable().update(userId,{ germanZusatz: lottoNumbersValue}).catch(function(error) {
+  return lottoDbTable().update(userId,{ spiel77: lottoNumbersValue}).catch(function(error) {
     return lottoDbTable().insert({
       echoUserId: userId,
       spiel77: lottoNumbersValue
@@ -51,10 +51,8 @@ Spiel77DbHelper.prototype.removeLotteryNumbers = function(userId) {
 };
 
 function convertTippscheinnummern(lotteryNumbers) {
-    var convertedArray = [[[]]];
-    console.log("What to convert: " + lotteryNumbers);
+    var convertedArray = [];
     for(var i = 0; i < lotteryNumbers.length; i++) {
-        console.log("Send to sub: " + lotteryNumbers[i]);
         convertedArray[i] = convertTippscheinnummernSub(lotteryNumbers[i]);
     }
 
@@ -62,7 +60,7 @@ function convertTippscheinnummern(lotteryNumbers) {
 }
 
 function convertTippscheinnummernSub(lotteryNumbers) {
-    var convertedArray = [[]];
+    var convertedArray = [];
     for(var i = 0; i < lotteryNumbers.length; i++) {
 
         var tempArray = [];
@@ -75,8 +73,6 @@ function convertTippscheinnummernSub(lotteryNumbers) {
         //set array to index
         convertedArray[i] = tempArray;
     }
-
-    console.log("returned from sub: " + convertedArray);
 
     return convertedArray;
 }

@@ -45,6 +45,16 @@ GermanLotteryApiHelper.prototype.getLastLotteryNumbers = function() {
     });
 };
 
+GermanLotteryApiHelper.prototype.getNextLotteryDrawingDate = function() {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
+        if(json) {
+            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + ":" + json.next.date.minute + " Uhr.";
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
 GermanLotteryApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
@@ -72,7 +82,7 @@ GermanLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
 
 GermanLotteryApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
-    for(var i = 1; i <= germanOdds.length; i++)
+    for(var i = 1; i <= Object.keys(germanOdds).length; i++)
     {
         if(germanOdds['rank'+i][0] == myRank[0] && germanOdds['rank'+i][1] == myRank[1])
             return i;
@@ -89,7 +99,7 @@ GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbe
   var speakOutput = "";
 
   for(var i = 0; i < mainNumbers.length; i++)
-      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
+      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
   
   speakOutput+=". Superzahl:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
 
@@ -109,8 +119,6 @@ GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank,
         default:
             speechOutput += "In der letzten Ziehung 6 aus 49 von " + date + "  hast du " + germanOdds['rank'+myRank][0] + " richtige Zahlen" + (germanOdds['rank'+myRank][1] == 1 ? " und sogar die Superzahl richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
     }
-
-    speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";
 
     return speechOutput;
 };

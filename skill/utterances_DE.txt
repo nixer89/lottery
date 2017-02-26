@@ -4,6 +4,7 @@ AddLotteryNumbers Feld hinzufügen für {lotteryName}
 AddLotteryNumbers füge ein Feld für {lotteryName} hinzu
 AddLotteryNumbers füge ein neues Feld für {lotteryName} hinzu
 AddLotteryNumbers füge ein {lotteryName} Feld hinzu
+AddLotteryNumbers lege neue Zahlen für {lotteryName} an
 MyCurrentNumbers wie lauten meine aktuellen Zahlen für {lotteryName}
 MyCurrentNumbers wie lauten meine aktuellen {lotteryName} Zahlen
 MyCurrentNumbers wie lauten meine aktuellen Gewinnzahlen für {lotteryName}
@@ -30,6 +31,8 @@ ChangeLotteryNumberIntent ändern
 AskForLatestLotteryNumbers was sind die Gewinnzahlen der letzten Ziehung von {lotteryName}
 AskForLatestLotteryNumbers was sind die aktuellen Gewinnzahlen von {lotteryName}
 AskForLatestLotteryNumbers nach den aktuellen Gewinnzahlen von {lotteryName}
+AskForLatestLotteryNumbers nach den {lotteryName} Zahlen
+AskForLatestLotteryNumbers nach den {lotteryName} Gewinnzahlen
 SupportedLotteries welche Lotterien werden unterstützt
 SupportedLotteries welche Lotterien kann ich verwenden
 SupportedLotteries was sind die unterstützten Lotterien
@@ -38,6 +41,10 @@ AskForLotteryJackpot nach der aktuellen Gewinnsumme in {lotteryName}
 AskForLotteryJackpot wie hoch ist der Jackpott von {lotteryName}
 AskForLotteryJackpot nach dem Jackpott von {lotteryName}
 AskForLotteryJackpot nach dem aktuellen Jackpott von {lotteryName}
+AskForNextLotteryDrawing nach der nächsten Ziehung von {lotteryName}
+AskForNextLotteryDrawing nach der nächsten {lotteryName} Ziehung
+AskForNextLotteryDrawing wann ist die nächste Ziehung {lotteryName}
+AskForNextLotteryDrawing wann ist die nächste {lotteryName} Ziehung
 NullNumberIntent null
 ThanksIntent Danke
 EndIntent Beenden

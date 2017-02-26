@@ -45,6 +45,16 @@ EuroMillionsApiHelper.prototype.getLastLotteryNumbers =function() {
     });
 };
 
+EuroMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
+    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
+        if(json) {
+            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + ":" + json.next.date.minute + " Uhr.";
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });
+};
+
 EuroMillionsApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
@@ -77,7 +87,7 @@ EuroMillionsApiHelper.prototype.getOdds = function() {
 EuroMillionsApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
 
-    for(var i = 1; i <= euroMillionsOdds.length; i++)
+    for(var i = 1; i <= Object.keys(euroMillionsOdds).length; i++)
     {
         if(euroMillionsOdds['rank'+i][0] == myRank[0] && euroMillionsOdds['rank'+i][1] == myRank[1])
             return i;
@@ -94,11 +104,9 @@ EuroMillionsApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumber
   var speakOutput = "";
 
   for(var i = 0; i < mainNumbers.length; i++)
-      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/> ";
+      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
   
   speakOutput+=". Sterne: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
-
-  console.log("generated output: " + speakOutput);
 
   return speakOutput;
 };
@@ -121,8 +129,6 @@ EuroMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, 
             speechOutput += "! Herzlichen Glückwunsch! " + moneySpeech;
             break;
     }
-
-    speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";
 
     return speechOutput;
 };
