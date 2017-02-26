@@ -19,7 +19,10 @@ var lottoDbTable = function() {
 
 MegaMillionsDbHelper.prototype.readLotteryNumbers = function(userId) {
   return lottoDbTable().find(userId).then(function(result) {
-    return result.megaMillions;
+    if(result)
+      return result.megaMillions;
+    else
+      return null;
   });
 };
 

@@ -19,7 +19,10 @@ var lottoDbTable = function() {
 
 GermanLotteryDbHelper.prototype.readLotteryNumbers = function(userId) {
   return lottoDbTable().find(userId).then(function(result) {
-    return result.german6aus49;
+    if(result)
+      return result.german6aus49;
+    else
+      return null;
   });
 };
 

@@ -48,7 +48,7 @@ MegaMillionsApiHelper.prototype.getLastLotteryNumbers = function() {
 MegaMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + ":" + json.next.date.minute + " Uhr.";
+            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
         }
     }).catch(function(err) {
         console.log(err);
@@ -123,13 +123,13 @@ MegaMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, 
 
     switch(myRank) {
         case 1000:
-            speechOutput += "In der letzten Ziehung MegaMillions von " + date + "  hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+            speechOutput += "In der letzten Ziehung MegaMillions von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             break;
         case 1:
-            speechOutput += "In der letzten Ziehung MegaMillions von " + date + "  hast du den JackPott geknackt! Alle Zahlen und auch den Megaball hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
+            speechOutput += "In der letzten Ziehung MegaMillions von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch den Megaball hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             break;
         default:
-            speechOutput += "In der letzten Ziehung MegaMillions von " + date + "  hast du " + megaMilltionsOdds['rank'+myRank][0] + " richtige Zahlen" + (megaMilltionsOdds['rank'+myRank][1] == 1 ? " und sogar den Megaball richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
+            speechOutput += "In der letzten Ziehung MegaMillions von " + date + " hast du " + megaMilltionsOdds['rank'+myRank][0] + " richtige Zahlen" + (megaMilltionsOdds['rank'+myRank][1] == 1 ? " und sogar den Megaball richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
     }
 
     return speechOutput;

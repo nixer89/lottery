@@ -26,12 +26,12 @@ AskForLotteryWinIntent ob ich in der letzten Ziehung von {lotteryName} gewonnen 
 AskForLotteryWinIntent prüfe ob ich in {lotteryName} gewonnen habe
 AskForLotteryWinIntent prüfe ob ich in der letzten Ziehung von {lotteryName} gewonnen habe
 NewNumber {lotteryNumber}
+NullNumberIntent null
 ChangeLotteryNumberIntent korrigieren
 ChangeLotteryNumberIntent ändern
 AskForLatestLotteryNumbers was sind die Gewinnzahlen der letzten Ziehung von {lotteryName}
 AskForLatestLotteryNumbers was sind die aktuellen Gewinnzahlen von {lotteryName}
 AskForLatestLotteryNumbers nach den aktuellen Gewinnzahlen von {lotteryName}
-AskForLatestLotteryNumbers nach den {lotteryName} Zahlen
 AskForLatestLotteryNumbers nach den {lotteryName} Gewinnzahlen
 SupportedLotteries welche Lotterien werden unterstützt
 SupportedLotteries welche Lotterien kann ich verwenden
@@ -45,6 +45,5 @@ AskForNextLotteryDrawing nach der nächsten Ziehung von {lotteryName}
 AskForNextLotteryDrawing nach der nächsten {lotteryName} Ziehung
 AskForNextLotteryDrawing wann ist die nächste Ziehung {lotteryName}
 AskForNextLotteryDrawing wann ist die nächste {lotteryName} Ziehung
-NullNumberIntent null
 ThanksIntent Danke
 EndIntent Beenden

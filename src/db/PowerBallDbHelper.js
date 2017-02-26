@@ -19,7 +19,10 @@ var lottoDbTable = function() {
 
 PowerBallDbHelper.prototype.readLotteryNumbers = function(userId) {
   return lottoDbTable().find(userId).then(function(result) {
-    return result.powerBall;
+    if(result)
+      return result.powerBall;
+    else
+      return null;
   });
 };
 

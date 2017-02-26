@@ -48,7 +48,7 @@ EuroMillionsApiHelper.prototype.getLastLotteryNumbers =function() {
 EuroMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + ":" + json.next.date.minute + " Uhr.";
+            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
         }
     }).catch(function(err) {
         console.log(err);

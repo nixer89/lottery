@@ -19,7 +19,7 @@ var lottoDbTable = function() {
 
 Spiel77DbHelper.prototype.readLotteryNumbers = function(userId) {
   return lottoDbTable().find(userId).then(function(result) {
-    if(result.spiel77)
+    if(result && result.spiel77)
       return convertTippscheinnummern(result.spiel77);
     else
       return [];

@@ -48,7 +48,7 @@ Spiel77ApiHelper.prototype.getLastLotteryNumbers = function() {
 Spiel77ApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + ":" + json.next.date.minute + " Uhr.";
+            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
         }
     }).catch(function(err) {
         console.log(err);
@@ -115,8 +115,31 @@ Spiel77ApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, money
         case 1:
             speechOutput += "In der letzten Ziehung Spiel77 von " + date + " stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             break;
+        case 7:
+            speechOutput += "In der letzten Ziehung Super6 von " + date + " stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
+            break;
         default:
-            speechOutput += "In der letzten Ziehung Spiel77 von " + date + " stimmen die letzten" + spiel77Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
+            speechOutput += "In der letzten Ziehung Spiel77 von " + date + " stimmen die letzten " + spiel77Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
+    }
+
+    return speechOutput;
+};
+
+Spiel77ApiHelper.prototype.createLotteryWinSpeechOutputShort = function(myRank, moneySpeech, date) {
+    var speechOutput = "<break time=\"500ms\"/>";
+
+    switch(myRank) {
+        case 1000:
+            speechOutput += " In Spiel77 hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+            break;
+        case 1:
+            speechOutput += " In Spiel77 stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
+            break;
+        case 7:
+            speechOutput += " In Spiel77 stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
+            break;
+        default:
+            speechOutput += " In Spiel77 stimmen die letzten " + spiel77Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
     }
 
     return speechOutput;

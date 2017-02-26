@@ -19,7 +19,7 @@ var lottoDbTable = function() {
 
 Super6DbHelper.prototype.readLotteryNumbers = function(userId) {
   return lottoDbTable().find(userId).then(function(result) {
-    if(result.super6)
+    if(result && result.super6)
       return convertTippscheinnummern(result.super6);
     else
       return [];

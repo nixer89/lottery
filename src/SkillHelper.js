@@ -54,7 +54,13 @@ var MEGAMILLIONS = "mega millions";
 var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "MegaMillions", "additionalNumberName": "Megaball", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 75,"minRangeAdditional": 1, "maxRangeAdditional": 15};
 //LOTTERY CONFIG END
 
+var supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS]
+
 function SkillHelper() {}
+
+SkillHelper.prototype.isLotteryNameSupported = function(lotteryName) {
+    return supportedLotteries.indexOf(lotteryName) != -1;
+}
 
 SkillHelper.prototype.getCorrectNamingOfNumber = function(number) {
     switch(number) {
@@ -198,6 +204,55 @@ function sortLotteryNumbersSub(lotteryNumbers) {
     }
 
     return sortedLotteryArray;
+}
+
+SkillHelper.prototype.getRank = function(session, lotteryNumbersAndDate, myNumbers) {
+    var numberOfMatchesMain = 0;
+    var numberOfMatchesAdditional= 0;
+    var rank = 1000;
+
+    for(var i = 0; i < myNumbers.length; i++) {
+        var numberOfMatchesMainTmp = getMatchingNumbers(session, lotteryNumbersAndDate[0], myNumbers[i][0]).length;
+        var numberOfMatchesAdditionalTmp = getMatchingNumbers(session, lotteryNumbersAndDate[1], myNumbers[i][1]).length;
+
+        var rankTemp = this.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLotteryOddRank(numberOfMatchesMainTmp,numberOfMatchesAdditionalTmp);
+
+        if(rankTemp < rank) {
+            rank = rankTemp;
+            numberOfMatchesMain = numberOfMatchesMainTmp; 
+            numberOfMatchesAdditional = numberOfMatchesAdditionalTmp;
+            //gewinnZahlen = myNumbers[i]; // save for later use maybe?
+        }
+    }
+
+    return rank;
+}
+
+function getMatchingNumbers(session, gewinnZahlen, myNumbers) {
+    if(!session.attributes.currentConfig.isZusatzLottery) {
+        return gewinnZahlen.filter(n => myNumbers.indexOf(n) != -1);
+    } else {
+        var equalNumbers = [];
+
+        if(myNumbers[0] == "-") {
+            return equalNumbers;
+        }
+
+        var gewinnZahlenLength = gewinnZahlen.length-1;
+        var myNumbersLength = myNumbers.length-1;
+
+        while(gewinnZahlenLength >= 0) {
+            if(myNumbers[myNumbersLength] == gewinnZahlen[gewinnZahlenLength]) {
+                equalNumbers.unshift(myNumbers[myNumbersLength]);
+                myNumbersLength--;
+                gewinnZahlenLength--;
+            }
+            else
+                return equalNumbers;
+        }
+
+        return equalNumbers;
+    }
 }
 
 //SkillHelper.prototype.generateOverAllWinOutput = function(session, response) {

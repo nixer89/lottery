@@ -19,7 +19,10 @@ var lottoDbTable = function() {
 
 EuroMillionsDbHelper.prototype.readLotteryNumbers = function(userId) {
   return lottoDbTable().find(userId).then(function(result) {
-    return result.euroMillions;
+    if(result)
+      return result.euroMillions;
+    else
+      return null;
   });
 };
 
