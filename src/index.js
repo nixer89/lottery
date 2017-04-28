@@ -26,7 +26,7 @@ var skillHelper = new skillHelperPrototype();
 var Lotto = function () {
     AlexaSkill.call(this, APP_ID);
 };
-
+ 
 //var locale = "de-DE";
 
 // Extend AlexaSkill
