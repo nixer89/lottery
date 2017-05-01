@@ -23,6 +23,7 @@ Super6ApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
             numbersAndDate[0] = stringifyArray(json.last.super6.split(""));
             numbersAndDate[1] = -1;
             numbersAndDate[2] = lotteryDateString;
+            numbersAndDate[3] = json.last.currency;
 
             return numbersAndDate;
         }

@@ -23,6 +23,7 @@ EuroMillionsApiHelper.prototype.getLastLotteryDateAndNumbers =function() {
             numbersAndDate[0] = stringifyArray(json.last.numbers);
             numbersAndDate[1] = stringifyArray(json.last.stars);
             numbersAndDate[2] = lotteryDateString;
+            numbersAndDate[3] = json.last.currency;
 
             return numbersAndDate;
         }

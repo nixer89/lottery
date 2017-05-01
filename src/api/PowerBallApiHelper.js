@@ -23,6 +23,7 @@ PowerBallApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
             numbersAndDate[0] = stringifyArray(json.last.numbers);
             numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.powerballs));
             numbersAndDate[2] = lotteryDateString;
+            numbersAndDate[3] = json.last.currency;
 
             return numbersAndDate;
         }
