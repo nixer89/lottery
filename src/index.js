@@ -52,11 +52,12 @@ Lotto.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, se
 var Intent_Handler  = {
     // register custom intent handlers
     "HelloIntent": function (intent, session, response) {
-        checkIntentStatus(session,response);
+        if(!checkIntentStatus(session,response)) return;
+
         response.ask(props.hello, props.hello_reprompt);
     },
     "NewNumber": function (intent, session, response) {
-        checkRemoveNumbersIntent(session, response);
+        if(!checkRemoveNumbersIntent(session, response)) return;
 
         if(session.attributes.isAddingField && intent.slots.lotteryNumber.value == "?") {
             checkWhatNumberIsNext(response, session, null, props.unknown_number);
@@ -71,7 +72,7 @@ var Intent_Handler  = {
         }
     },
     "ChangeLotteryNumberIntent": function (intent, session, response) {
-        checkRemoveNumbersIntent(session, response);
+        if(!checkRemoveNumbersIntent(session, response)) return;
 
         if(session.attributes.isAddingField && session.attributes.newNumbersMain && session.attributes.newNumbersMain.length > 0) {
             if(session.attributes.newNumbersAdditional.length == 0)
@@ -89,7 +90,8 @@ var Intent_Handler  = {
         }
     },
     "AddLotteryNumbers": function (intent, session, response) {
-        checkIntentStatus(session, response);
+        if(!checkIntentStatus(session, response)) return;
+
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             setUpForNewField(session, intent.slots.lotteryName.value);
             var speechStart = props.speech_first_part + session.attributes.currentConfig.speechLotteryName + props.speech_second_part;
@@ -102,7 +104,8 @@ var Intent_Handler  = {
         }
     },
     "RemoveLotteryNumbers": function (intent, session, response) {
-        checkIntentStatus(session,response);
+        if(!checkIntentStatus(session, response)) return;
+
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             session.attributes.currentConfig = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
             session.attributes.isRemovingNumbers = true;
@@ -136,7 +139,8 @@ var Intent_Handler  = {
                 response.tell(props.remove_error);
             });
         } else {
-            checkAddFieldIntent(session, response);
+            if(!checkAddFieldIntent(session, response)) return;
+            
             response.ask(props.you_are_wrong_here);
         }
     },
@@ -150,12 +154,14 @@ var Intent_Handler  = {
         } else if(session.attributes.isRemovingNumbers) {
             response.tell(props.ok_your + session.attributes.currentConfig.speechLotteryName + props.numbers_not_deleted);
         } else {
-            checkAddFieldIntent(session, response);
+            if(!checkAddFieldIntent(session, response)) return;
+
             response.ask(props.you_are_wrong_here);
         }
     },
     "AskForLotteryWinIntent": function (intent, session, response) {
-        checkIntentStatus(session, response);
+        if(!checkIntentStatus(session, response)) return;
+
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             
             var config = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
@@ -204,17 +210,18 @@ var Intent_Handler  = {
     //    skillHelper.generateOverAllWinOutput(session, response);
     //},
     "MyCurrentNumbers": function (intent, session, response) {
-        checkIntentStatus(session,response);
+        if(!checkIntentStatus(session, response)) return;
+
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             var config = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
             session.attributes.currentConfig = config;
 
             readLotteryNumbers(session, response).then(function(myNumbers) {
                 if(myNumbers && myNumbers.length > 0) {
-                    var speakOutput = "<speak>Hier sind deine aktuell gespeicherten "+ config.speechLotteryName + " Zahlen. <break time=\"200ms\"/>";
+                    var speakOutput = "<speak>"+ props.current_numbers_1 + config.speechLotteryName + props.current_numbers_2 + " <break time=\"200ms\"/>";
 
                     for(var i = 0; i < myNumbers.length; i++) {
-                        speakOutput += (myNumbers.length > 1 ? (session.attributes.currentConfig.isZusatzLottery ? "Tippscheinnummer ":"Feld ") + (i+1) : "") + ": <break time=\"500ms\"/>";
+                        speakOutput += (myNumbers.length > 1 ? (session.attributes.currentConfig.isZusatzLottery ? props.current_numbers_lottery_ticket_number : props.current_numbers_field) + (i+1) : "") + ": <break time=\"500ms\"/>";
                         speakOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createSSMLOutputForField(myNumbers[i]);
                         speakOutput += ". ";
                     }
@@ -223,7 +230,7 @@ var Intent_Handler  = {
                     response.tell({type:"SSML",speech: speakOutput});
 
                 } else {
-                    response.ask("Du hast noch keine Zahlen für "+ config.speechLotteryName + " hinterlegt. Sage: Feld hinzufügen "+ config.speechLotteryName + ", um deine Zahlen anzulegen.");
+                    response.ask(props.current_numbers_no_numbers_1 + config.speechLotteryName + props.current_numbers_no_numbers_2 + config.speechLotteryName + props.current_numbers_no_numbers_3);
                 }
             });
         } else {
@@ -231,7 +238,8 @@ var Intent_Handler  = {
         }
     },
     "AskForLatestLotteryNumbers": function (intent, session, response) {
-        checkIntentStatus(session,response);
+        if(!checkIntentStatus(session, response)) return;
+
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             var config = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
             
@@ -252,7 +260,8 @@ var Intent_Handler  = {
         }
      },
      "AskForLotteryJackpot": function (intent, session, response) {
-        checkIntentStatus(session,response);
+        if(!checkIntentStatus(session, response)) return;
+
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             var config = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
             
@@ -269,7 +278,8 @@ var Intent_Handler  = {
         }
      },
      "AskForNextLotteryDrawing": function (intent, session, response) {
-        checkIntentStatus(session,response);
+        if(!checkIntentStatus(session, response)) return;
+
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             var config = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
             
@@ -286,11 +296,12 @@ var Intent_Handler  = {
         }
      },
      "SupportedLotteries": function (intent, session, response) {
-         checkIntentStatus(session,response);
+         if(!checkIntentStatus(session, response)) return;
+
          response.ask("Aktuell werden die Lotteriesysteme 6aus49, Eurojackpot, EuroMillions, PowerBall, MegaMillions und die Zusatzlotterien Spiel77 und Super6 unterstützt. Sage: Feld hinzufügen und den Lotterienamen, um deine Zahlen zu speichern oder sage: Beenden, um den Skill zu schließen.");
      },
      "NullNumberIntent": function (intent, session, response) {
-        checkRemoveNumbersIntent(session, response);
+        if(!checkRemoveNumbersIntent(session, response)) return;
 
         if(session.attributes.isAddingField && session.attributes.currentConfig && session.attributes.currentConfig.isZusatzLottery) {
             doZusatzLotteryNumberCheck(response, session, 0);
@@ -306,11 +317,12 @@ var Intent_Handler  = {
          response.tell("Tschüss und weiterhin viel Glück!");
      },
      "ThanksIntent": function (intent, session, response) {
-         checkIntentStatus(session, response);
+         if(!checkIntentStatus(session, response)) return;
+
          response.tell("Bitte!");
      },
     "AMAZON.HelpIntent": function (intent, session, response) {
-        checkIntentStatus(session,response);
+        if(!checkIntentStatus(session, response)) return;
 
         var help = "Mit diesem Skill kannst du deine Lottozahlen hinterlegen und abfragen, ob du gewonnen hast. Deine Zahlen werden dann gegen die letzte Ziehung der angegebenen Lotterie verglichen. Ich habe ein paar Beispiel-Kommandos an die Alexa App gesendet. Öffne die App und schaue dir die Kommandos an. Um zu erfahren, welche Lotteriesysteme unterstüzt werden, frage einfach: Welche Lotterien werden unterstützt?";
         var repromt = "Sage: Feld hinzufügen und den Lotterienamen, um deine Lottozahlen zu hinterlegen."
@@ -513,22 +525,30 @@ function doZusatzLotteryNumberCheck(response, session, newNumber) {
 }
 
 function checkIntentStatus(session, response) {
-    checkAddFieldIntent(session, response);
-    checkRemoveNumbersIntent(session, response);
+    if(!checkAddFieldIntent(session, response))
+        return false;
+    
+    return checkRemoveNumbersIntent(session, response);
 }
 
 function checkAddFieldIntent(session, response) {
     if(session.attributes.isAddingField && lotteryFieldHasMaxLength(session)) {
         response.ask("Tut mir leid, ich habe dich nicht richtig verstanden. Sage 'JA', um die Zahlen zu speichern, oder 'NEIN', um die Zahlen zu verwerfen.");
+        return false;
     } else if(session.attributes.isAddingField) {
         response.ask("Tut mir leid, ich habe die Zahl nicht richtig verstanden. Bitte wiederhole die Zahl oder sage abbrechen");
+        return false;
     }
+
+    return true;
 }
 
 function checkRemoveNumbersIntent(session, response) {
     if(session.attributes.isRemovingNumbers) {
         response.ask("Tut mir leid, ich habe dich nicht richtig verstanden. Sage 'JA', um die Zahlen zu löschen, oder 'NEIN', um die Zahlen nicht zu löschen.")
+        return false;
     }
+    return true;
 }
 
 function lotteryFieldHasMaxLength(session) {
