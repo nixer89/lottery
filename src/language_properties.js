@@ -106,6 +106,57 @@ var properties =
         help_intent_card_content_line: "Hier sind ein paar nützliche Kommandos:\n- füge ein Feld für 6aus49 hinzu\n- habe ich in Euro Jackpot gewonnen?" +
         "\n- was sind meine aktuell hinterlegten Zahlen für 6aus49\n- was sind die aktuellen Gewinnzahlen von PowerBall\n- lösche meine Zahlen von Euro Jackpot" +
         "\n- wann ist die nächste Ziehung EuroMillions?\n- wie hoch ist der Jackpott von 6aus49",
+
+        //saveNewLottoNumbers function
+        save_new_numbers_ask_super6: " Spielst du damit auch Super sechs?",
+        save_new_numbers_ask_spiel77: " Spielst du damit auch Spiel77?",
+        save_new_numbers_failed: "Deine Zahlen konnten nicht gespeichert werden. Es kam zu einem Fehler.",
+
+        //getSaveSpeechOutput function
+        speech_output_saved_lottery_ticket_number: " Deine Tippscheinnummer wurde erfolgreich für ",
+        speech_output_saved_lottery_numbers: " Deine Zahlen wurden erfolgreich für ",
+        speech_output_successfully_saved: " gespeichert. ",
+
+        //doLotteryNumberCheck function
+        just_whole_numbers_allowed: "Es sind nur ganze Zahlen erlaubt. Bitte wähle eine neue Zahl.",
+        range_check_numbers_repromt: "Bitte wähle eine neue Zahl.",
+
+        range_check_main_numbers_1: "Die Zahl darf nicht kleiner als ",
+        range_check_main_numbers_2: " und nicht größer als ",
+        range_check_main_numbers_3: " sein. Bitte wähle eine neue Zahl.",
+
+        range_check_additional_number_1: " Die ",
+        range_check_additional_number_2: " darf nicht kleiner als ",
+        range_check_additional_number_3: " und nicht größer als ",
+        range_check_additional_number_4: " sein. Bitte wähle eine neue Zahl.",
+
+        check_duplicate_number: "Du hast diese Zahl schon angegeben. Doppelte Zahlen sind nicht erlaubt. Bitte wähle eine neue Zahl.",
+
+        //checkWhatNumberIsNext function
+        check_next_number_current_numbers: "Danke. Deine Zahlen lauten. ",
+        check_next_number_ask_correct: ". Ist das korrekt?",
+        check_next_number_ask_correct_all_numbers: "Sind die Zahlen korrekt?",
+
+        check_next_number_ask_next_number_start_1: "Wie lautet ",
+        check_next_number_is_zero: "null",
+        check_next_number_ask_for_number: ". Zahl?",
+        check_next_number_ask_next_number_start_2: "Wie lautet deine ",
+        check_next_number_your: "deine ",
+
+        //checkAddFieldIntent function
+        check_add_field_misunderstood_yes_no: "Tut mir leid, ich habe dich nicht richtig verstanden. Sage 'JA', um die Zahlen zu speichern, oder 'NEIN', um die Zahlen zu verwerfen.",
+        check_add_field_misunderstood_number: "Tut mir leid, ich habe die Zahl nicht richtig verstanden. Bitte wiederhole die Zahl oder sage abbrechen",
+
+        //checkRemoveNumbersIntent function
+        check_remove_numbers_yes_no: "Tut mir leid, ich habe dich nicht richtig verstanden. Sage 'JA', um die Zahlen zu löschen, oder 'NEIN', um die Zahlen nicht zu löschen.",
+
+        //checkForSpiel77 function
+        additional_lottery_win_1: "Dein Gewinn beträgt ",
+        additional_lottery_win_2:  " Euro.",
+        lottery_win_no_payout_amount_yet: "Die Gewinnsumme steht noch nicht fest.",
+
+        //appendSuper6Win function
+
     },
 
     en_US: {
@@ -202,5 +253,48 @@ var properties =
         help_intent_card_content_line: "Here you find some usefull commands:\n- add field for PowerBall\n- did I win in mega millions?" +
         "\n- what are my currently stored numbers for PowerBall?\n- what are the last drawn numbers of PowerBall?\n- delete my numbers of Euro Jackpot" +
         "\n- when is the next drawing for Euro Millions?\n- what is the current jackpot of PowerBall?",
+
+        //saveNewLottoNumbers function
+        save_new_numbers_ask_super6: " Are you also playing super 6?",
+        save_new_numbers_ask_spiel77: " Are you also playing spiel 77?",
+        save_new_numbers_failed: "I´m sorry, but I could not save your numbers. An error occured.",
+
+        //getSaveSpeechOutput function
+        speech_output_saved_lottery_ticket_number: " Your lottery ticket number has been successfully saved for ",
+        speech_output_saved_lottery_numbers: " Your lottery numbers have been successfully saved for ",
+        speech_output_successfully_saved: " ",
+
+        //doLotteryNumberCheck function
+        just_whole_numbers_allowed: "Only whole numbers are allowed. Please choose a new number.",
+        range_check_numbers_repromt: "Please choose a new number.",
+
+        range_check_main_numbers_1: "The number cannot be smaller than ",
+        range_check_main_numbers_2: " and not bigger than ",
+        range_check_main_numbers_3: " . Please choose a new number.",
+
+        range_check_additional_number_1: " The ",
+        range_check_additional_number_2: " cannot be smaller than ",
+        range_check_additional_number_3: " and not bigger than ",
+        range_check_additional_number_4: " . Please choose a new number.",
+
+        check_duplicate_number: "You have already added this number. Duplicate numbers are not allowed. Please choose a new number.",
+
+        //checkWhatNumberIsNext
+        check_next_number_current_numbers: "Thank you! Your numbers are: " ,
+        check_next_number_ask_correct: ". Is this correct?",
+        check_next_number_ask_correct_all_numbers: "Are your numbers correct?",
+
+        check_next_number_ask_next_number_start_1: "what is ",
+        check_next_number_is_zero: "zero",
+        check_next_number_ask_for_number: ". number?",
+        check_next_number_ask_next_number_start_2: "What is your ",
+        check_next_number_your: "your ",
+
+        //checkAddFieldIntent function
+        check_add_field_misunderstood_yes_no: "I´m sorry, I could not recognize what you said. Say 'YES' to save your numbers or 'NO' to discard your numbers.",
+        check_add_field_misunderstood_number: "I´m sorry, I did not understand your number correctly. Please repeat your number or say 'cancel'.",
+
+        //checkRemoveNumbersIntent function
+        check_remove_numbers_yes_no: "I´m sorry, I could not recognize what you said. Say 'YES' to delete your numbers or 'NO' to keep your numbers'",
     }
 }

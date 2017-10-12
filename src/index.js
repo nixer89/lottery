@@ -218,7 +218,7 @@ var Intent_Handler  = {
 
             readLotteryNumbers(session, response).then(function(myNumbers) {
                 if(myNumbers && myNumbers.length > 0) {
-                    var speakOutput = "<speak>"+ props.current_numbers_1 + config.speechLotteryName + props.current_numbers_2 + " <break time=\"200ms\"/>";
+                    var speakOutput = "<speak>"+ props.current_numbers_1 + config.speechLotteryName + props.current_numbers_2 + "<break time=\"200ms\"/>";
 
                     for(var i = 0; i < myNumbers.length; i++) {
                         speakOutput += (myNumbers.length > 1 ? (session.attributes.currentConfig.isZusatzLottery ? props.current_numbers_lottery_ticket_number : props.current_numbers_field) + (i+1) : "") + ": <break time=\"500ms\"/>";
@@ -394,10 +394,10 @@ function saveNewLottoNumbers(session, response) {
                 if(result) {
                     if(session.attributes.currentConfig.lotteryName == skillHelper.getSpiel77LotteryName() && !session.attributes.addToSuper6) {
                         session.attributes.addToSuper6 = true;
-                        response.ask(getSaveSpeechOutput(session) + " Spielst du damit auch Super sechs?");
+                        response.ask(getSaveSpeechOutput(session) + props.save_new_numbers_ask_super6);
                     } else if(session.attributes.currentConfig.lotteryName == skillHelper.getSuper6LotteryName() && !session.attributes.addToSpiel77) {
                         session.attributes.addToSpiel77 = true;
-                        response.ask(getSaveSpeechOutput(session) + " Spielst du damit auch Spiel77?");
+                        response.ask(getSaveSpeechOutput(session) + + props.save_new_numbers_ask_spiel77);
                     } else {
                         if(session.attributes.currentConfig.isZusatzLottery)
                             response.tell(getSaveSpeechOutput(session));
@@ -405,7 +405,7 @@ function saveNewLottoNumbers(session, response) {
                             response.tell(getSaveSpeechOutput(session));
                     }
                 } else {
-                    response.tell("Deine Zahlen konnten nicht gespeichert werden. Es kam zu einem Fehler.")
+                    response.tell(props.save_new_numbers_failed)
                 }
             });
         });
@@ -414,9 +414,9 @@ function saveNewLottoNumbers(session, response) {
 
 function getSaveSpeechOutput(session, isZusatzLottery) {
     if(session.attributes.currentConfig.isZusatzLottery)
-        return "Deine Tippscheinnummer wurde erfolgreich für " + session.attributes.currentConfig.speechLotteryName + " gespeichert.";
+        return props.speech_output_saved_lottery_ticket_number + session.attributes.currentConfig.speechLotteryName + props.speech_output_successfully_saved;
     else
-        return "Deine Zahlen wurden erfolgreich für " + session.attributes.currentConfig.speechLotteryName + " gespeichert.";
+        return props.speech_output_saved_lottery_numbers + session.attributes.currentConfig.speechLotteryName + props.speech_output_successfully_saved;
 }
 
 function readLotteryNumbers(session, response) {
@@ -443,21 +443,21 @@ function readLotteryNumbers(session, response) {
 
 function doLotteryNumberCheck(response, session, newNumber) {
     if(newNumber%1 != 0)
-        response.ask("Es sind nur ganze Zahlen erlaubt. Bitte wähle eine neue Zahl.", "Bitte wähle eine neue Zahl.");
+        response.ask(props.just_whole_numbers_allowed, props.range_check_numbers_repromt);
 
     //round every 2.0 to 2!
     newNumber = Math.round(newNumber);
 
     //noch keine additional numbers -> checke auf range der main numbers
     if(session.attributes.newNumbersMain.length < session.attributes.currentConfig.numberCountMain && (newNumber < session.attributes.currentConfig.minRangeMain || newNumber > session.attributes.currentConfig.maxRangeMain))
-        response.ask("Die Zahl darf nicht kleiner als " + session.attributes.currentConfig.minRangeMain + " und nicht größer als " + session.attributes.currentConfig.maxRangeMain + " sein. Bitte wähle eine neue Zahl.","Bitte wähle eine neue Zahl.");
+        response.ask(props.range_check_main_numbers_1 + session.attributes.currentConfig.minRangeMain + props.range_check_main_numbers_2 + session.attributes.currentConfig.maxRangeMain + props.range_check_main_numbers_3, props.range_check_numbers_repromt);
     //alle main numbers angegeben, checke auf range der additional numbers
     else if(session.attributes.newNumbersMain.length == session.attributes.currentConfig.numberCountMain && (newNumber < session.attributes.currentConfig.minRangeAdditional || newNumber > session.attributes.currentConfig.maxRangeAdditional))
-        response.ask("Die " + session.attributes.currentConfig.additionalNumberName + " darf nicht kleiner als " + session.attributes.currentConfig.minRangeAdditional + " und nicht größer als " + session.attributes.currentConfig.maxRangeAdditional + " sein. Bitte wähle eine neue Zahl.", "Bitte wähle eine neue Zahl.")
+        response.ask(props.range_check_additional_number_1 + session.attributes.currentConfig.additionalNumberName + props.range_check_additional_number_2 + session.attributes.currentConfig.minRangeAdditional + props.range_check_additional_number_3 + session.attributes.currentConfig.maxRangeAdditional + props.range_check_additional_number_4, props.range_check_numbers_repromt)
     //prüfe ob eine main number oder eine additional number schon doppelt sind!
     else if((session.attributes.newNumbersMain.length <= session.attributes.currentConfig.numberCountMain -1 && session.attributes.newNumbersMain.indexOf(newNumber) != -1) ||
                 (session.attributes.newNumbersAdditional.length <= session.attributes.currentConfig.numberCountAdditional-1 && session.attributes.newNumbersAdditional.indexOf(newNumber) != -1))
-            response.ask("Du hast diese Zahl schon angegeben. Doppelte Zahlen sind nicht erlaubt. Bitte wähle eine neue Zahl.", "Bitte wähle eine neue Zahl.");
+            response.ask(props.check_duplicate_number, props.range_check_numbers_repromt);
     else {
         //zahl is valide, also füge sie hinzu!
         if(session.attributes.newNumbersMain.length < session.attributes.currentConfig.numberCountMain)
@@ -473,10 +473,10 @@ function checkWhatNumberIsNext(response, session, newNumber, additionalSpeechInf
     //check ob weitere Zahlen hinzugefügt werden müssen
     if(lotteryFieldHasMaxLength(session)) {
         session.attributes.newNumbersAdditional = session.attributes.newNumbersAdditional.sort((a, b) => a - b);
-        var speakOutput = "<speak>Danke. Deine Zahlen lauten. ";
+        var speakOutput = "<speak>" + props.check_next_number_current_numbers;
         speakOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createSSMLOutputForNumbers(session.attributes.newNumbersMain, session.attributes.newNumbersAdditional);
-        speakOutput += ". Ist das korrekt?</speak>";
-        response.ask({type:"SSML",speech: speakOutput}, "Sind die Zahlen korrekt?");
+        speakOutput += props.check_next_number_ask_correct + "</speak>";
+        response.ask({type:"SSML",speech: speakOutput}, props.check_next_number_ask_correct_all_numbers);
 
     } else if(session.attributes.newNumbersMain.length == session.attributes.currentConfig.numberCountMain) {
         //sort numbers and add additional number!
@@ -487,7 +487,7 @@ function checkWhatNumberIsNext(response, session, newNumber, additionalSpeechInf
                             + session.attributes.currentConfig.additionalNumberName + "?";
 
         if(newNumber) {
-            var speechOutputPost = "Wie lautet " + outPut;
+            var speechOutputPost = props.check_next_number_ask_next_number_start_1 + outPut;
             var speechOutput = "<speak>" + newNumber + "<break time=\"200ms\"/>" + speechOutputPost + "</speak>";
 
             response.ask({type: "SSML", speech: speechOutput}, speechOutputPost);
@@ -496,24 +496,24 @@ function checkWhatNumberIsNext(response, session, newNumber, additionalSpeechInf
         }
     } else {
         if(newNumber || newNumber == 0) {
-            var speechOutput = "<speak>" + (newNumber == 0 ? "null" : newNumber)+ "<break time=\"200ms\"/>" + (session.attributes.newNumbersMain.length + 1) + ". Zahl?</speak>"
-            response.ask({type: "SSML", speech: speechOutput}, "Wie lautet deine " + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + " Zahl?");
+            var speechOutput = "<speak>" + (newNumber == 0 ? props.check_next_number_is_zero : newNumber)+ "<break time=\"200ms\"/>" + (session.attributes.newNumbersMain.length + 1) + props.check_next_number_ask_for_number +"</speak>"
+            response.ask({type: "SSML", speech: speechOutput}, props.check_next_number_ask_next_number_start_2 + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + props.check_next_number_ask_for_number);
         } else {
-            response.ask(additionalSpeechInfo + "deine " + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + " Zahl?", "Wie lautet deine " + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + " Zahl?");
+            response.ask(additionalSpeechInfo + props.check_next_number_your + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + props.check_next_number_ask_for_number, props.check_next_number_ask_next_number_start_2 + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + props.check_next_number_ask_for_number);
         }
     }
 }
 
 function doZusatzLotteryNumberCheck(response, session, newNumber) {
     if(newNumber%1 != 0)
-        response.ask("Es sind nur ganze Zahlen erlaubt. Bitte wähle eine neue Zahl.", "Bitte wähle eine neue Zahl.");
+        response.ask(props.just_whole_numbers_allowed, props.range_check_numbers_repromt);
 
     //round every 2.0 to 2!
     newNumber = Math.round(newNumber);
     
     //noch keine additional numbers -> checke auf range der main numbers
     if(session.attributes.newNumbersMain.length < session.attributes.currentConfig.numberCountMain && (newNumber < session.attributes.currentConfig.minRangeMain || newNumber > session.attributes.currentConfig.maxRangeMain))
-        response.ask("Die Zahl darf nicht kleiner als " + session.attributes.currentConfig.minRangeMain + " und nicht größer als " + session.attributes.currentConfig.maxRangeMain + " sein. Bitte wähle eine neue Zahl.","Bitte wähle eine neue Zahl.");
+        response.ask(props.range_check_main_numbers_1 + session.attributes.currentConfig.minRangeMain + props.range_check_main_numbers_2 + session.attributes.currentConfig.maxRangeMain + props.range_check_main_numbers_3, props.range_check_numbers_repromt);
     else {
         //zahl is valide, also füge sie hinzu!
         if(session.attributes.newNumbersMain.length < session.attributes.currentConfig.numberCountMain)
@@ -532,10 +532,10 @@ function checkIntentStatus(session, response) {
 
 function checkAddFieldIntent(session, response) {
     if(session.attributes.isAddingField && lotteryFieldHasMaxLength(session)) {
-        response.ask("Tut mir leid, ich habe dich nicht richtig verstanden. Sage 'JA', um die Zahlen zu speichern, oder 'NEIN', um die Zahlen zu verwerfen.");
+        response.ask(props.check_add_field_misunderstood_yes_no);
         return false;
     } else if(session.attributes.isAddingField) {
-        response.ask("Tut mir leid, ich habe die Zahl nicht richtig verstanden. Bitte wiederhole die Zahl oder sage abbrechen");
+        response.ask(props.check_add_field_misunderstood_number);
         return false;
     }
 
@@ -544,7 +544,7 @@ function checkAddFieldIntent(session, response) {
 
 function checkRemoveNumbersIntent(session, response) {
     if(session.attributes.isRemovingNumbers) {
-        response.ask("Tut mir leid, ich habe dich nicht richtig verstanden. Sage 'JA', um die Zahlen zu löschen, oder 'NEIN', um die Zahlen nicht zu löschen.")
+        response.ask(props.check_remove_numbers_yes_no)
         return false;
     }
     return true;
@@ -570,19 +570,19 @@ function checkForSpiel77(session, response, speechOutput) {
                     skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
                         var moneySpeech = ""
                         if(money && money.length > 0)
-                            moneySpeech = "Dein Gewinn beträgt " + money + " Euro.";
+                            moneySpeech = props.additional_lottery_win_1 + money + props.additional_lottery_win_2;
                         else
-                            moneySpeech = "Die Gewinnsumme steht noch nicht fest."
+                            moneySpeech = props.lottery_win_no_payout_amount_yet;
                             
                         speechOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutputShort(rank, moneySpeech, lotteryNumbersAndDate[2]);
 
                         appendSuper6Win(session, response, speechOutput);
 
                     }).catch(function(err) {
-                        response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");    
+                        response.tell(props.last_drawing_request_failed);    
                     });
                 } else {
-                    response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");
+                    response.tell(props.last_drawing_request_failed);
                 }
             });
         } else {
@@ -604,23 +604,23 @@ function appendSuper6Win(session, response, speechOutput) {
                     skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
                         var moneySpeech = ""
                         if(money && money.length > 0)
-                            moneySpeech = "Dein Gewinn beträgt " + money + " Euro.";
+                            moneySpeech = props.additional_lottery_win_1 + money + props.additional_lottery_win_2;
                         else
-                            moneySpeech = "Die Gewinnsumme steht noch nicht fest."
+                            moneySpeech = props.lottery_win_no_payout_amount_yet;
                             
                         speechOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutputShort(rank, moneySpeech, lotteryNumbersAndDate[2]);
 
-                        speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";
+                        speechOutput += "<break time=\"200ms\"/>" + props.without_guarantee + "</speak>";
                         response.tell({type:"SSML",speech: speechOutput});
                     }).catch(function(err) {
-                        response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");    
+                        response.tell(props.last_drawing_request_failed);    
                     });
                 } else {
-                    response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");
+                    response.tell(props.last_drawing_request_failed);
                 }
             });
         } else {
-            speechOutput += "<break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr.</speak>";
+            speechOutput += "<break time=\"200ms\"/>" + props.without_guarantee + "</speak>";
             response.tell({type:"SSML",speech: speechOutput});
         }
     });
