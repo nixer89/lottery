@@ -177,7 +177,7 @@ var properties =
         
         //new number intent
         unknown_number: "The number is not within my known range or was not detected properly. Please repeat ",
-        add_numbers: "You need to say: Add field, and the lottery name, to add your lottery numbers",
+        add_numbers: "Please say: Add field, and the lottery name, to add your lottery numbers",
         not_recognized_number: "Sorry, but I couldn`t understand your number properly. Please repeat!",
 
         //new number intent
@@ -204,7 +204,7 @@ var properties =
 
         //lottery win intent
         amount_you_won: "The amount you won is: ",
-        no_amount_set_yet: "The amount you won is not set yet!",
+        no_amount_set_yet: "The amount you won is not available yet!",
         last_drawing_request_failed: "I´m soryy but the request of the latest drawn numbers failed.",
         add_numbers_before_asking_for_win_1: "To check if you won in the last drawing, you need to add your ",
         add_numbers_before_asking_for_win_2: " numbers first. Just say: 'Add field ",
@@ -216,7 +216,7 @@ var properties =
         current_numbers_field : "Feld ",
         current_numbers_no_numbers_1 : "You haven't saved any numbers for ",
         current_numbers_no_numbers_2 : " yet. Say: Add field ",
-        current_numbers_no_numbers_3 : ", to store new numbers.",
+        current_numbers_no_numbers_3 : " to store new numbers.",
 
         //AskForLatestLotteryNumbers intent
         latest_lottery_drawing_numbers: "These are the latest drawn numbers of ",

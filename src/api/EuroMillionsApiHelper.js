@@ -3,8 +3,11 @@
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/euroMillions";
 var euroMillionsOdds = {"rank1": [5,2], "rank2": [5,1], "rank3": [5,0], "rank4": [4,2], "rank5": [4,1], "rank6": [3,2], "rank7": [4,0], "rank8": [2,2], "rank9": [3,1], "rank10": [3,0], "rank11": [1,2], "rank12": [2,1], "rank13": [2,0]};
+var locale="";
 
-function EuroMillionsApiHelper() {}
+function EuroMillionsApiHelper(currentLocale) {
+    locale = currentLocale;
+}
 
 function invokeBackend(url) {
     return nodeFetch(url)
@@ -15,11 +18,20 @@ function invokeBackend(url) {
     });
 };
 
+function isGermanLang() {
+    return 'de-DE' == locale;
+}
+
 EuroMillionsApiHelper.prototype.getLastLotteryDateAndNumbers =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
-            var lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+            var lotteryDateString = "";
+            if(isGermanLang())
+                lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+            else
+                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+
             numbersAndDate[0] = stringifyArray(json.last.numbers);
             numbersAndDate[1] = stringifyArray(json.last.stars);
             numbersAndDate[2] = lotteryDateString;
@@ -49,7 +61,10 @@ EuroMillionsApiHelper.prototype.getLastLotteryNumbers =function() {
 EuroMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+            if(isGermanLang())
+                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+            else
+                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
     }).catch(function(err) {
         console.log(err);
@@ -102,14 +117,16 @@ EuroMillionsApiHelper.prototype.createSSMLOutputForField = function(field) {
 };
 
 EuroMillionsApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
-  var speakOutput = "";
-
-  for(var i = 0; i < mainNumbers.length; i++)
-      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
-  
-  speakOutput+=". Sterne: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
-
-  return speakOutput;
+    var speakOutput = "";
+    for(var i = 0; i < mainNumbers.length; i++)
+        speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
+    
+    if(isGermanLang())
+        speakOutput+=". Sterne: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
+    else
+        speakOutput+=". Stars: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
+        
+    return speakOutput;
 };
 
 EuroMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
@@ -117,17 +134,31 @@ EuroMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, 
 
     switch(myRank) {
         case 1000:
-            speechOutput += "In der letzten Ziehung Euromillions von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+            if(isGermanLang())
+                speechOutput += "In der letzten Ziehung Euromillions von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+            else
+                speechOutput += "The last drawing of euro millions was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck in the future!";
             break;
         case 1:
-            speechOutput += "In der letzten Ziehung Euromillions von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch die beiden Sterne hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech ;
+            if(isGermanLang())
+                speechOutput += "In der letzten Ziehung Euromillions von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch die beiden Sterne hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech ;
+            else
+                speechOutput += "The last drawing of euro millions was on " + date + ". And you won the jackpot! You predicted all numbers and both stars correctly! Let´s get the party started! Congratulation! " + moneySpeech ;
             break;
         default:
-            speechOutput += "In der letzten Ziehung Euromillions von " + date + " hast du ";
-            speechOutput += euroMillionsOdds['rank'+myRank][0] == 1 ? "eine richtige Zahl" : euroMillionsOdds['rank'+myRank][0] + " richtige Zahlen";
-            speechOutput += (euroMillionsOdds['rank'+myRank][1] == 1 ? " und einen Stern richtig!" : "");
-            speechOutput += (euroMillionsOdds['rank'+myRank][1] == 2 ? " und zwei Sterne richtig!" : "");
-            speechOutput += "! Herzlichen Glückwunsch! " + moneySpeech;
+            if(isGermanLang()) {
+                speechOutput += "In der letzten Ziehung Euromillions von " + date + " hast du ";
+                speechOutput += euroMillionsOdds['rank'+myRank][0] == 1 ? "eine richtige Zahl" : euroMillionsOdds['rank'+myRank][0] + " richtige Zahlen";
+                speechOutput += (euroMillionsOdds['rank'+myRank][1] == 1 ? " und einen Stern richtig!" : "");
+                speechOutput += (euroMillionsOdds['rank'+myRank][1] == 2 ? " und zwei Sterne richtig!" : "");
+                speechOutput += "! Herzlichen Glückwunsch! " + moneySpeech;
+            } else {
+                speechOutput += "The last drawing of euro millions was on " + date + ". You have ";
+                speechOutput += euroJackpotOdds['rank'+myRank][0] == 1 ? "one matching number" : euroJackpotOdds['rank'+myRank][0] + " matching numbers";
+                speechOutput += (euroJackpotOdds['rank'+myRank][1] == 1 ? " and one matching stars!" : "");
+                speechOutput += (euroJackpotOdds['rank'+myRank][1] == 2 ? " and two matching stars!" : "");
+                speechOutput += "! Congratulation! " + moneySpeech;
+            }
             break;
     }
 

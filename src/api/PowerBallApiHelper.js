@@ -3,8 +3,11 @@
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/powerBall";
 var powerBallOdds = {"rank1": [5,1], "rank2": [5,0], "rank3": [4,1], "rank4": [4,0], "rank5": [3,1], "rank6": [3,0], "rank7": [2,1], "rank8": [1,1], "rank9": [0,1]};
+var locale="";
 
-function PowerBallApiHelper() {}
+function PowerBallApiHelper(currentLocale) {
+    locale = currentLocale;
+}
 
 function invokeBackend(url) {
     return nodeFetch(url)
@@ -15,11 +18,20 @@ function invokeBackend(url) {
     });
 };
 
+function isGermanLang() {
+    return 'de-DE' == locale;
+}
+
 PowerBallApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
-            var lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+            var lotteryDateString = "";
+            if(isGermanLang())
+                lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+            else
+                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+
             numbersAndDate[0] = stringifyArray(json.last.numbers);
             numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.powerballs));
             numbersAndDate[2] = lotteryDateString;
@@ -49,7 +61,10 @@ PowerBallApiHelper.prototype.getLastLotteryNumbers = function() {
 PowerBallApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+            if(isGermanLang())
+                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+            else
+                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
     }).catch(function(err) {
         console.log(err);
@@ -110,14 +125,14 @@ PowerBallApiHelper.prototype.createSSMLOutputForField = function(field) {
 };
 
 PowerBallApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
-  var speakOutput = "";
-
-  for(var i = 0; i < mainNumbers.length; i++)
-      speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
-  
-  speakOutput+=". Powerball:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
-
-  return speakOutput;
+    var speakOutput = "";
+    
+    for(var i = 0; i < mainNumbers.length; i++)
+        speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
+        
+    speakOutput+=". Powerball:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
+    
+    return speakOutput;
 };
 
 PowerBallApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
@@ -125,13 +140,23 @@ PowerBallApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, mon
 
     switch(myRank) {
         case 1000:
-            speechOutput += "In der letzten Ziehung Powerball von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+            if(isGermanLang())
+                speechOutput += "In der letzten Ziehung Powerball von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+            else
+                speechOutput += "The last drawing of powerball was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck in the future!";
             break;
         case 1:
-            speechOutput += "In der letzten Ziehung Powerball von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch den Powerball hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
+            if(isGermanLang())
+                speechOutput += "In der letzten Ziehung Powerball von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch den Powerball hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
+            else
+                speechOutput += "The last drawing of powerball was on " + date + ". And you won the jackpot! You predicted all numbers and the powerball correctly! Let´s get the party started! Congratulation! " + moneySpeech ;
+
             break;
         default:
-            speechOutput += "In der letzten Ziehung Powerball von " + date + " hast du " + powerBallOdds['rank'+myRank][0] + " richtige Zahlen" + (powerBallOdds['rank'+myRank][1] == 1 ? " und sogar den Powerball richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
+            if(isGermanLang())
+                speechOutput += "In der letzten Ziehung Powerball von " + date + " hast du " + powerBallOdds['rank'+myRank][0] + " richtige Zahlen" + (powerBallOdds['rank'+myRank][1] == 1 ? " und sogar den Powerball richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
+            else
+                speechOutput += "The last drawing of powerball was on " + date + ". You have " + germanOdds['rank'+myRank][0] + " matching numbers" + (germanOdds['rank'+myRank][1] == 1 ? " and the powerball does match as well!" : "!") + " Congratulation! " + moneySpeech;
     }
 
     return speechOutput;

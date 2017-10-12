@@ -15,8 +15,8 @@ var APP_ID = process.env.APP_ID;
  */
 var AlexaSkill = require('./AlexaSkill');
 var skillHelperPrototype = require('./SkillHelper');
-var language_properties = require('./language_properties');
-var skillHelper = new skillHelperPrototype();
+var language_properties = require('./language_properties_main');
+var skillHelper;
 var props = "";
 
 /**
@@ -34,6 +34,27 @@ var Lotto = function () {
 // Extend AlexaSkill
 Lotto.prototype = Object.create(AlexaSkill.prototype);
 Lotto.prototype.constructor = Lotto;
+
+// Create the handler that responds to the Alexa Request.
+exports.handler = function (event, context) {
+    // Create an instance of the Lotto skill.
+    var lotto = new Lotto();
+
+    locale = event.request.locale
+
+    if (locale == 'en-US')
+        props = language_properties.getEnglishProperties();
+    else if(locale == 'en-GB')
+        props = language_properties.getEnglishProperties();
+    else if(locale == 'de-DE')
+        props = language_properties.getGermanProperties();
+
+    skillHelper = new skillHelperPrototype(locale);
+
+    lotto.intentHandlers = Intent_Handler; //register intent handler
+
+    lotto.execute(event, context);
+};
 
 Lotto.prototype.eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
     console.log("Lotto onSessionStarted requestId: " + sessionStartedRequest.requestId + ", sessionId: " + session.sessionId);
@@ -358,25 +379,6 @@ function setUpForNewField(session, lotteryName) {
     session.attributes.newNumbersAdditional = [];
     session.attributes.currentConfig = skillHelper.getConfigByUtterance(lotteryName);
 }
-
-// Create the handler that responds to the Alexa Request.
-exports.handler = function (event, context) {
-    // Create an instance of the Lotto skill.
-    var lotto = new Lotto();
-
-    locale = event.request.locale
-
-    if (locale == 'en-US')
-        props = language_properties.getEnglishProperties();
-    else if(locale == 'en-GB')
-        props = language_properties.getEnglishProperties();
-    else if(locale == 'de-DE')
-        props = language_properties.getGermanProperties();
-
-    lotto.intentHandlers = Intent_Handler; //register intent handler
-
-    lotto.execute(event, context);
-};
 
 function saveNewLottoNumbers(session, response) {
     if(lotteryFieldHasMaxLength(session)) {
