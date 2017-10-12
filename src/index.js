@@ -190,10 +190,10 @@ var Intent_Handler  = {
                                     response.tell({type:"SSML",speech: speechOutput});
                                 }
                             }).catch(function(err) {
-                                response.tell(props.last_drawing_request_failes);    
+                                response.tell(props.last_drawing_request_failed);    
                             });
                         } else {
-                            response.tell(props.last_drawing_request_failes);
+                            response.tell(props.last_drawing_request_failed);
                         }
                     });
                 }
@@ -251,7 +251,7 @@ var Intent_Handler  = {
 
                     response.tell({type:"SSML",speech: speakOutput});
                 } else {
-                    response.tell("Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");
+                    response.tell(props.last_drawing_request_failed);
                 }
             });
         }

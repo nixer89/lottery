@@ -58,7 +58,7 @@ var properties =
         //lottery win intent
         amount_you_won: "Dein Gewinn beträgt ",
         no_amount_set_yet: "Die Gewinnsumme steht noch nicht fest.",
-        last_drawing_request_failes: "Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
+        last_drawing_request_failed: "Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
         add_numbers_before_asking_for_win_1: "Du musst erst Zahlen für ",
         add_numbers_before_asking_for_win_2: " hinterlegen, damit ich prüfen kann, ob du gewonnen hast. Sage dazu einfach 'Feld hinzufügen ",
 
@@ -119,7 +119,7 @@ var properties =
         //lottery win intent
         amount_you_won: "The amount you won is: ",
         no_amount_set_yet: "The amount you won is not set yet!",
-        last_drawing_request_failes: "Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
+        last_drawing_request_failed: "Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
         add_numbers_before_asking_for_win_1: "Du musst erst Zahlen für ",
         add_numbers_before_asking_for_win_2: " hinterlegen, damit ich prüfen kann, ob du gewonnen hast. Sage dazu einfach 'Feld hinzufügen ",
 
