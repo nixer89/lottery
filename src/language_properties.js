@@ -63,14 +63,49 @@ var properties =
         add_numbers_before_asking_for_win_2: " hinterlegen, damit ich prüfen kann, ob du gewonnen hast. Sage dazu einfach 'Feld hinzufügen ",
 
         //MyCurrentNumbers intent
-        current_numbers_1 : "Hier sind deine aktuell gespeicherten ",
-        current_numbers_2 : " Zahlen: ",
-        current_numbers_lottery_ticket_number : " Tippscheinnummer ",
-        current_numbers_field : "Feld ",
-        current_numbers_no_numbers_1 : "Du hast noch keine Zahlen für ",
-        current_numbers_no_numbers_2 : " hinterlegt. Sage: Feld hinzufügen ",
-        current_numbers_no_numbers_3 : ", um deine Zahlen anzulegen.",
+        current_numbers_1: "Hier sind deine aktuell gespeicherten ",
+        current_numbers_2: " Zahlen: ",
+        current_numbers_lottery_ticket_number: " Tippscheinnummer ",
+        current_numbers_field: "Feld ",
+        current_numbers_no_numbers_1: "Du hast noch keine Zahlen für ",
+        current_numbers_no_numbers_2: " hinterlegt. Sage: Feld hinzufügen ",
+        current_numbers_no_numbers_3: ", um deine Zahlen anzulegen.",
 
+        //AskForLatestLotteryNumbers
+        latest_lottery_drawing_numbers: "Hier sind die Gewinnzahlen der letzten Ziehung ",
+        latest_lottery_numbers_from: " von ",
+
+        //AskForLotteryJackpot
+        current_jackpot_size_1: "Der aktuelle Jackpott von ",
+        current_jackpot_size_2: " beträgt ",
+        current_jackpot_size_3: " Millionen Euro.",
+        current_jackpot_size_error: "Bei der Abfrage nach dem aktuellen Jackpott ist ein Fehler aufgetreten. Bitte entschuldige.",
+
+        //AskForNextLotteryDrawing intent
+        next_drawing_1: "Die nächste Ziehung von ",
+        next_drawing_2: " ist am ",
+        next_drawing_failed: "Bei der Abfrage nach der nächsten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
+
+        //SupportedLotteries intent
+        supportet_lotteries: "Aktuell werden die Lotteriesysteme 6aus49, Eurojackpot, EuroMillions, PowerBall, MegaMillions und die Zusatzlotterien Spiel77 und Super6 unterstützt. Sage: Feld hinzufügen und den Lotterienamen, um deine Zahlen zu speichern oder sage: Beenden, um den Skill zu schließen.",
+
+        //NullNumberIntent intent
+        null_number_intent_error_1: "Wenn du deine Zahlen hinzufügen willst, musst du 'Feld hinzufügen und den Lotterie-Namen' sagen.",
+        null_number_intent_error_2: "Tut mir leid, ich konnte die Zahl nicht verstehen. Bitte sage sie noch einmal.",
+
+        //EndIntent & AMAZON.StopIntent & AMAZON.CancelIntent
+        goodbye_intent: "Tschüss und weiterhin viel Glück!", 
+
+        //ThanksIntent
+        thanks_intent: "Bitte",
+
+        //AMAZON.HelpIntent
+        help_intent_help_line: "Mit diesem Skill kannst du deine Lottozahlen hinterlegen und abfragen, ob du gewonnen hast. Deine Zahlen werden dann gegen die letzte Ziehung der angegebenen Lotterie verglichen. Ich habe ein paar Beispiel-Kommandos an die Alexa App gesendet. Öffne die App und schaue dir die Kommandos an. Um zu erfahren, welche Lotteriesysteme unterstüzt werden, frage einfach: Welche Lotterien werden unterstützt?",
+        help_intent_repromt_line: "Sage: Feld hinzufügen und den Lotterienamen, um deine Lottozahlen zu hinterlegen.",
+        help_intent_card_title_line: "MeinLotto Kommandos",
+        help_intent_card_content_line: "Hier sind ein paar nützliche Kommandos:\n- füge ein Feld für 6aus49 hinzu\n- habe ich in Euro Jackpot gewonnen?" +
+        "\n- was sind meine aktuell hinterlegten Zahlen für 6aus49\n- was sind die aktuellen Gewinnzahlen von PowerBall\n- lösche meine Zahlen von Euro Jackpot" +
+        "\n- wann ist die nächste Ziehung EuroMillions?\n- wie hoch ist der Jackpott von 6aus49",
     },
 
     en_US: {
@@ -82,7 +117,7 @@ var properties =
         without_guarantee: "Alle Angaben wie immer ohne Gewähr.",
 
         //welcome prompt
-        welcome: "Welcome to my lottery! Say: 'add field, and the lottery name', to save your lottery numbers. Say: help, to view more commands in the alexa app.",
+        welcome: "Welcome to my lottery! Say: 'add field', and the lottery name, to save your lottery numbers. Say: help, to view more commands in the alexa app.",
         welcome_reprompt: "Say: help, to view more commands in the alexa app!",
 
         //hello intent
@@ -119,9 +154,9 @@ var properties =
         //lottery win intent
         amount_you_won: "The amount you won is: ",
         no_amount_set_yet: "The amount you won is not set yet!",
-        last_drawing_request_failed: "Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
-        add_numbers_before_asking_for_win_1: "Du musst erst Zahlen für ",
-        add_numbers_before_asking_for_win_2: " hinterlegen, damit ich prüfen kann, ob du gewonnen hast. Sage dazu einfach 'Feld hinzufügen ",
+        last_drawing_request_failed: "I´m soryy but the request of the latest drawn numbers failed.",
+        add_numbers_before_asking_for_win_1: "To check if you won in the last drawing, you need to add your ",
+        add_numbers_before_asking_for_win_2: " numbers first. Just say: 'Add field ",
 
         //MyCurrentNumbers intent
         current_numbers_1 : "Your currently saved ",
@@ -131,5 +166,41 @@ var properties =
         current_numbers_no_numbers_1 : "You haven't saved any numbers for ",
         current_numbers_no_numbers_2 : " yet. Say: Add field ",
         current_numbers_no_numbers_3 : ", to store new numbers.",
+
+        //AskForLatestLotteryNumbers intent
+        latest_lottery_drawing_numbers: "These are the latest drawn numbers of ",
+        latest_lottery_numbers_from: " from ",
+
+        //AskForLotteryJackpot intent
+        current_jackpot_size_1: "The current jackpot of ",
+        current_jackpot_size_2: " is ",
+        current_jackpot_size_3: " million euro.",
+        current_jackpot_size_error: "I´m sorry, but the request for the current jackpot size failed.",
+
+        //AskForNextLotteryDrawing intent
+        next_drawing_1: "The next drawing for ",
+        next_drawing_2: " is on ",
+        next_drawing_failed: "I´m sorry, but the request for the next drawing failed.",
+
+        //SupportedLotteries intent
+        supportet_lotteries: "Currently, following lotteries are supported: german 6 out of 49, euro jackpot, euro millions, powerBall, mega millions and german additional lottiers 'Spiel77' and 'super 6'. Say: add field and the lottery name to save your numbers or say: cancel, to close the skill",
+
+        //NullNumberIntent intent
+        null_number_intent_error_1: "If you want to add you numbers, you need to say: add field, and the lottery name.",
+        null_number_intent_error_2: "I´m sorry but I could not recongnize the number you said. Please repeat your number",
+
+        //EndIntent & AMAZON.StopIntent & AMAZON.CancelIntent
+        goodbye_intent: "Bye and good luck for the next time!",
+
+        //ThanksIntent
+        thanks_intent: "You`re welcome",
+
+        //AMAZON.HelpIntent
+        help_intent_help_line: "With this skill, you are able to store you lottery numbers and ask if you did win in the last drawing. You`re stored numbers will be matched to the numbers of the last drawing of the given lottery. I´ve just send you some example commands to your alexa app. Open the app and check the commands. To check the supported lotteries, just say: Which lotteries are supported?",
+        help_intent_repromt_line: "Say: 'add field', and the lottery name, to store your lottery numbers",
+        help_intent_card_title_line: "my lottery commands",
+        help_intent_card_content_line: "Here you find some usefull commands:\n- add field for PowerBall\n- did I win in mega millions?" +
+        "\n- what are my currently stored numbers for PowerBall?\n- what are the last drawn numbers of PowerBall?\n- delete my numbers of Euro Jackpot" +
+        "\n- when is the next drawing for Euro Millions?\n- what is the current jackpot of PowerBall?",
     }
 }

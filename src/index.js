@@ -245,9 +245,9 @@ var Intent_Handler  = {
             
             skillHelper.getLotteryApiHelper(config.lotteryName).getLastLotteryDateAndNumbers().then(function(numbers) {
                 if(numbers) {
-                    var speakOutput = "<speak>Hier sind die Gewinnzahlen der letzten " + config.speechLotteryName + " Ziehung von " + numbers[2] + ". <break time=\"500ms\"/>";
+                    var speakOutput = "<speak>" + props.latest_lottery_drawing_numbers + config.speechLotteryName + props.latest_lottery_numbers_from + numbers[2] + ". <break time=\"500ms\"/>";
                     speakOutput += skillHelper.getLotteryApiHelper(config.lotteryName).createSSMLOutputForNumbers(numbers[0], numbers[1]);
-                    speakOutput += ". <break time=\"200ms\"/>Alle Angaben wie immer ohne Gewähr</speak>";
+                    speakOutput += ". <break time=\"200ms\"/>" + props.without_guarantee + "</speak>";
 
                     response.tell({type:"SSML",speech: speakOutput});
                 } else {
@@ -267,9 +267,9 @@ var Intent_Handler  = {
             
             skillHelper.getLotteryApiHelper(config.lotteryName).getCurrentJackpot().then(function(jackpotSize) {
                 if(jackpotSize) {
-                    response.tell("Der aktuelle Jackpott von " + config.speechLotteryName + " beträgt " + jackpotSize + " Millionen Euro.");
+                    response.tell(props.current_jackpot_size_1 + config.speechLotteryName + props.current_jackpot_size_2 + jackpotSize + props.current_jackpot_size_3);
                 } else {
-                    response.tell("Bei der Abfrage nach dem aktuellen Jackpott ist ein Fehler aufgetreten. Bitte entschuldige.");
+                    response.tell(props.current_jackpot_size_error);
                 }
             });
         }
@@ -285,20 +285,20 @@ var Intent_Handler  = {
             
             skillHelper.getLotteryApiHelper(config.lotteryName).getNextLotteryDrawingDate().then(function(nextDrawing) {
                 if(nextDrawing) {
-                    response.tell("Die nächste Ziehung von " + config.speechLotteryName + " ist am " + nextDrawing);
+                    response.tell(props.next_drawing_1 + config.speechLotteryName + props.next_drawing_2 + nextDrawing);
                 } else {
-                    response.tell("Bei der Abfrage nach der nächsten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.");
+                    response.tell(props.next_drawing_failed);
                 }
             });
         }
         else {
-            response.ask("Tut mir leid, diese Lotterie kenne ich nicht. Frage mich, welche Lotterien unterstützt werden, um eine Übersicht in der Alexa App zu erhalten.");
+            response.ask(props.unknown_lottery);
         }
      },
      "SupportedLotteries": function (intent, session, response) {
          if(!checkIntentStatus(session, response)) return;
 
-         response.ask("Aktuell werden die Lotteriesysteme 6aus49, Eurojackpot, EuroMillions, PowerBall, MegaMillions und die Zusatzlotterien Spiel77 und Super6 unterstützt. Sage: Feld hinzufügen und den Lotterienamen, um deine Zahlen zu speichern oder sage: Beenden, um den Skill zu schließen.");
+         response.ask(props.supportet_lotteries);
      },
      "NullNumberIntent": function (intent, session, response) {
         if(!checkRemoveNumbersIntent(session, response)) return;
@@ -308,35 +308,34 @@ var Intent_Handler  = {
         } else if(session.attributes.isAddingField && session.attributes.currentConfig && !session.attributes.currentConfig.isZusatzLottery) {
             doLotteryNumberCheck(response, session, 0);
         } else if(!session.attributes.isAddingField) {
-            response.ask("Wenn du deine Zahlen hinzufügen willst, musst du 'Feld hinzufügen und den Lotterie-Namen' sagen.")
+            response.ask(props.null_number_intent_error_1)
         }else {
-            response.ask("Tut mir leid, ich konnte die Zahl nicht verstehen. Bitte sage sie noch einmal.");
+            response.ask(props.null_number_intent_error_2);
         }
      },
      "EndIntent": function (intent, session, response) {
-         response.tell("Tschüss und weiterhin viel Glück!");
+         response.tell(props.goodbye_intent);
      },
      "ThanksIntent": function (intent, session, response) {
          if(!checkIntentStatus(session, response)) return;
 
-         response.tell("Bitte!");
+         response.tell(props.thanks_intent);
      },
     "AMAZON.HelpIntent": function (intent, session, response) {
         if(!checkIntentStatus(session, response)) return;
 
-        var help = "Mit diesem Skill kannst du deine Lottozahlen hinterlegen und abfragen, ob du gewonnen hast. Deine Zahlen werden dann gegen die letzte Ziehung der angegebenen Lotterie verglichen. Ich habe ein paar Beispiel-Kommandos an die Alexa App gesendet. Öffne die App und schaue dir die Kommandos an. Um zu erfahren, welche Lotteriesysteme unterstüzt werden, frage einfach: Welche Lotterien werden unterstützt?";
-        var repromt = "Sage: Feld hinzufügen und den Lotterienamen, um deine Lottozahlen zu hinterlegen."
-        var cardTitle = "MeinLotto Kommandos";
-        var cardContent = "Hier sind ein paar nützliche Kommandos:\n- füge ein Feld für 6aus49 hinzu\n- habe ich in Euro Jackpot gewonnen?" +
-         "\n- was sind meine aktuell hinterlegten Zahlen für 6aus49\n- was sind die aktuellen Gewinnzahlen von PowerBall\n- lösche meine Zahlen von Euro Jackpot" +
-         "\n- wann ist die nächste Ziehung EuroMillions?\n- wie hoch ist der Jackpott von 6aus49";
+        var help = props.help_intent_help_line;
+        var repromt = props.help_intent_repromt_line;
+        var cardTitle = props.help_intent_card_title_line;
+        var cardContent = props.help_intent_card_content_line;
+        
         response.askWithCard(help, repromt, cardTitle, cardContent);
     },
     "AMAZON.StopIntent": function (intent, session, response) {
-        response.tell("Tschüss und weiterhin viel Glück!");
+        response.tell(props.goodbye_intent);
     },
     "AMAZON.CancelIntent": function (intent, session, response) {
-        response.tell("Tschüss und weiterhin viel Glück!");
+        response.tell(props.goodbye_intent);
     },
     "TestIntent": function (intent, session, response) {
         var germanNumbers = [[["10","20","13","40","15","26"],["7", "1"]],[["49","21","13","31","15","1"],["2","8"]]];
