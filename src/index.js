@@ -498,7 +498,7 @@ function checkWhatNumberIsNext(response, session, newNumber, additionalSpeechInf
         }
     } else {
         if(newNumber || newNumber == 0) {
-            var speechOutput = "<speak>" + (newNumber == 0 ? props.check_next_number_is_zero : newNumber)+ "<break time=\"200ms\"/>" + (session.attributes.newNumbersMain.length + 1) + props.check_next_number_ask_for_number +"</speak>"
+            var speechOutput = "<speak>" + (newNumber == 0 ? props.check_next_number_is_zero : newNumber)+ "<break time=\"200ms\"/>" + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + props.check_next_number_ask_for_number +"</speak>"
             response.ask({type: "SSML", speech: speechOutput}, props.check_next_number_ask_next_number_start_2 + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + props.check_next_number_ask_for_number);
         } else {
             response.ask(additionalSpeechInfo + props.check_next_number_your + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + props.check_next_number_ask_for_number, props.check_next_number_ask_next_number_start_2 + skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersMain.length + 1)) + props.check_next_number_ask_for_number);
@@ -572,9 +572,9 @@ function checkForSpiel77(session, response, speechOutput) {
                     skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
                         var moneySpeech = ""
                         if(money && money.length > 0)
-                            moneySpeech = props.additional_lottery_win_1 + money + props.additional_lottery_win_2;
+                            moneySpeech = props.amount_you_won + money + props.amount_currency;
                         else
-                            moneySpeech = props.lottery_win_no_payout_amount_yet;
+                            moneySpeech = props.no_amount_set_yet;
                             
                         speechOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutputShort(rank, moneySpeech, lotteryNumbersAndDate[2]);
 
@@ -606,9 +606,9 @@ function appendSuper6Win(session, response, speechOutput) {
                     skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
                         var moneySpeech = ""
                         if(money && money.length > 0)
-                            moneySpeech = props.additional_lottery_win_1 + money + props.additional_lottery_win_2;
+                            moneySpeech = props.amount_you_won + money + props.amount_currency;
                         else
-                            moneySpeech = props.lottery_win_no_payout_amount_yet;
+                            moneySpeech = props.no_amount_set_yet;
                             
                         speechOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutputShort(rank, moneySpeech, lotteryNumbersAndDate[2]);
 

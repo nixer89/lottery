@@ -57,6 +57,7 @@ var properties =
 
         //lottery win intent
         amount_you_won: "Dein Gewinn beträgt ",
+        amount_currency: " Euro.",
         no_amount_set_yet: "Die Gewinnsumme steht noch nicht fest.",
         last_drawing_request_failed: "Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
         add_numbers_before_asking_for_win_1: "Du musst erst Zahlen für ",
@@ -139,7 +140,7 @@ var properties =
 
         check_next_number_ask_next_number_start_1: "Wie lautet ",
         check_next_number_is_zero: "null",
-        check_next_number_ask_for_number: ". Zahl?",
+        check_next_number_ask_for_number: " Zahl?",
         check_next_number_ask_next_number_start_2: "Wie lautet deine ",
         check_next_number_your: "deine ",
 
@@ -148,24 +149,16 @@ var properties =
         check_add_field_misunderstood_number: "Tut mir leid, ich habe die Zahl nicht richtig verstanden. Bitte wiederhole die Zahl oder sage abbrechen",
 
         //checkRemoveNumbersIntent function
-        check_remove_numbers_yes_no: "Tut mir leid, ich habe dich nicht richtig verstanden. Sage 'JA', um die Zahlen zu löschen, oder 'NEIN', um die Zahlen nicht zu löschen.",
-
-        //checkForSpiel77 function
-        additional_lottery_win_1: "Dein Gewinn beträgt ",
-        additional_lottery_win_2:  " Euro.",
-        lottery_win_no_payout_amount_yet: "Die Gewinnsumme steht noch nicht fest.",
-
-        //appendSuper6Win function
-
+        check_remove_numbers_yes_no: "Tut mir leid, ich habe dich nicht richtig verstanden. Sage 'JA', um die Zahlen zu löschen, oder 'NEIN', um die Zahlen nicht zu löschen."
     },
 
     en_US: {
         //general
         you_are_wrong_here: "Sorry, I don`t know what you mean. Say: help, to view more commands in the alexa app.",
-        unknown_lottery: "Sorry, but I don`t know this lottery. Ask which lotteries are supported to send them to the alexa app!",
+        unknown_lottery: "Sorry, but I don`t know this lottery. Ask: 'which lotteries are supported', to send them to the alexa app!",
         ok: "Okay.",
         ok_your: "Okay, your ",
-        without_guarantee: "Alle Angaben wie immer ohne Gewähr.",
+        without_guarantee: "All statements without guarantee.",
 
         //welcome prompt
         welcome: "Welcome to my lottery! Say: 'add field', and the lottery name, to save your lottery numbers. Say: help, to view more commands in the alexa app.",
@@ -204,6 +197,7 @@ var properties =
 
         //lottery win intent
         amount_you_won: "The amount you won is: ",
+        amount_currency: " Euro.",
         no_amount_set_yet: "The amount you won is not available yet!",
         last_drawing_request_failed: "I´m soryy but the request of the latest drawn numbers failed.",
         add_numbers_before_asking_for_win_1: "To check if you won in the last drawing, you need to add your ",
@@ -295,6 +289,6 @@ var properties =
         check_add_field_misunderstood_number: "I´m sorry, I did not understand your number correctly. Please repeat your number or say 'cancel'.",
 
         //checkRemoveNumbersIntent function
-        check_remove_numbers_yes_no: "I´m sorry, I could not recognize what you said. Say 'YES' to delete your numbers or 'NO' to keep your numbers'",
+        check_remove_numbers_yes_no: "I´m sorry, I could not recognize what you said. Say 'YES' to delete your numbers or 'NO' to keep your numbers'"
     }
 }

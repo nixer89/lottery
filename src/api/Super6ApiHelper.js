@@ -7,6 +7,9 @@ var locale="";
 
 function Super6ApiHelper(currentLocale) {
     locale = currentLocale;
+
+    if(!isGermanLang())
+        LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/german6aus49";
 }
 
 function invokeBackend(url) {
@@ -86,7 +89,7 @@ Super6ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
         if(json && json.last.super6Odds && json.last.super6Odds['rank'+myRank]) {
             if(json.last.super6Odds['rank'+myRank].prize > 0) {
                 var price = json.last.super6Odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + "," + price.substring(price.length-2);
+                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
             } else {
                 return null;
             }

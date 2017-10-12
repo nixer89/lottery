@@ -1,49 +1,43 @@
 HelloIntent hi
 HelloIntent hallo
-AddLotteryNumbers Feld hinzufügen für {lotteryName}
-AddLotteryNumbers füge ein Feld für {lotteryName} hinzu
-AddLotteryNumbers füge ein neues Feld für {lotteryName} hinzu
-AddLotteryNumbers füge ein {lotteryName} Feld hinzu
-AddLotteryNumbers lege neue Zahlen für {lotteryName} an
-MyCurrentNumbers wie lauten meine aktuellen Zahlen für {lotteryName}
-MyCurrentNumbers wie lauten meine aktuellen {lotteryName} Zahlen
-MyCurrentNumbers wie lauten meine aktuellen Gewinnzahlen für {lotteryName}
-MyCurrentNumbers wie meine aktuellen Zahlen für {lotteryName} lauten
-MyCurrentNumbers was meine Zahlen für {lotteryName} sind
-MyCurrentNumbers nach meinen aktuellen Zahlen für {lotteryName}
-MyCurrentNumbers nach meinen Zahlen für {lotteryName}
-MyCurrentNumbers was sind meine aktuell hinterlegten Zahlen für {lotteryName}
-MyCurrentNumbers wie lauten meine aktuell hinterlegten Zahlen für {lotteryName}
-RemoveLotteryNumbers Lösche meine {lotteryName} Zahlen
-RemoveLotteryNumbers Lösche meine Zahlen von {lotteryName}
-RemoveLotteryNumbers Lösche alle meine {lotteryName} Zahlen
-RemoveLotteryNumbers Lösche meine aktuell hinterlegten {lotteryName} Zahlen
-RemoveLotteryNumbers Lösche meine aktuellen {lotteryName} Zahlen
-AskForLotteryWinIntent habe ich in {lotteryName} gewonnen
-AskForLotteryWinIntent ob ich in {lotteryName} gewonnen habe
-AskForLotteryWinIntent ob ich in der letzten {lotteryName} Ziehung gewonnen habe
-AskForLotteryWinIntent ob ich in der letzten Ziehung von {lotteryName} gewonnen habe
-AskForLotteryWinIntent prüfe ob ich in {lotteryName} gewonnen habe
-AskForLotteryWinIntent prüfe ob ich in der letzten Ziehung von {lotteryName} gewonnen habe
+AddLotteryNumbers add field for {lotteryName}
+AddLotteryNumbers add a new field for {lotteryName}
+AddLotteryNumbers add a {lotteryName} field
+AddLotteryNumbers add new numbers for {lotteryName}
+MyCurrentNumbers what are my currently stored numbers for {lotteryName}
+MyCurrentNumbers what are my currently saved numbers for {lotteryName}
+MyCurrentNumbers what my currently saved numbers for {lotteryName} are
+MyCurrentNumbers what my currently stored numbers for {lotteryName} are
+MyCurrentNumbers for my {lotteryName} numbers
+RemoveLotteryNumbers delete my {lotteryName} numbers
+RemoveLotteryNumbers delete my numbers for {lotteryName}
+RemoveLotteryNumbers delete all my {lotteryName} numbers
+RemoveLotteryNumbers delete all my currently stored numbers for {lotteryName}
+RemoveLotteryNumbers delete my current numbers for {lotteryName}
+AskForLotteryWinIntent did I won in {lotteryName}
+AskForLotteryWinIntent if I did won in {lotteryName}
+AskForLotteryWinIntent if I won in the last drawing of {lotteryName}
+AskForLotteryWinIntent check if I won in {lotteryName}
+AskForLotteryWinIntent check if I won in the last drawing of {lotteryName}
 NewNumber {lotteryNumber}
 NullNumberIntent null
-ChangeLotteryNumberIntent korrigieren
-ChangeLotteryNumberIntent ändern
-AskForLatestLotteryNumbers was sind die Gewinnzahlen der letzten Ziehung von {lotteryName}
-AskForLatestLotteryNumbers was sind die aktuellen Gewinnzahlen von {lotteryName}
-AskForLatestLotteryNumbers nach den aktuellen Gewinnzahlen von {lotteryName}
-AskForLatestLotteryNumbers nach den {lotteryName} Gewinnzahlen
-SupportedLotteries welche Lotterien werden unterstützt
-SupportedLotteries welche Lotterien kann ich verwenden
-SupportedLotteries was sind die unterstützten Lotterien
-AskForLotteryJackpot was ist die aktuelle Gewinnsumme in {lotteryName}
-AskForLotteryJackpot nach der aktuellen Gewinnsumme in {lotteryName}
-AskForLotteryJackpot wie hoch ist der Jackpott von {lotteryName}
-AskForLotteryJackpot nach dem Jackpott von {lotteryName}
-AskForLotteryJackpot nach dem aktuellen Jackpott von {lotteryName}
-AskForNextLotteryDrawing nach der nächsten Ziehung von {lotteryName}
-AskForNextLotteryDrawing nach der nächsten {lotteryName} Ziehung
-AskForNextLotteryDrawing wann ist die nächste Ziehung {lotteryName}
-AskForNextLotteryDrawing wann ist die nächste {lotteryName} Ziehung
-ThanksIntent Danke
-EndIntent Beenden
+NullNumberIntent zero
+ChangeLotteryNumberIntent correct last number
+ChangeLotteryNumberIntent correct
+ChangeLotteryNumberIntent change
+ChangeLotteryNumberIntent revise
+AskForLatestLotteryNumbers what are the numbers in the last drawing of {lotteryName}
+AskForLatestLotteryNumbers what are the drawn numbers for {lotteryName}
+AskForLatestLotteryNumbers for the latest drawn numbers of {lotteryName}
+SupportedLotteries which lotteries are supported
+SupportedLotteries which lotteries can I use
+SupportedLotteries what are the supported lotteries
+AskForLotteryJackpot what is the current jackpot for {lotteryName}
+AskForLotteryJackpot for the current jackpot of {lotteryName}
+AskForLotteryJackpot how big is the jackpot of {lotteryName}
+AskForLotteryJackpot for the jackpot of {lotteryName}
+AskForNextLotteryDrawing for the next drawing of {lotteryName}
+AskForNextLotteryDrawing when is the next drawing of {lotteryName}
+AskForNextLotteryDrawing when is the next {lotteryName} drawing
+ThanksIntent Thanks
+EndIntent End

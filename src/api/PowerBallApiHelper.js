@@ -7,6 +7,9 @@ var locale="";
 
 function PowerBallApiHelper(currentLocale) {
     locale = currentLocale;
+
+    if(!isGermanLang())
+        LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/powerBall";
 }
 
 function invokeBackend(url) {
@@ -87,16 +90,20 @@ PowerBallApiHelper.prototype.getLastPrizeByRank = function(myRank) {
             if(json.last.odds['rank'+myRank].prize > 0) {
                 var price = json.last.odds['rank'+myRank].prize + "";
                 var output = ""
-                var priceNoPowerPlay = price.substring(0, price.length-2) + "," + price.substring(price.length-2);
+                var priceNoPowerPlay = price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
 
                 output += priceNoPowerPlay;
 
                 var multiplikator = myRank == 1 ? 0 : (myRank == 2 ? 2 : json.last.powerplay);
 
                 if(multiplikator > 0) {
+                    if(isGermanLang())
                     output += " Euro. Wenn du zusätzlich noch PowerPlay aktiviert hast, beträgt dein Gewinn ";
+                    else
+                        output += " Euro. If you additionally activated PowerPlay, the amount you won is: ";
+
                     var priceX = (price * multiplikator) + "";
-                    output += priceX.substring(0, priceX.length-2) + "," + priceX.substring(priceX.length-2);
+                    output += priceX.substring(0, priceX.length-2) + (isGermanLang() ? "," : ".") + priceX.substring(priceX.length-2);
                 }
 
                 return output;

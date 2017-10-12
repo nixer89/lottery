@@ -7,6 +7,9 @@ var locale="";
 
 function EuroJackpotApiHelper(currentLocale) {
     locale = currentLocale;
+
+    if(!isGermanLang())
+        LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/euroJackpot";
 }
 
 function invokeBackend(url) {
@@ -86,7 +89,7 @@ EuroJackpotApiHelper.prototype.getLastPrizeByRank = function(myRank) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
             if(json.last.odds['rank'+myRank].prize > 0) {
                 var price = json.last.odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + "," + price.substring(price.length-2);
+                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
             } else {
                 return null;
             }

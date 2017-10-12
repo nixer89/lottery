@@ -5,56 +5,52 @@
 
 var locale = "";
 
-function SkillHelper(currentLocale) {
-    locale = currentLocale;
-}
-
 //LOTTERY CONFIG START
 var GermanLotteryApi = require('./api/GermanLotteryApiHelper');
 var GermanLotteryDb = require('./db/GermanLotteryDbHelper');
-var germanLottoApi = new GermanLotteryApi(locale);
+var germanLottoApi;
 var germanLottoDb = new GermanLotteryDb();
-var GERMAN_LOTTERY = (isGermanLang() ? "sechs aus neun und vierzig" : "german lotto");
-var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "6aus49", "additionalNumberName": (isGermanLang() ? "Superzahl" : "SuperBall"), "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 49, "minRangeAdditional": 0, "maxRangeAdditional": 9};
+var GERMAN_LOTTERY = "sechs aus neun und vierzig";
+var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "6aus49", "additionalNumberName": "Superzahl", "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 49, "minRangeAdditional": 0, "maxRangeAdditional": 9};
 
 var Spiel77Api = require('./api/Spiel77ApiHelper');
 var Spiel77Db = require('./db/Spiel77DbHelper');
-var spiel77Api = new Spiel77Api(locale);
+var spiel77Api;
 var spiel77Db = new Spiel77Db();
 var SPIEL77 = "spiel sieben und siebzig";
 var Spiel77Config = { "lotteryName": SPIEL77, "speechLotteryName": SPIEL77, "additionalNumberName": "", "isZusatzLottery": true, "numberCountMain": 7, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
 
 var Super6Api = require('./api/Super6ApiHelper');
 var Super6Db = require('./db/Super6DbHelper');
-var super6Api = new Super6Api(locale);
+var super6Api;
 var super6Db = new Super6Db();
 var SUPER6 = "super sechs";
 var Super6Config = { "lotteryName": SUPER6, "speechLotteryName": SUPER6, "additionalNumberName": "", "isZusatzLottery": true, "numberCountMain": 7, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
 
 var EuroJackpotApi = require('./api/EuroJackpotApiHelper');
 var EuroJackpotDb = require('./db/EuroJackpotDbHelper');
-var euroJackPottApi = new EuroJackpotApi(locale);
+var euroJackPottApi;
 var euroJackPottDb = new EuroJackpotDb();
 var EUROJACKPOT = "euro jackpot";
-var EuroJackpotConfig = { "lotteryName": EUROJACKPOT, "speechLotteryName": "Eurojackpott", "additionalNumberName":  (isGermanLang() ? "Eurozahl" : "euronumber"), "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50, "minRangeAdditional": 1, "maxRangeAdditional": 10};
+var EuroJackpotConfig = { "lotteryName": EUROJACKPOT, "speechLotteryName": "Eurojackpott", "additionalNumberName": "Eurozahl", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50, "minRangeAdditional": 1, "maxRangeAdditional": 10};
 
 var EuroMillionsApi = require('./api/EuroMillionsApiHelper');
 var EuroMillionsDb = require('./db/EuroMillionsDbHelper');
-var euroMillionsApi = new EuroMillionsApi(locale);
+var euroMillionsApi;
 var euroMillionsDb = new EuroMillionsDb();
 var EUROMILLIONS = "euro millions";
-var EuroMillionsConfig = { "lotteryName": EUROMILLIONS, "speechLotteryName": "Euromillions", "additionalNumberName":  (isGermanLang() ? "Sternzahl" : "star"), "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50,"minRangeAdditional": 1, "maxRangeAdditional": 12};
+var EuroMillionsConfig = { "lotteryName": EUROMILLIONS, "speechLotteryName": "Euromillions", "additionalNumberName":  "Sternzahl", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50,"minRangeAdditional": 1, "maxRangeAdditional": 12};
 
 var PowerBallApi = require('./api/PowerBallApiHelper');
 var PowerBallDb = require('./db/PowerBallDbHelper');
-var powerBallApi = new PowerBallApi(locale);
+var powerBallApi;
 var powerBallDb = new PowerBallDb();
 var POWERBALL = "powerball";
 var PowerBallConfig = { "lotteryName": POWERBALL, "speechLotteryName": "PowerBall", "additionalNumberName": "Powerball", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 69,"minRangeAdditional": 1, "maxRangeAdditional": 26};
 
 var MegaMillionsApi = require('./api/MegaMillionsApiHelper');
 var MegaMillionsDb = require('./db/MegaMillionsDbHelper');
-var megaMillionsApi = new MegaMillionsApi(locale);
+var megaMillionsApi;
 var megaMillionsDb = new MegaMillionsDb();
 var MEGAMILLIONS = "mega millions";
 var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "MegaMillions", "additionalNumberName": "Megaball", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 75,"minRangeAdditional": 1, "maxRangeAdditional": 15};
@@ -62,26 +58,66 @@ var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "Me
 
 var supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS]
 
+function SkillHelper(currentLocale) {
+    locale = currentLocale;
+
+    germanLottoApi = new GermanLotteryApi(locale);
+    spiel77Api = new Spiel77Api(locale);
+    super6Api = new Super6Api(locale);
+    euroJackPottApi = new EuroJackpotApi(locale);
+    euroMillionsApi = new EuroMillionsApi(locale);
+    powerBallApi= new PowerBallApi(locale);
+    megaMillionsApi = new MegaMillionsApi(locale);
+
+    if(!isGermanLang()) {
+        GERMAN_LOTTERY = "german lotto";
+        GermanLottoConfig.lotteryName = GERMAN_LOTTERY;
+        GermanLottoConfig.speechLotteryName = "german lotto";
+        GermanLottoConfig.additionalNumberName = "SupberBall";
+
+        EuroJackpotConfig.additionalNumberName = "euronumber";
+        EuroMillionsConfig.additionalNumberName = "star";
+
+        supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS]
+    }
+}
+
 function isGermanLang() {
     return 'de-DE' == locale;
 }
 
 SkillHelper.prototype.isLotteryNameSupported = function(lotteryName) {
-    return supportedLotteries.indexOf(lotteryName) != -1;
+    return supportedLotteries.indexOf(lotteryName.toLowerCase()) != -1;
 }
 
 SkillHelper.prototype.getCorrectNamingOfNumber = function(number) {
-    switch(number) {
-        case 1: return "erste";
-        case 2: return "zweite";
-        case 3: return "dritte";
-        case 4: return "vierte";
-        case 5: return "fünfte";
-        case 6: return "sechste";
-        case 7: return "siebte";
-        case 8: return "achte";
-        case 9: return "neunte";
-        case 10: return "zehnte";
+
+    if(isGermanLang()) {
+        switch(number) {
+            case 1: return "erste";
+            case 2: return "zweite";
+            case 3: return "dritte";
+            case 4: return "vierte";
+            case 5: return "fünfte";
+            case 6: return "sechste";
+            case 7: return "siebte";
+            case 8: return "achte";
+            case 9: return "neunte";
+            case 10: return "zehnte";
+        }
+    } else {
+        switch(number) {
+            case 1: return "first";
+            case 2: return "second";
+            case 3: return "third";
+            case 4: return "fourth";
+            case 5: return "fifth";
+            case 6: return "sixth";
+            case 7: return "seventh";
+            case 8: return "eighth";
+            case 9: return "ninth";
+            case 10: return "tenth";
+        }
     }
 }
 
@@ -98,15 +134,15 @@ SkillHelper.prototype.getSuper6LotteryName = function() {
 }
 
 SkillHelper.prototype.getCorrectPreWordAdditionalNumber = function(lotteryName) {
-    switch(lotteryName) {
+    switch(lotteryName.toLowerCase()) {
         case POWERBALL:
-        case MEGAMILLIONS: return "dein ";
-        default: return "deine ";
+        case MEGAMILLIONS: return (isGermanLang() ? "dein " : "your ");
+        default: return (isGermanLang() ? "deine " : "your ");
     }
 }
 
 SkillHelper.prototype.getConfigByUtterance = function(lotteryName) {
-    switch(lotteryName) {
+    switch(lotteryName.toLowerCase()) {
         case GERMAN_LOTTERY: return GermanLottoConfig;
         case SPIEL77: return Spiel77Config;
         case SUPER6: return Super6Config;
@@ -119,7 +155,7 @@ SkillHelper.prototype.getConfigByUtterance = function(lotteryName) {
 }
 
 SkillHelper.prototype.getLotteryApiHelper = function(lotteryName) {
-    switch(lotteryName) {
+    switch(lotteryName.toLowerCase()) {
         case GERMAN_LOTTERY: return germanLottoApi;
         case SPIEL77: return spiel77Api;
         case SUPER6: return super6Api;
@@ -132,7 +168,7 @@ SkillHelper.prototype.getLotteryApiHelper = function(lotteryName) {
 }
 
 SkillHelper.prototype.getLotteryDbHelper = function(lotteryName) {
-    switch(lotteryName) {
+    switch(lotteryName.toLowerCase()) {
         case GERMAN_LOTTERY: return germanLottoDb;
         case SPIEL77: return spiel77Db;
         case SUPER6: return super6Db;
