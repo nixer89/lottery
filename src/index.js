@@ -607,7 +607,7 @@ function appendSuper6Win(session, response, speechOutput) {
                     skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
                         var moneySpeech = ""
                         if(money && money.length > 0)
-                            moneySpeech = props.amount_you_won + money + props.amount_currency;
+                            moneySpeech = props.amount_you_won + money;
                         else
                             moneySpeech = props.no_amount_set_yet;
                             

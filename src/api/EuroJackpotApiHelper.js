@@ -25,20 +25,24 @@ function isGermanLang() {
     return 'de-DE' == locale;
 }
 
+function isUSLang() {
+    return 'en-US' == locale;
+}
+
 EuroJackpotApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
             var lotteryDateString = "";
-            if(isGermanLang())
-                lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+            if(isUSLang())
+                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.month + "." + json.last.date.day + "." + json.last.date.year;
             else
                 lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
 
             numbersAndDate[0] = stringifyArray(json.last.numbers);
             numbersAndDate[1] = stringifyArray(json.last.euroNumbers);
             numbersAndDate[2] = lotteryDateString;
-            numbersAndDate[3] = json.last.currency;
+            numbersAndDate[3] = "";//json.last.currency;
 
             return numbersAndDate;
         }
@@ -66,8 +70,10 @@ EuroJackpotApiHelper.prototype.getNextLotteryDrawingDate = function() {
         if(json) {
             if(isGermanLang())
                 return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
-            else
+            else if(isUSLang())
                 return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+            else
+                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
     }).catch(function(err) {
         console.log(err);
@@ -89,7 +95,7 @@ EuroJackpotApiHelper.prototype.getLastPrizeByRank = function(myRank) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
             if(json.last.odds['rank'+myRank].prize > 0) {
                 var price = json.last.odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " Euro";
+                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " Euro.";
             } else {
                 return null;
             }
@@ -151,13 +157,13 @@ EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, m
         default:
             if(isGermanLang()) {
                 speechOutput += "In der letzten Ziehung Eurojackpott von " + date + " hast du ";
-                speechOutput += euroJackpotOdds['rank'+myRank][0] == 1 ? "eine richtige Zahl" : euroJackpotOdds['rank'+myRank][0] + " richtige Zahlen";
+                speechOutput += (euroJackpotOdds['rank'+myRank][0] == 1 ? "eine richtige Zahl" : euroJackpotOdds['rank'+myRank][0]) + " richtige Zahlen";
                 speechOutput += (euroJackpotOdds['rank'+myRank][1] == 1 ? " und eine Eurozahl richtig!" : "");
                 speechOutput += (euroJackpotOdds['rank'+myRank][1] == 2 ? " und zwei Eurozahlen richtig!" : "");
                 speechOutput += "! Herzlichen Glückwunsch! " + moneySpeech;
             } else {
                 speechOutput += "The last drawing of euro jackpot was on " + date + ". You have ";
-                speechOutput += euroJackpotOdds['rank'+myRank][0] == 1 ? "one matching number" : euroJackpotOdds['rank'+myRank][0] + " matching numbers";
+                speechOutput += (euroJackpotOdds['rank'+myRank][0] == 1 ? "one matching number" : euroJackpotOdds['rank'+myRank][0]) + " matching numbers";
                 speechOutput += (euroJackpotOdds['rank'+myRank][1] == 1 ? " and one matching euro number!" : "");
                 speechOutput += (euroJackpotOdds['rank'+myRank][1] == 2 ? " and two matching euro numbers!" : "");
                 speechOutput += "! Congratulation! " + moneySpeech;

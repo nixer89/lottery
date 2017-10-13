@@ -199,7 +199,7 @@ var properties =
         amount_you_won: "The amount you won is: ",
         amount_currency: " Euro.",
         no_amount_set_yet: "The amount you won is not available yet!",
-        last_drawing_request_failed: "I´m soryy but the request of the latest drawn numbers failed.",
+        last_drawing_request_failed: "I´m sorry but the request of the latest drawn numbers failed.",
         add_numbers_before_asking_for_win_1: "To check if you won in the last drawing, you need to add your ",
         add_numbers_before_asking_for_win_2: " numbers first. Just say: 'Add field ",
 

@@ -25,20 +25,24 @@ function isGermanLang() {
     return 'de-DE' == locale;
 }
 
+function isUSLang() {
+    return 'en-US' == locale;
+}
+
 Super6ApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
             var lotteryDateString = "";
-            if(isGermanLang())
-                lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+            if(isUSLang())
+                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.month + "." + json.last.date.day + "." + json.last.date.year;
             else
                 lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
 
             numbersAndDate[0] = stringifyArray(json.last.super6.split(""));
             numbersAndDate[1] = -1;
             numbersAndDate[2] = lotteryDateString;
-            numbersAndDate[3] = json.last.currency;
+            numbersAndDate[3] = "";//json.last.currency;
 
             return numbersAndDate;
         }
@@ -66,6 +70,8 @@ Super6ApiHelper.prototype.getNextLotteryDrawingDate = function() {
         if(json) {
             if(isGermanLang())
                 return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+            else if(isUSLang())
+                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
             else
                 return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
@@ -89,7 +95,7 @@ Super6ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
         if(json && json.last.super6Odds && json.last.super6Odds['rank'+myRank]) {
             if(json.last.super6Odds['rank'+myRank].prize > 0) {
                 var price = json.last.super6Odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " Euro";
+                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " Euro.";
             } else {
                 return null;
             }

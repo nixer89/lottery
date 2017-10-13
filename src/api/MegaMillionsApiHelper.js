@@ -26,20 +26,24 @@ function isGermanLang() {
     return 'de-DE' == locale;
 }
 
+function isUSLang() {
+    return 'en-US' == locale;
+}
+
 MegaMillionsApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
             var lotteryDateString = "";
-            if(isGermanLang())
-                lotteryDateString = json.last.date.dayOfWeek + ", den " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+            if(isUSLang())
+                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.month + "." + json.last.date.day + "." + json.last.date.year;
             else
                 lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
 
             numbersAndDate[0] = stringifyArray(json.last.numbers);
             numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.megaballs));
             numbersAndDate[2] = lotteryDateString;
-            numbersAndDate[3] = json.last.currency;
+            numbersAndDate[3] = "";//json.last.currency;
 
             return numbersAndDate;
         }
@@ -67,6 +71,8 @@ MegaMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
         if(json) {
             if(isGermanLang())
                 return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+            else if(isUSLang())
+                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
             else
                 return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
@@ -151,15 +157,15 @@ MegaMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, 
             break;
         case 1:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung MegaMillions von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch den Megaball hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += "In der letzten Ziehung MegaMillions von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch den Megaball hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! ";
             else
-                speechOutput += "The last drawing of megamillions was on " + date + ". And you won the jackpot! You predicted all numbers and the megaball correctly! Let´s get the party started! Congratulation! " + moneySpeech ;
+                speechOutput += "The last drawing of megamillions was on " + date + ". And you won the jackpot! You predicted all numbers and the megaball correctly! Let´s get the party started! Congratulation! ";
             break;
         default:
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung MegaMillions von " + date + " hast du " + megaMillionsOdds['rank'+myRank][0] + " richtige Zahlen" + (megaMillionsOdds['rank'+myRank][1] == 1 ? " und sogar den Megaball richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of megamillions was on " + date + ". You have " + germanOdds['rank'+myRank][0] + " matching numbers" + (germanOdds['rank'+myRank][1] == 1 ? " and the megaball does match as well!" : "!") + " Congratulation! " + moneySpeech;
+                speechOutput += "The last drawing of megamillions was on " + date + ". You have " + megaMillionsOdds['rank'+myRank][0] + " matching numbers" + (megaMillionsOdds['rank'+myRank][1] == 1 ? " and the megaball does match as well!" : "!") + " Congratulation! " + moneySpeech;
     }
 
     return speechOutput;
