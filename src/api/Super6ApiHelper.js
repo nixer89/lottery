@@ -89,7 +89,7 @@ Super6ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
         if(json && json.last.super6Odds && json.last.super6Odds['rank'+myRank]) {
             if(json.last.super6Odds['rank'+myRank].prize > 0) {
                 var price = json.last.super6Odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
+                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " Euro";
             } else {
                 return null;
             }

@@ -3,6 +3,7 @@
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/powerBall";
 var powerBallOdds = {"rank1": [5,1], "rank2": [5,0], "rank3": [4,1], "rank4": [4,0], "rank5": [3,1], "rank6": [3,0], "rank7": [2,1], "rank8": [1,1], "rank9": [0,1]};
+var powerBallPrizes = {"rank1": 0, "rank2": 1000000, "rank3": 50000, "rank4": 100, "rank5": 100, "rank6": 7, "rank7": 7, "rank8": 4, "rank9": 4};
 var locale="";
 
 function PowerBallApiHelper(currentLocale) {
@@ -88,9 +89,9 @@ PowerBallApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
             if(json.last.odds['rank'+myRank].prize > 0) {
-                var price = json.last.odds['rank'+myRank].prize + "";
+                var price = powerBallPrizes['rank'+myRank];
                 var output = ""
-                var priceNoPowerPlay = price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
+                var priceNoPowerPlay = price;
 
                 output += priceNoPowerPlay;
 
@@ -98,12 +99,12 @@ PowerBallApiHelper.prototype.getLastPrizeByRank = function(myRank) {
 
                 if(multiplikator > 0) {
                     if(isGermanLang())
-                    output += " Euro. Wenn du zusätzlich noch PowerPlay aktiviert hast, beträgt dein Gewinn ";
+                        output += " $. Wenn du zusätzlich noch PowerPlay aktiviert hast, beträgt dein Gewinn ";
                     else
-                        output += " Euro. If you additionally activated PowerPlay, the amount you won is: ";
+                        output += " $. If you additionally activated PowerPlay, the amount you won is: ";
 
                     var priceX = (price * multiplikator) + "";
-                    output += priceX.substring(0, priceX.length-2) + (isGermanLang() ? "," : ".") + priceX.substring(priceX.length-2);
+                    output += priceX + " $."
                 }
 
                 return output;

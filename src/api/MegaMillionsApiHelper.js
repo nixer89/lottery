@@ -2,7 +2,8 @@
 
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/megaMillions";
-var megaMilltionsOdds = {"rank1": [5,1], "rank2": [5,0], "rank3": [4,1], "rank4": [4,0], "rank5": [3,1], "rank6": [3,0], "rank7": [2,1], "rank8": [1,1], "rank9": [0,1]};
+var megaMillionsOdds = {"rank1": [5,1], "rank2": [5,0], "rank3": [4,1], "rank4": [4,0], "rank5": [3,1], "rank6": [3,0], "rank7": [2,1], "rank8": [1,1], "rank9": [0,1]};
+var megaMillionsPrizes = {"rank1": 0 , "rank2": 1000000, "rank3": 5000, "rank4": 500, "rank5": 50, "rank6": 5, "rank7": 5, "rank8": 2, "rank9": 1};
 var locale="";
 
 function MegaMillionsApiHelper(currentLocale) {
@@ -87,28 +88,26 @@ MegaMillionsApiHelper.prototype.getCurrentJackpot =function() {
 MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
-            if(json.last.odds['rank'+myRank].prize > 0) {
-                var price = json.last.odds['rank'+myRank].prize + "";
-                var output = ""
-                var priceNoPowerPlay = price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
+            var price = megaMillionsPrizes['rank'+myRank];
+            var output = ""
+            var priceNoPowerPlay = price;
 
-                output += priceNoPowerPlay;
-                var multiplikator = myRank == 1 ? 0 : json.last.megaplier;
+            output += priceNoPowerPlay;
+            var multiplikator = myRank == 1 ? 0 : json.last.megaplier;
 
-                if(multiplikator > 0) {
-                    if(isGermanLang())
-                        output += " Euro. Wenn du zusätzlich noch MegaPlier aktiviert hast, beträgt dein Gewinn ";
-                    else
-                        output += " Euro. If you additionally activated MegaPlier, the amount you won is: ";
+            if(multiplikator > 0) {
+                if(isGermanLang())
+                    output += " $. Wenn du zusätzlich noch MegaPlier aktiviert hast, beträgt dein Gewinn ";
+                else
+                    output += " $. If you additionally activated MegaPlier, the amount you won is: ";
 
-                    var priceX = (price * multiplikator) + "";
-                    output += priceX.substring(0, priceX.length-2) + (isGermanLang() ? "," : ".") + priceX.substring(priceX.length-2);
-                }
-
-                return output;
-            } else {
-                return null;
+                var priceX = myRank == 1 ? 0 : (price * multiplikator);
+                output += priceX + " $";
             }
+
+            return output;
+        } else {
+            return null;
         }
     }).catch(function(err) {
         console.log(err);
@@ -117,9 +116,9 @@ MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
 
 MegaMillionsApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
-    for(var i = 1; i <= Object.keys(megaMilltionsOdds).length; i++)
+    for(var i = 1; i <= Object.keys(megaMillionsOdds).length; i++)
     {
-        if(megaMilltionsOdds['rank'+i][0] == myRank[0] && megaMilltionsOdds['rank'+i][1] == myRank[1])
+        if(megaMillionsOdds['rank'+i][0] == myRank[0] && megaMillionsOdds['rank'+i][1] == myRank[1])
             return i;
     }
 
@@ -158,7 +157,7 @@ MegaMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, 
             break;
         default:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung MegaMillions von " + date + " hast du " + megaMilltionsOdds['rank'+myRank][0] + " richtige Zahlen" + (megaMilltionsOdds['rank'+myRank][1] == 1 ? " und sogar den Megaball richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += "In der letzten Ziehung MegaMillions von " + date + " hast du " + megaMillionsOdds['rank'+myRank][0] + " richtige Zahlen" + (megaMillionsOdds['rank'+myRank][1] == 1 ? " und sogar den Megaball richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
             else
                 speechOutput += "The last drawing of megamillions was on " + date + ". You have " + germanOdds['rank'+myRank][0] + " matching numbers" + (germanOdds['rank'+myRank][1] == 1 ? " and the megaball does match as well!" : "!") + " Congratulation! " + moneySpeech;
     }

@@ -89,7 +89,7 @@ Spiel77ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
         if(json && json.last.spiel77Odds && json.last.spiel77Odds['rank'+myRank]) {
             if(json.last.spiel77Odds['rank'+myRank].prize > 0) {
                 var price = json.last.spiel77Odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
+                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " Euro";
             } else {
                 return null;
             }
