@@ -44,6 +44,8 @@ PowerBallApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
             numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.powerballs));
             numbersAndDate[2] = lotteryDateString;
             numbersAndDate[3] = "";//json.last.currency;
+            numbersAndDate[4] = "powerplay";
+            numbersAndDate[5] = json.last.powerplay;
 
             return numbersAndDate;
         }
@@ -58,6 +60,8 @@ PowerBallApiHelper.prototype.getLastLotteryNumbers = function() {
             var numbers = [];
             numbers[0] = stringifyArray(json.last.numbers);
             numbers[1] = stringifyArray(Array(1).fill(json.last.powerballs));
+            numbers[2] = "powerplay";
+            numbers[3] = json.last.powerplay;
 
             return numbers;
         }
@@ -66,15 +70,22 @@ PowerBallApiHelper.prototype.getLastLotteryNumbers = function() {
     });
 };
 
+PowerBallApiHelper.prototype.getCorrectArticle = function() {
+    if(isGermanLang())
+        return "Der ";
+    else
+        return "The ";
+}
+
 PowerBallApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             if(isGermanLang())
-                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
             else if(isUSLang())
-                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
             else
-                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
     }).catch(function(err) {
         console.log(err);
@@ -84,7 +95,11 @@ PowerBallApiHelper.prototype.getNextLotteryDrawingDate = function() {
 PowerBallApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.jackpot;
+            //return json.next.jackpot;
+            if(isGermanLang())
+                return "Der aktuelle Jackpot kann nicht bestimmt werden.";
+            else
+                return "The current jackpot cannot be determined";
         }
     }).catch(function(err) {
         console.log(err);
@@ -93,35 +108,41 @@ PowerBallApiHelper.prototype.getCurrentJackpot =function() {
 
 PowerBallApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
-        if(json && json.last.odds && json.last.odds['rank'+myRank]) {
-            if(json.last.odds['rank'+myRank].prize > 0) {
-                var price = powerBallPrizes['rank'+myRank];
-                var output = ""
-                var priceNoPowerPlay = price;
-
-                output += priceNoPowerPlay;
-
-                var multiplikator = myRank == 1 ? 0 : (myRank == 2 ? 2 : json.last.powerplay);
-
-                if(multiplikator > 0) {
-                    if(isGermanLang())
-                        output += " $. Wenn du zusätzlich noch PowerPlay aktiviert hast, beträgt dein Gewinn ";
-                    else
-                        output += " $. If you additionally activated PowerPlay, the amount you won is: ";
-
-                    var priceX = (price * multiplikator) + "";
-                    output += priceX + " $."
-                }
-
-                return output;
+        if(json) {
+            if(myRank == 1 && json.last.odds && json.last.odds['rank'+myRank] && json.last.odds['rank'+myRank].prize > 0) {
+                return formatPrize(json.last.odds['rank'+myRank].prize, json.last.powerplay, myRank);
+            } else if(powerBallPrizes['rank'+myRank] && powerBallPrizes['rank'+myRank].prize > 0){ //no odds yet -> check if rank is in known prize
+                return formatPrize(powerBallPrizes['rank'+myRank], json.last.powerplay, myRank);
             } else {
                 return null;
             }
         }
+        else return null;
     }).catch(function(err) {
         console.log(err);
     });
 };
+
+function formatPrize(prize, powerplay, myRank) {
+    var output = ""
+    var prizeNoPowerPlay = prize;
+
+    output += prizeNoPowerPlay;
+
+    var multiplikator = myRank == 1 ? 0 : (myRank == 2 ? 2 : powerplay);
+
+    if(multiplikator > 0) {
+        if(isGermanLang())
+            output += " $. Wenn du zusätzlich noch PowerPlay aktiviert hast, beträgt dein Gewinn ";
+        else
+            output += " $. If you additionally activated PowerPlay, the amount you won is: ";
+
+        var prizeX = (prize * multiplikator) + "";
+        output += prizeX + " $."
+    }
+
+    return output;
+}
 
 PowerBallApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
@@ -134,17 +155,18 @@ PowerBallApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, n
     return 1000;
 };
 
-PowerBallApiHelper.prototype.createSSMLOutputForField = function(field) {
-  return this.createSSMLOutputForNumbers(field[0], field[1]);
-};
-
-PowerBallApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+PowerBallApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
     var speakOutput = "";
+    var mainNumbers = numbers[0];
+    var addNumbers = numbers[1];
     
     for(var i = 0; i < mainNumbers.length; i++)
         speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
         
     speakOutput+=". Powerball:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
+
+    if(numbers[4] && numbers[5])
+        speakOutput += numbers[4] + (isGermanLang() ? " ist " : " is ") + numbers[5] + ".<break time=\"500ms\"/>";
     
     return speakOutput;
 };

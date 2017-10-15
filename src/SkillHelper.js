@@ -32,14 +32,14 @@ var EuroJackpotDb = require('./db/EuroJackpotDbHelper');
 var euroJackPottApi;
 var euroJackPottDb = new EuroJackpotDb();
 var EUROJACKPOT = "euro jackpot";
-var EuroJackpotConfig = { "lotteryName": EUROJACKPOT, "speechLotteryName": "Eurojackpott", "additionalNumberName": "Eurozahl", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50, "minRangeAdditional": 1, "maxRangeAdditional": 10};
+var EuroJackpotConfig = { "lotteryName": EUROJACKPOT, "speechLotteryName": "euro jackpot", "additionalNumberName": "Eurozahl", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50, "minRangeAdditional": 1, "maxRangeAdditional": 10};
 
 var EuroMillionsApi = require('./api/EuroMillionsApiHelper');
 var EuroMillionsDb = require('./db/EuroMillionsDbHelper');
 var euroMillionsApi;
 var euroMillionsDb = new EuroMillionsDb();
 var EUROMILLIONS = "euro millions";
-var EuroMillionsConfig = { "lotteryName": EUROMILLIONS, "speechLotteryName": "Euromillions", "additionalNumberName":  "Sternzahl", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50,"minRangeAdditional": 1, "maxRangeAdditional": 12};
+var EuroMillionsConfig = { "lotteryName": EUROMILLIONS, "speechLotteryName": "euro millions", "additionalNumberName":  "Sternzahl", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 2, "minRangeMain": 1, "maxRangeMain": 50,"minRangeAdditional": 1, "maxRangeAdditional": 12};
 
 var PowerBallApi = require('./api/PowerBallApiHelper');
 var PowerBallDb = require('./db/PowerBallDbHelper');
@@ -53,7 +53,7 @@ var MegaMillionsDb = require('./db/MegaMillionsDbHelper');
 var megaMillionsApi;
 var megaMillionsDb = new MegaMillionsDb();
 var MEGAMILLIONS = "mega millions";
-var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "MegaMillions", "additionalNumberName": "Megaball", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 75,"minRangeAdditional": 1, "maxRangeAdditional": 15};
+var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "mega millions", "additionalNumberName": "Megaball", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 75,"minRangeAdditional": 1, "maxRangeAdditional": 15};
 //LOTTERY CONFIG END
 
 var supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS]
@@ -72,8 +72,16 @@ function SkillHelper(currentLocale) {
     if(!isGermanLang()) {
         GERMAN_LOTTERY = "german lotto";
         GermanLottoConfig.lotteryName = GERMAN_LOTTERY;
-        GermanLottoConfig.speechLotteryName = "german lotto";
-        GermanLottoConfig.additionalNumberName = "SupberBall";
+        GermanLottoConfig.speechLotteryName = GERMAN_LOTTERY;
+        GermanLottoConfig.additionalNumberName = "SuperBall";
+
+        SPIEL77 = "game seventyseven";
+        Spiel77Config.lotteryName = SPIEL77;
+        Spiel77Config.speechLotteryName = SPIEL77;
+
+        SUPER6 = "super 6";
+        Super6Config.lotteryName = SUPER6;
+        Super6Config.speechLotteryName = SUPER6;
 
         EuroJackpotConfig.additionalNumberName = "euronumber";
         EuroMillionsConfig.additionalNumberName = "star";

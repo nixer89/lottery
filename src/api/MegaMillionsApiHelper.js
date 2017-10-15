@@ -44,6 +44,8 @@ MegaMillionsApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
             numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.megaballs));
             numbersAndDate[2] = lotteryDateString;
             numbersAndDate[3] = "";//json.last.currency;
+            numbersAndDate[4] = "megaplier";
+            numbersAndDate[5] = json.last.megaplier;
 
             return numbersAndDate;
         }
@@ -58,6 +60,8 @@ MegaMillionsApiHelper.prototype.getLastLotteryNumbers = function() {
             var numbers = [];
             numbers[0] = stringifyArray(json.last.numbers);
             numbers[1] = stringifyArray(Array(1).fill(json.last.megaballs));
+            numbers[2] = "megaplier";
+            numbers[3] = json.last.megaplier;
 
             return numbers;
         }
@@ -66,15 +70,22 @@ MegaMillionsApiHelper.prototype.getLastLotteryNumbers = function() {
     });
 };
 
+MegaMillionsApiHelper.prototype.getCorrectArticle = function() {
+    if(isGermanLang())
+        return "Der ";
+    else
+        return "The ";
+}
+
 MegaMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             if(isGermanLang())
-                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
             else if(isUSLang())
-                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
             else
-                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
     }).catch(function(err) {
         console.log(err);
@@ -84,7 +95,11 @@ MegaMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
 MegaMillionsApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.jackpot;
+            //return json.next.jackpot;
+            if(isGermanLang())
+                return "Der aktuelle Jackpot kann nicht bestimmt werden.";
+            else
+                return "The current jackpot cannot be determined";
         }
     }).catch(function(err) {
         console.log(err);
@@ -93,25 +108,14 @@ MegaMillionsApiHelper.prototype.getCurrentJackpot =function() {
 
 MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
-        if(json && json.last.odds && json.last.odds['rank'+myRank]) {
-            var price = megaMillionsPrizes['rank'+myRank];
-            var output = ""
-            var priceNoPowerPlay = price;
-
-            output += priceNoPowerPlay;
-            var multiplikator = myRank == 1 ? 0 : json.last.megaplier;
-
-            if(multiplikator > 0) {
-                if(isGermanLang())
-                    output += " $. Wenn du zusätzlich noch MegaPlier aktiviert hast, beträgt dein Gewinn ";
-                else
-                    output += " $. If you additionally activated MegaPlier, the amount you won is: ";
-
-                var priceX = myRank == 1 ? 0 : (price * multiplikator);
-                output += priceX + " $";
+        if(json) {
+            if(myRank == 1 && json.last.odds && json.last.odds['rank'+myRank] && json.last.odds['rank'+myRank].prize > 0) {
+                return formatPrize(json.last.odds['rank'+myRank].prize, json.last.megaplier, myRank);
+            } else if(megaMillionsPrizes['rank'+myRank] && megaMillionsPrizes['rank'+myRank].prize > 0){ //no odds yet -> check if rank is in known prize
+                return formatPrize(megaMillionsPrizes['rank'+myRank], json.last.megaplier, myRank);
+            } else {
+                return null;
             }
-
-            return output;
         } else {
             return null;
         }
@@ -119,6 +123,26 @@ MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
         console.log(err);
     });
 };
+
+function formatPrize(prize, megaplier, myRank) {
+    var output = ""
+    var prizeNoMegaPlier = prize;
+
+    output += prizeNoMegaPlier;
+    var multiplikator = myRank == 1 ? 0 : megaplier;
+
+    if(multiplikator > 0) {
+        if(isGermanLang())
+            output += " $. Wenn du zusätzlich noch MegaPlier aktiviert hast, beträgt dein Gewinn ";
+        else
+            output += " $. If you additionally activated MegaPlier, the amount you won is: ";
+
+        var prizeX = myRank == 1 ? 0 : (prize * multiplikator);
+        output += prizeX + " $";
+    }
+
+    return output;
+}
 
 MegaMillionsApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
@@ -131,16 +155,18 @@ MegaMillionsApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain
     return 1000;
 };
 
-MegaMillionsApiHelper.prototype.createSSMLOutputForField = function(field) {
-  return this.createSSMLOutputForNumbers(field[0], field[1]);
-};
-
-MegaMillionsApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+MegaMillionsApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
     var speakOutput = "";
+    var mainNumbers = numbers[0];
+    var addNumbers = numbers[1];
+
     for(var i = 0; i < mainNumbers.length; i++)
         speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
 
     speakOutput+=". Megaball:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
+
+    if(numbers[4] && numbers[5])
+    speakOutput += numbers[4] + (isGermanLang() ? " ist " : " is ") + numbers[5] + ".<break time=\"500ms\"/>";
     
     return speakOutput;
 };

@@ -69,11 +69,11 @@ EuroJackpotApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             if(isGermanLang())
-                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
             else if(isUSLang())
-                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
             else
-                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
     }).catch(function(err) {
         console.log(err);
@@ -109,6 +109,13 @@ EuroJackpotApiHelper.prototype.getOdds = function() {
     return euroJackpotOdds;
 };
 
+EuroJackpotApiHelper.prototype.getCorrectArticle = function() {
+    if(isGermanLang())
+        return "Die ";
+    else
+        return "The ";
+}
+
 EuroJackpotApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
 
@@ -121,19 +128,18 @@ EuroJackpotApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain,
     return 1000;
 };
 
-EuroJackpotApiHelper.prototype.createSSMLOutputForField = function(field) {
-  return this.createSSMLOutputForNumbers(field[0], field[1]);
-};
-
-EuroJackpotApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+EuroJackpotApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
     var speakOutput = "";
+    var mainNumbers = numbers[0];
+    var addNumbers = numbers[1];
+
     for(var i = 0; i < mainNumbers.length; i++)
         speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
     
     if(isGermanLang())
         speakOutput+=". Eurozahlen: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
     else
-        speakOutput+=". Euro numbers: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> und " + addNumbers[1] + "<break time=\"500ms\"/>";
+        speakOutput+=". Euro numbers: <break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/> and " + addNumbers[1] + "<break time=\"500ms\"/>";
         
     return speakOutput;
 };

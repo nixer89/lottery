@@ -19,6 +19,7 @@ var properties =
         ok: "Okay.",
         ok_your: "Ok, deine ",
         without_guarantee: "Alle Angaben wie immer ohne Gewähr.",
+        is_connector: " ist ",
 
         //welcome prompt
         welcome: "Willkommen bei Mein Lotto, jetzt auch mit Spiel77 und Super6! Sage 'Feld hinzufügen und den Lotterie-Namen' um deine Lottozahlen zu speichern oder sage 'Hilfe' um dir weitere Kommandos in der Alexa App anzusehen.",
@@ -65,7 +66,7 @@ var properties =
 
         //MyCurrentNumbers intent
         current_numbers_1: "Hier sind deine aktuell gespeicherten ",
-        current_numbers_2: " Zahlen: ",
+        current_numbers_2: " Zahlen. ",
         current_numbers_lottery_ticket_number: " Tippscheinnummer ",
         current_numbers_field: "Feld ",
         current_numbers_no_numbers_1: "Du hast noch keine Zahlen für ",
@@ -75,7 +76,7 @@ var properties =
         //AskForLatestLotteryNumbers
         latest_lottery_drawing_numbers: "Hier sind die Gewinnzahlen der letzten Ziehung ",
         latest_lottery_numbers_from: " von ",
-
+        
         //AskForLotteryJackpot
         current_jackpot_size_1: "Der aktuelle Jackpott von ",
         current_jackpot_size_2: " beträgt ",
@@ -159,6 +160,7 @@ var properties =
         ok: "Okay.",
         ok_your: "Okay, your ",
         without_guarantee: "All statements without guarantee.",
+        is_connector: " is ",
 
         //welcome prompt
         welcome: "Welcome to my lottery! Say: 'add field', and the lottery name, to save your lottery numbers. Say: help, to view more commands in the alexa app.",
@@ -205,7 +207,7 @@ var properties =
 
         //MyCurrentNumbers intent
         current_numbers_1 : "Your currently saved ",
-        current_numbers_2 : " numbers are: ",
+        current_numbers_2 : " numbers are. ",
         current_numbers_lottery_ticket_number : "lottery ticket number ",
         current_numbers_field : "Feld ",
         current_numbers_no_numbers_1 : "You haven't saved any numbers for ",

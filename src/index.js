@@ -46,7 +46,9 @@ exports.handler = function (event, context) {
         props = language_properties.getEnglishProperties();
     else if(locale == 'en-GB')
         props = language_properties.getEnglishProperties();
-    else if(locale == 'de-DE')
+    else if(locale == 'en-IN')
+        props = language_properties.getEnglishProperties();
+    else
         props = language_properties.getGermanProperties();
 
     skillHelper = new skillHelperPrototype(locale);
@@ -243,7 +245,7 @@ var Intent_Handler  = {
 
                     for(var i = 0; i < myNumbers.length; i++) {
                         speakOutput += (myNumbers.length > 1 ? (session.attributes.currentConfig.isZusatzLottery ? props.current_numbers_lottery_ticket_number : props.current_numbers_field) + (i+1) : "") + ": <break time=\"500ms\"/>";
-                        speakOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createSSMLOutputForField(myNumbers[i]);
+                        speakOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createSSMLOutputForNumbers(myNumbers[i]);
                         speakOutput += ". ";
                     }
                     speakOutput += "</speak>";
@@ -267,7 +269,7 @@ var Intent_Handler  = {
             skillHelper.getLotteryApiHelper(config.lotteryName).getLastLotteryDateAndNumbers().then(function(numbers) {
                 if(numbers) {
                     var speakOutput = "<speak>" + props.latest_lottery_drawing_numbers + config.speechLotteryName + props.latest_lottery_numbers_from + numbers[2] + ". <break time=\"500ms\"/>";
-                    speakOutput += skillHelper.getLotteryApiHelper(config.lotteryName).createSSMLOutputForNumbers(numbers[0], numbers[1]);
+                    speakOutput += skillHelper.getLotteryApiHelper(config.lotteryName).createSSMLOutputForNumbers(numbers);
                     speakOutput += ". <break time=\"200ms\"/>" + props.without_guarantee + "</speak>";
 
                     response.tell({type:"SSML",speech: speakOutput});
@@ -287,8 +289,10 @@ var Intent_Handler  = {
             var config = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
             
             skillHelper.getLotteryApiHelper(config.lotteryName).getCurrentJackpot().then(function(jackpotSize) {
-                if(jackpotSize) {
+                if(jackpotSize && jackpotSize > 0) {
                     response.tell(props.current_jackpot_size_1 + config.speechLotteryName + props.current_jackpot_size_2 + jackpotSize + props.current_jackpot_size_3);
+                } else if(jackpotSize) {
+                    response.tell(jackpotSize);
                 } else {
                     response.tell(props.current_jackpot_size_error);
                 }
@@ -455,7 +459,7 @@ function doLotteryNumberCheck(response, session, newNumber) {
         response.ask(props.range_check_main_numbers_1 + session.attributes.currentConfig.minRangeMain + props.range_check_main_numbers_2 + session.attributes.currentConfig.maxRangeMain + props.range_check_main_numbers_3, props.range_check_numbers_repromt);
     //alle main numbers angegeben, checke auf range der additional numbers
     else if(session.attributes.newNumbersMain.length == session.attributes.currentConfig.numberCountMain && (newNumber < session.attributes.currentConfig.minRangeAdditional || newNumber > session.attributes.currentConfig.maxRangeAdditional))
-        response.ask(props.range_check_additional_number_1 + session.attributes.currentConfig.additionalNumberName + props.range_check_additional_number_2 + session.attributes.currentConfig.minRangeAdditional + props.range_check_additional_number_3 + session.attributes.currentConfig.maxRangeAdditional + props.range_check_additional_number_4, props.range_check_numbers_repromt)
+        response.ask(skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getCorrectArticle() + session.attributes.currentConfig.additionalNumberName + props.range_check_additional_number_2 + session.attributes.currentConfig.minRangeAdditional + props.range_check_additional_number_3 + session.attributes.currentConfig.maxRangeAdditional + props.range_check_additional_number_4, props.range_check_numbers_repromt)
     //prüfe ob eine main number oder eine additional number schon doppelt sind!
     else if((session.attributes.newNumbersMain.length <= session.attributes.currentConfig.numberCountMain -1 && session.attributes.newNumbersMain.indexOf(newNumber) != -1) ||
                 (session.attributes.newNumbersAdditional.length <= session.attributes.currentConfig.numberCountAdditional-1 && session.attributes.newNumbersAdditional.indexOf(newNumber) != -1))
@@ -477,7 +481,11 @@ function checkWhatNumberIsNext(response, session, newNumber, additionalSpeechInf
     if(lotteryFieldHasMaxLength(session)) {
         session.attributes.newNumbersAdditional = session.attributes.newNumbersAdditional.sort((a, b) => a - b);
         var speakOutput = "<speak>" + props.check_next_number_current_numbers;
-        speakOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createSSMLOutputForNumbers(session.attributes.newNumbersMain, session.attributes.newNumbersAdditional);
+        var numbers = [];
+        numbers[0] = session.attributes.newNumbersMain;
+        numbers[1] = session.attributes.newNumbersAdditional;
+
+        speakOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createSSMLOutputForNumbers(numbers);
         speakOutput += props.check_next_number_ask_correct + "</speak>";
         response.ask({type:"SSML",speech: speakOutput}, props.check_next_number_ask_correct_all_numbers);
 

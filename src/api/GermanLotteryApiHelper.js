@@ -50,6 +50,13 @@ GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     });
 };
 
+GermanLotteryApiHelper.prototype.getCorrectArticle = function() {
+    if(isGermanLang())
+        return "Die ";
+    else
+        return "The ";
+}
+
 GermanLotteryApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
@@ -68,11 +75,11 @@ GermanLotteryApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             if(isGermanLang())
-                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
             else if(isUSLang())
-                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
             else
-                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
     }).catch(function(err) {
         console.log(err);
@@ -115,12 +122,11 @@ GermanLotteryApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMai
     return 1000;
 };
 
-GermanLotteryApiHelper.prototype.createSSMLOutputForField = function(field) {
-  return this.createSSMLOutputForNumbers(field[0], field[1]);
-};
-
-GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
     var speakOutput = "";
+    var mainNumbers = numbers[0];
+    var addNumbers = numbers[1];
+
     for(var i = 0; i < mainNumbers.length; i++)
         speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
     

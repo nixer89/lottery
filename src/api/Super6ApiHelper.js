@@ -3,6 +3,7 @@
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/german6aus49";
 var super6Odds = {"rank1": [6,0], "rank2": [5,0], "rank3": [4,0], "rank4": [3,0], "rank5": [2,0], "rank6": [1,0]};
+var super6Prizes = {"rank1": 0, "rank2": 6666, "rank3": 666, "rank4": 66, "rank5": 6, "rank6": 2.5};
 var locale="";
 
 function Super6ApiHelper(currentLocale) {
@@ -65,15 +66,22 @@ Super6ApiHelper.prototype.getLastLotteryNumbers = function() {
     });
 };
 
+Super6ApiHelper.prototype.getCorrectArticle = function() {
+    if(isGermanLang())
+        return "Die ";
+    else
+        return "The ";
+}
+
 Super6ApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             if(isGermanLang())
-                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
+                return json.next.date.dayOfWeek + ", den " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " um " + json.next.date.hour + " Uhr "  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "");
             else if(isUSLang())
-                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.month + "." + json.next.date.day + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
             else
-                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
+                return json.next.date.dayOfWeek + ", " + json.next.date.day + "." + json.next.date.month + "." + json.next.date.year; // + " at " + json.next.date.hour + ":"  + (Number(json.next.date.minute) > 0 ? json.next.date.minute : "00");
         }
     }).catch(function(err) {
         console.log(err);
@@ -83,7 +91,11 @@ Super6ApiHelper.prototype.getNextLotteryDrawingDate = function() {
 Super6ApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.jackpot;
+            //return json.next.jackpot;
+            if(isGermanLang())
+                return "Der aktuelle Jackpot kann nicht bestimmt werden.";
+            else
+                return "The current jackpot cannot be determined";
         }
     }).catch(function(err) {
         console.log(err);
@@ -94,16 +106,26 @@ Super6ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.super6Odds && json.last.super6Odds['rank'+myRank]) {
             if(json.last.super6Odds['rank'+myRank].prize > 0) {
-                var price = json.last.super6Odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " Euro.";
+                return formatPrize(json.last.super6Odds['rank'+myRank]+"");
             } else {
                 return null;
             }
+        }  else if(super6Prizes['rank'+myRank] && super6Prizes['rank'+myRank] > 0) { // no internet, use if not jackpot!
+            return formatPrize(super6Prizes['rank'+myRank]+"");
+        } else {
+            return null;
         }
     }).catch(function(err) {
         console.log(err);
     });
 };
+
+function formatPrize(prize) {
+    if(isGermanLang())
+        prize = prize.replace('.',',');
+
+    return price + " Euro.";
+}
 
 Super6ApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
@@ -116,12 +138,9 @@ Super6ApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numb
     return 1000;
 };
 
-Super6ApiHelper.prototype.createSSMLOutputForField = function(field) {
-  return this.createSSMLOutputForNumbers(field[0], field[1]);
-};
-
-Super6ApiHelper.prototype.createSSMLOutputForNumbers = function(mainNumbers, addNumbers) {
+Super6ApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
   var speakOutput = "";
+  var mainNumbers = numbers[0];
 
   for(var i = 0; i < mainNumbers.length; i++)
       speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
