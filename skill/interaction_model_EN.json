@@ -70,8 +70,8 @@
       {
         "name": "AskForLotteryWinIntent",
         "samples": [
-          "did I won in {lotteryName}",
-          "if I did won in {lotteryName}",
+          "did I win in {lotteryName}",
+          "if I did win in {lotteryName}",
           "if I won in the last drawing of {lotteryName}",
           "check if I won in {lotteryName}",
           "check if I won in the last drawing of {lotteryName}"
@@ -159,7 +159,8 @@
         "name": "NullNumberIntent",
         "samples": [
           "null",
-          "zero"
+          "zero",
+          "oh"
         ],
         "slots": []
       },

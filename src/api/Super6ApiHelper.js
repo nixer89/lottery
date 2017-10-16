@@ -106,7 +106,9 @@ Super6ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.super6Odds && json.last.super6Odds['rank'+myRank]) {
             if(json.last.super6Odds['rank'+myRank].prize > 0) {
-                return formatPrize(json.last.super6Odds['rank'+myRank]+"");
+                var price = json.last.super6Odds['rank'+myRank].prize + "";
+                price = price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
+                return formatPrize(price);
             } else {
                 return null;
             }
@@ -124,7 +126,7 @@ function formatPrize(prize) {
     if(isGermanLang())
         prize = prize.replace('.',',');
 
-    return price + " Euro.";
+    return prize + " €.";
 }
 
 Super6ApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
@@ -150,31 +152,32 @@ Super6ApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
 
 Super6ApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
     var speechOutput = "<speak>";
+    console.log("Super6 rank is: " + myRank);
 
     switch(myRank) {
         case 1000:
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Super6 von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             else
-                speechOutput += "The last drawing of Super6 was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck next time!";
+                speechOutput += "The last drawing of Super 6 was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck next time!";
             break;
         case 1:
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Super6 von " + date + " stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of Super6 was on " + date + ". And all your numbers are matching to the drawn numbers! Let´s get the party started! Congratulation! " + moneySpeech ;
+                speechOutput += "The last drawing of Super 6 was on " + date + ". And all your numbers are matching to the drawn numbers! Let´s get the party started! Congratulation! " + moneySpeech ;
             break;
-        case 7:
+        case 6:
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Super6 von " + date + " stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of Super6 was on " + date + ". Your last number matches the drawing. Congratulation! " + moneySpeech;
+                speechOutput += "The last drawing of Super 6 was on " + date + ". Your last number matches the drawing. Congratulation! " + moneySpeech;
             break;
         default:
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Super6 von " + date + " stimmen die letzten " + super6Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of Super6 was on " + date + ". Your last " + super6Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
+                speechOutput += "The last drawing of Super 6 was on " + date + ". Your last " + super6Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
     }
 
     return speechOutput;
@@ -194,19 +197,19 @@ Super6ApiHelper.prototype.createLotteryWinSpeechOutputShort = function(myRank, m
             if(isGermanLang())
                 speechOutput += " In Super6 stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Super6, all your numbers are matching to the drawn numbers!. Let´s get the party started! Congratulation! " + moneySpeech;
+                speechOutput += " In Super 6, all your numbers are matching to the drawn numbers!. Let´s get the party started! Congratulation! " + moneySpeech;
             break;
-        case 7:
+        case 6:
             if(isGermanLang())
                 speechOutput += " In Super6 stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Super6, your last number matches the drawing. Congratulation! " + moneySpeech;
+                speechOutput += " In Super 6, your last number matches the drawing. Congratulation! " + moneySpeech;
             break;
         default:
             if(isGermanLang())
                 speechOutput += " In Super6 stimmen die letzten " + super6Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Super6, your last " + super6Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
+                speechOutput += " In Super 6, your last " + super6Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
     }
 
     return speechOutput;

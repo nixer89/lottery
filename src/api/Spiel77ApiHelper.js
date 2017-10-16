@@ -106,12 +106,13 @@ Spiel77ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.spiel77Odds && json.last.spiel77Odds['rank'+myRank]) {
             if(json.last.spiel77Odds['rank'+myRank].prize > 0) { //check the internet
-                return son.last.spiel77Odds['rank'+myRank] + " Euro.";
+                var price = json.last.spiel77Odds['rank'+myRank].prize + "";
+                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " €.";
             } else {
                 return null;
             }
         } else if(spiel77Prizes['rank'+myRank] && spiel77Prizes['rank'+myRank] > 0) { // no internet, use if not jackpot!
-            return spiel77Prizes['rank'+myRank] + " Euro.";
+            return spiel77Prizes['rank'+myRank] + " €.";
         } else {
             return null;
         }
@@ -150,25 +151,25 @@ Spiel77ApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, money
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Spiel77 von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             else
-                speechOutput += "The last drawing of Spiel77 was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck next time!";
+                speechOutput += "The last drawing of game 77 was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck next time!";
             break;
         case 1:
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Spiel77 von " + date + " stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! "  + moneySpeech;
             else
-                speechOutput += "The last drawing of Spiel77 was on " + date + ". And all your numbers are matching to the drawn numbers! Let´s get the party started! Congratulation! "  + moneySpeech;
+                speechOutput += "The last drawing of game 77 was on " + date + ". And all your numbers are matching to the drawn numbers! Let´s get the party started! Congratulation! "  + moneySpeech;
             break;
         case 7:
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Spiel77 von " + date + " stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of Spiel77 was on " + date + ". Your last number matches the drawing. Congratulation! " + moneySpeech;
+                speechOutput += "The last drawing of game 77 was on " + date + ". Your last number matches the drawing. Congratulation! " + moneySpeech;
             break;
         default:
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Spiel77 von " + date + " stimmen die letzten " + spiel77Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of Spiel77 was on " + date + ". Your last " + spiel77Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
+                speechOutput += "The last drawing of game 77 was on " + date + ". Your last " + spiel77Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
     }
 
     return speechOutput;
@@ -182,25 +183,25 @@ Spiel77ApiHelper.prototype.createLotteryWinSpeechOutputShort = function(myRank, 
             if(isGermanLang())
                 speechOutput += " In Spiel77 hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             else
-                speechOutput += "Unfortunately, you didn`t won anything in Spiel77. I wish you all the luck next time";
+                speechOutput += "Unfortunately, you didn`t won anything in game 77. I wish you all the luck next time";
             break;
         case 1:
             if(isGermanLang())
                 speechOutput += " In Spiel77 stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Spiel77, all your numbers are matching to the drawn numbers!. Let´s get the party started! Congratulation! " + moneySpeech;
+                speechOutput += " In game 77, all your numbers are matching to the drawn numbers!. Let´s get the party started! Congratulation! " + moneySpeech;
             break;
         case 7:
             if(isGermanLang())
                 speechOutput += " In Spiel77 stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Spiel77, your last number matches the drawing. Congratulation! " + moneySpeech;
+                speechOutput += " In game 77, your last number matches the drawing. Congratulation! " + moneySpeech;
             break;
         default:
             if(isGermanLang())
                 speechOutput += " In Spiel77 stimmen die letzten " + spiel77Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Spiel77, your last " + spiel77Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
+                speechOutput += " In game 77, your last " + spiel77Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
     }
 
     return speechOutput;

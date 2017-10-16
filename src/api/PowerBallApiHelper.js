@@ -3,7 +3,7 @@
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/powerBall";
 var powerBallOdds = {"rank1": [5,1], "rank2": [5,0], "rank3": [4,1], "rank4": [4,0], "rank5": [3,1], "rank6": [3,0], "rank7": [2,1], "rank8": [1,1], "rank9": [0,1]};
-var powerBallPrizes = {"rank1": 0, "rank2": 1000000, "rank3": 50000, "rank4": 100, "rank5": 100, "rank6": 7, "rank7": 7, "rank8": 4, "rank9": 4};
+var powerBallPrizes = {"rank1": 0, "rank2": 100000000, "rank3": 5000000, "rank4": 10000, "rank5": 10000, "rank6": 700, "rank7": 700, "rank8": 400, "rank9": 400};
 var locale="";
 
 function PowerBallApiHelper(currentLocale) {
@@ -109,9 +109,11 @@ PowerBallApiHelper.prototype.getCurrentJackpot =function() {
 PowerBallApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json) {
-            if(myRank == 1 && json.last.odds && json.last.odds['rank'+myRank] && json.last.odds['rank'+myRank].prize > 0) {
+            console.log("check for prize");
+            if(isGermanLang() && json.last.odds && json.last.odds['rank'+myRank] && json.last.odds['rank'+myRank].prize > 0) {
+                console.log("check for prize german");
                 return formatPrize(json.last.odds['rank'+myRank].prize, json.last.powerplay, myRank);
-            } else if(powerBallPrizes['rank'+myRank] && powerBallPrizes['rank'+myRank].prize > 0){ //no odds yet -> check if rank is in known prize
+            } else if(!isGermanLang() && powerBallPrizes['rank'+myRank] && powerBallPrizes['rank'+myRank].prize > 0){ //no odds yet -> check if rank is in known prize
                 return formatPrize(powerBallPrizes['rank'+myRank], json.last.powerplay, myRank);
             } else {
                 return null;
@@ -125,20 +127,23 @@ PowerBallApiHelper.prototype.getLastPrizeByRank = function(myRank) {
 
 function formatPrize(prize, powerplay, myRank) {
     var output = ""
-    var prizeNoPowerPlay = prize;
+    var prizeNoPowerPlay = prize+"";
 
-    output += prizeNoPowerPlay;
+    console.log("prize: " + prize);
+    console.log("rank: " + myRank);
+
+    output += prizeNoPowerPlay.substring(0, prizeNoPowerPlay.length-2) + (isGermanLang() ? "," : ".") + prizeNoPowerPlay.substring(prizeNoPowerPlay.length-2);
 
     var multiplikator = myRank == 1 ? 0 : (myRank == 2 ? 2 : powerplay);
 
     if(multiplikator > 0) {
         if(isGermanLang())
-            output += " $. Wenn du zusätzlich noch PowerPlay aktiviert hast, beträgt dein Gewinn ";
+            output += " €. Wenn du zusätzlich noch PowerPlay aktiviert hast, beträgt dein Gewinn ";
         else
             output += " $. If you additionally activated PowerPlay, the amount you won is: ";
 
         var prizeX = (prize * multiplikator) + "";
-        output += prizeX + " $."
+        output += prizeX.substring(0, prizeX.length-2) + (isGermanLang() ? "," : ".") + prizeX.substring(prizeX.length-2) + (isGermanLang() ? " €." : " $.");
     }
 
     return output;

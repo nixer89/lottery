@@ -95,7 +95,7 @@ EuroMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
             if(json.last.odds['rank'+myRank].prize > 0) {
                 var price = json.last.odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " Euro.";
+                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " €.";
             } else {
                 return null;
             }

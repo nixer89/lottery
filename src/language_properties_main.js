@@ -58,7 +58,7 @@ var properties =
 
         //lottery win intent
         amount_you_won: "Dein Gewinn beträgt ",
-        amount_currency: " Euro.",
+        amount_currency: " €.",
         no_amount_set_yet: "Die Gewinnsumme steht noch nicht fest.",
         last_drawing_request_failed: "Bei der Abfrage der letzten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
         add_numbers_before_asking_for_win_1: "Du musst erst Zahlen für ",
@@ -80,7 +80,7 @@ var properties =
         //AskForLotteryJackpot
         current_jackpot_size_1: "Der aktuelle Jackpott von ",
         current_jackpot_size_2: " beträgt ",
-        current_jackpot_size_3: " Millionen Euro.",
+        current_jackpot_size_3: " Millionen €.",
         current_jackpot_size_error: "Bei der Abfrage nach dem aktuellen Jackpott ist ein Fehler aufgetreten. Bitte entschuldige.",
 
         //AskForNextLotteryDrawing intent
@@ -199,7 +199,7 @@ var properties =
 
         //lottery win intent
         amount_you_won: "The amount you won is: ",
-        amount_currency: " Euro.",
+        amount_currency: " €.",
         no_amount_set_yet: "The amount you won is not available yet!",
         last_drawing_request_failed: "I´m sorry but the request of the latest drawn numbers failed.",
         add_numbers_before_asking_for_win_1: "To check if you won in the last drawing, you need to add your ",
@@ -221,7 +221,7 @@ var properties =
         //AskForLotteryJackpot intent
         current_jackpot_size_1: "The current jackpot of ",
         current_jackpot_size_2: " is ",
-        current_jackpot_size_3: " million euro.",
+        current_jackpot_size_3: " million €.",
         current_jackpot_size_error: "I´m sorry, but the request for the current jackpot size failed.",
 
         //AskForNextLotteryDrawing intent

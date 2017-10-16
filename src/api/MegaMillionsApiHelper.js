@@ -3,7 +3,7 @@
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/megaMillions";
 var megaMillionsOdds = {"rank1": [5,1], "rank2": [5,0], "rank3": [4,1], "rank4": [4,0], "rank5": [3,1], "rank6": [3,0], "rank7": [2,1], "rank8": [1,1], "rank9": [0,1]};
-var megaMillionsPrizes = {"rank1": 0 , "rank2": 1000000, "rank3": 5000, "rank4": 500, "rank5": 50, "rank6": 5, "rank7": 5, "rank8": 2, "rank9": 1};
+var megaMillionsPrizes = {"rank1": 0 , "rank2": 100000000, "rank3": 500000, "rank4": 50000, "rank5": 5000, "rank6": 500, "rank7": 500, "rank8": 200, "rank9": 100};
 var locale="";
 
 function MegaMillionsApiHelper(currentLocale) {
@@ -109,9 +109,9 @@ MegaMillionsApiHelper.prototype.getCurrentJackpot =function() {
 MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json) {
-            if(myRank == 1 && json.last.odds && json.last.odds['rank'+myRank] && json.last.odds['rank'+myRank].prize > 0) {
+            if(isGermanLang() && json.last.odds && json.last.odds['rank'+myRank] && json.last.odds['rank'+myRank].prize > 0) {
                 return formatPrize(json.last.odds['rank'+myRank].prize, json.last.megaplier, myRank);
-            } else if(megaMillionsPrizes['rank'+myRank] && megaMillionsPrizes['rank'+myRank].prize > 0){ //no odds yet -> check if rank is in known prize
+            } else if(!isGermanLang() && megaMillionsPrizes['rank'+myRank] && megaMillionsPrizes['rank'+myRank].prize > 0){ //no odds yet -> check if rank is in known prize
                 return formatPrize(megaMillionsPrizes['rank'+myRank], json.last.megaplier, myRank);
             } else {
                 return null;
@@ -126,19 +126,19 @@ MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
 
 function formatPrize(prize, megaplier, myRank) {
     var output = ""
-    var prizeNoMegaPlier = prize;
+    var prizeNoMegaPlier = prize+"";
 
-    output += prizeNoMegaPlier;
+    output += prizeNoMegaPlier.substring(0, prizeNoMegaPlier.length-2) + (isGermanLang() ? "," : ".") + prizeNoMegaPlier.substring(prizeNoMegaPlier.length-2);
     var multiplikator = myRank == 1 ? 0 : megaplier;
 
     if(multiplikator > 0) {
         if(isGermanLang())
-            output += " $. Wenn du zusätzlich noch MegaPlier aktiviert hast, beträgt dein Gewinn ";
+            output += " €. Wenn du zusätzlich noch MegaPlier aktiviert hast, beträgt dein Gewinn ";
         else
             output += " $. If you additionally activated MegaPlier, the amount you won is: ";
 
         var prizeX = myRank == 1 ? 0 : (prize * multiplikator);
-        output += prizeX + " $";
+        output += prizeX.substring(0, prizeX.length-2) + (isGermanLang() ? "," : ".") + prizeX.substring(prizeX.length-2); + (isGermanLang() ? " €." : " $.");
     }
 
     return output;
