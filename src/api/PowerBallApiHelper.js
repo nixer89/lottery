@@ -188,7 +188,7 @@ PowerBallApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, mon
             break;
         case 1:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung Powerball von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch den Powerball hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! ";
+                speechOutput += "In der letzten Ziehung Powerball von " + date + " hast du den Jackpot geknackt! Alle Zahlen und auch den Powerball hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! ";
             else
                 speechOutput += "The last drawing of powerball was on " + date + ". And you won the jackpot! You predicted all numbers and the powerball correctly! Let´s get the party started! Congratulation! ";
 

@@ -28,8 +28,6 @@ var props = "";
 var Lotto = function () {
     AlexaSkill.call(this, APP_ID);
 };
- 
-//var locale = "de-DE";
 
 // Extend AlexaSkill
 Lotto.prototype = Object.create(AlexaSkill.prototype);
@@ -40,7 +38,7 @@ exports.handler = function (event, context) {
     // Create an instance of the Lotto skill.
     var lotto = new Lotto();
 
-    locale = event.request.locale
+    var locale = event.request.locale
 
     if (locale == 'en-US')
         props = language_properties.getEnglishProperties();
@@ -208,6 +206,8 @@ var Intent_Handler  = {
 
                                 if(session.attributes.currentConfig.lotteryName == skillHelper.getGermanLotteryName()) {
                                     checkForSpiel77(session, response, speechOutput);
+                                } else if(session.attributes.currentConfig.lotteryName == skillHelper.getAustrianLotteryName()) {
+                                    checkForJoker(session, response, speechOutput);
                                 } else {
                                     speechOutput += "<break time=\"200ms\"/>" + props.without_guarantee + "</speak>";
                                     response.tell({type:"SSML",speech: speechOutput});
@@ -290,7 +290,7 @@ var Intent_Handler  = {
             
             skillHelper.getLotteryApiHelper(config.lotteryName).getCurrentJackpot().then(function(jackpotSize) {
                 if(jackpotSize && jackpotSize > 0) {
-                    response.tell(props.current_jackpot_size_1 + config.speechLotteryName + props.current_jackpot_size_2 + jackpotSize + props.current_jackpot_size_3);
+                    response.tell(props.current_jackpot_size_1 + config.speechLotteryName + props.current_jackpot_size_2 + (skillHelper.isGermanLang() ? (jackpotSize+"").replace('.',',') : jackpotSize) + props.current_jackpot_size_3);
                 } else if(jackpotSize) {
                     response.tell(jackpotSize);
                 } else {
@@ -611,6 +611,41 @@ function appendSuper6Win(session, response, speechOutput) {
                 if(lotteryNumbersAndDate) {
                     //check how many matches we have with the given numbers!
                     var rank = skillHelper.getRank(session, lotteryNumbersAndDate, mySuper6Numbers);
+
+                    skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
+                        var moneySpeech = ""
+                        if(money && money.length > 0)
+                            moneySpeech = props.amount_you_won + money;
+                        else
+                            moneySpeech = props.no_amount_set_yet;
+                            
+                        speechOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutputShort(rank, moneySpeech, lotteryNumbersAndDate[2]);
+
+                        speechOutput += "<break time=\"200ms\"/>" + props.without_guarantee + "</speak>";
+                        response.tell({type:"SSML",speech: speechOutput});
+                    }).catch(function(err) {
+                        response.tell(props.last_drawing_request_failed);    
+                    });
+                } else {
+                    response.tell(props.last_drawing_request_failed);
+                }
+            });
+        } else {
+            speechOutput += "<break time=\"200ms\"/>" + props.without_guarantee + "</speak>";
+            response.tell({type:"SSML",speech: speechOutput});
+        }
+    });
+}
+
+function checkForJoker(session, response, speechOutput) {    
+    session.attributes.currentConfig = skillHelper.getConfigByUtterance(skillHelper.getJokerLotteryName());
+
+    readLotteryNumbers(session, response).then(function(myJokerNumbers) {
+        if(myJokerNumbers && myJokerNumbers.length > 0) {
+            skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastLotteryDateAndNumbers().then(function(lotteryNumbersAndDate) {
+                if(lotteryNumbersAndDate) {
+                    //check how many matches we have with the given numbers!
+                    var rank = skillHelper.getRank(session, lotteryNumbersAndDate, myJokerNumbers);
 
                     skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
                         var moneySpeech = ""

@@ -250,8 +250,22 @@
               "value": "game seventyseven",
               "synonyms": []
             }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "austrian lotto",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "joker",
+              "synonyms": []
+            }
           }
         ]
       }
     ]
-  }
+}

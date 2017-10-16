@@ -156,7 +156,7 @@ EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, m
             break;
         case 1:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung Eurojackpott von " + date + " hast du den JackPott geknackt! Alle Zahlen und auch die beiden Eurozahlen hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech ;
+                speechOutput += "In der letzten Ziehung Eurojackpott von " + date + " hast du den Jackpot geknackt! Alle Zahlen und auch die beiden Eurozahlen hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech ;
             else
                 speechOutput += "The last drawing of euro jackpot was on " + date + ". And you won the jackpot! You predicted all numbers and both euro numbers correctly! Let´s get the party started! Congratulation! " + moneySpeech ;
             break;

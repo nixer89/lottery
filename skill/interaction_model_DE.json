@@ -254,6 +254,20 @@
             "value": "spiel sieben und siebzig",
             "synonyms": []
           }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "sechs aus fünf und vierzig",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "joker",
+            "synonyms": []
+          }
         }
       ]
     }

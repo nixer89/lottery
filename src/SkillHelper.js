@@ -54,9 +54,23 @@ var megaMillionsApi;
 var megaMillionsDb = new MegaMillionsDb();
 var MEGAMILLIONS = "mega millions";
 var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "mega millions", "additionalNumberName": "Megaball", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 75,"minRangeAdditional": 1, "maxRangeAdditional": 15};
+
+var AustrianLotteryApi = require('./api/AustrianLotteryApiHelper');
+var AustrianLotteryDb = require('./db/AustrianLotteryDbHelper');
+var austrianLottoApi;
+var austrianLottoDb = new AustrianLotteryDb();
+var AUSTRIAN_LOTTERY = "sechs aus fünf und vierzig";
+var AustrianLottoConfig = { "lotteryName": AUSTRIAN_LOTTERY, "speechLotteryName": "6aus45", "additionalNumberName": "Zusatzzahl", "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 0, "minRangeMain": 1, "maxRangeMain": 45, "minRangeAdditional": 0, "maxRangeAdditional": 0};
+
+var AustrianJokerApi = require('./api/AustrianJokerApiHelper');
+var AustrianJokerDb = require('./db/AustrianJokerDbHelper');
+var austrianJokerApi;
+var austrienJokerDb = new AustrianJokerDb();
+var AUSTRIAN_JOKER = "joker";
+var austrianJokerConfig = { "lotteryName": AUSTRIAN_JOKER, "speechLotteryName": AUSTRIAN_JOKER, "additionalNumberName": "", "isZusatzLottery": true, "numberCountMain": 6, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
 //LOTTERY CONFIG END
 
-var supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS]
+var supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS, AUSTRIAN_LOTTERY, AUSTRIAN_JOKER];
 
 function SkillHelper(currentLocale) {
     locale = currentLocale;
@@ -68,8 +82,10 @@ function SkillHelper(currentLocale) {
     euroMillionsApi = new EuroMillionsApi(locale);
     powerBallApi= new PowerBallApi(locale);
     megaMillionsApi = new MegaMillionsApi(locale);
+    austrianLottoApi = new AustrianLotteryApi(locale);
+    austrianJokerApi = new AustrianJokerApi(locale);
 
-    if(!isGermanLang()) {
+    if(!this.isGermanLang()) {
         GERMAN_LOTTERY = "german lotto";
         GermanLottoConfig.lotteryName = GERMAN_LOTTERY;
         GermanLottoConfig.speechLotteryName = GERMAN_LOTTERY;
@@ -86,11 +102,15 @@ function SkillHelper(currentLocale) {
         EuroJackpotConfig.additionalNumberName = "euronumber";
         EuroMillionsConfig.additionalNumberName = "star";
 
-        supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS]
+        AUSTRIAN_LOTTERY = "austrian lotto";
+        AustrianLottoConfig.lotteryName = AUSTRIAN_LOTTERY;
+        AustrianLottoConfig.speechLotteryName = AUSTRIAN_LOTTERY;
+
+        supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS, AUSTRIAN_LOTTERY, AUSTRIAN_JOKER];
     }
 }
 
-function isGermanLang() {
+SkillHelper.prototype.isGermanLang = function() {
     return 'de-DE' == locale;
 }
 
@@ -100,7 +120,7 @@ SkillHelper.prototype.isLotteryNameSupported = function(lotteryName) {
 
 SkillHelper.prototype.getCorrectNamingOfNumber = function(number) {
 
-    if(isGermanLang()) {
+    if(this.isGermanLang()) {
         switch(number) {
             case 1: return "erste";
             case 2: return "zweite";
@@ -141,11 +161,19 @@ SkillHelper.prototype.getSuper6LotteryName = function() {
     return SUPER6;
 }
 
+SkillHelper.prototype.getAustrianLotteryName = function() {
+    return AUSTRIAN_LOTTERY;
+}
+
+SkillHelper.prototype.getJokerLotteryName = function() {
+    return AUSTRIAN_JOKER;
+}
+
 SkillHelper.prototype.getCorrectPreWordAdditionalNumber = function(lotteryName) {
     switch(lotteryName.toLowerCase()) {
         case POWERBALL:
-        case MEGAMILLIONS: return (isGermanLang() ? "dein " : "your ");
-        default: return (isGermanLang() ? "deine " : "your ");
+        case MEGAMILLIONS: return (this.isGermanLang() ? "dein " : "your ");
+        default: return (this.isGermanLang() ? "deine " : "your ");
     }
 }
 
@@ -158,6 +186,8 @@ SkillHelper.prototype.getConfigByUtterance = function(lotteryName) {
         case EUROMILLIONS: return EuroMillionsConfig;
         case POWERBALL: return PowerBallConfig;
         case MEGAMILLIONS: return MegaMillionsConfig;
+        case AUSTRIAN_LOTTERY: return AustrianLottoConfig;
+        case AUSTRIAN_JOKER: return austrianJokerConfig;
         default: return "";
     }
 }
@@ -171,6 +201,8 @@ SkillHelper.prototype.getLotteryApiHelper = function(lotteryName) {
         case EUROMILLIONS: return euroMillionsApi;
         case POWERBALL: return powerBallApi;
         case MEGAMILLIONS: return megaMillionsApi;
+        case AUSTRIAN_LOTTERY: return austrianLottoApi;
+        case AUSTRIAN_JOKER: return austrianJokerApi;
         default: return "";
     }
 }
@@ -184,6 +216,8 @@ SkillHelper.prototype.getLotteryDbHelper = function(lotteryName) {
         case EUROMILLIONS: return euroMillionsDb;
         case POWERBALL: return powerBallDb;
         case MEGAMILLIONS: return megaMillionsDb;
+        case AUSTRIAN_LOTTERY: return austrianLottoDb;
+        case AUSTRIAN_JOKER: return austrienJokerDb;
         default: return "";
     }
 }
@@ -265,7 +299,12 @@ SkillHelper.prototype.getRank = function(session, lotteryNumbersAndDate, myNumbe
 
     for(var i = 0; i < myNumbers.length; i++) {
         var numberOfMatchesMainTmp = getMatchingNumbers(session, lotteryNumbersAndDate[0], myNumbers[i][0]).length;
-        var numberOfMatchesAdditionalTmp = getMatchingNumbers(session, lotteryNumbersAndDate[1], myNumbers[i][1]).length;
+        var numberOfMatchesAdditionalTmp;
+
+        if(session.attributes.currentConfig.lotteryName == AUSTRIAN_LOTTERY)
+            numberOfMatchesAdditionalTmp = getMatchingNumbers(session, lotteryNumbersAndDate[1], myNumbers[i][0]).length;
+        else
+            numberOfMatchesAdditionalTmp = getMatchingNumbers(session, lotteryNumbersAndDate[1], myNumbers[i][1]).length;
 
         var rankTemp = this.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLotteryOddRank(numberOfMatchesMainTmp,numberOfMatchesAdditionalTmp);
 
