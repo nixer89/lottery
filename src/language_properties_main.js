@@ -22,7 +22,7 @@ var properties =
         is_connector: " ist ",
 
         //welcome prompt
-        welcome: "Willkommen bei Mein Lotto, jetzt auch mit Spiel77 und Super6! Sage 'Feld hinzufügen und den Lotterie-Namen' um deine Lottozahlen zu speichern oder sage 'Hilfe' um dir weitere Kommandos in der Alexa App anzusehen.",
+        welcome: "Willkommen bei Mein Lotto! Sage 'Feld hinzufügen und den Lotterie-Namen' um deine Lottozahlen zu speichern oder sage 'Hilfe' um dir weitere Kommandos in der Alexa App anzusehen.",
         welcome_reprompt: "Sage 'Hilfe' um Kommandos in der Alexa App zu sehen!",
 
         //hello intent
@@ -246,7 +246,7 @@ var properties =
         help_intent_help_line: "With this skill, you are able to store you lottery numbers and ask if you did win in the last drawing. You`re stored numbers will be matched to the numbers of the last drawing of the given lottery. I´ve just send you some example commands to your alexa app. Open the app and check the commands. To check the supported lotteries, just say: Which lotteries are supported?",
         help_intent_repromt_line: "Say: 'add field', and the lottery name, to store your lottery numbers",
         help_intent_card_title_line: "my lottery commands",
-        help_intent_card_content_line: "Here you find some usefull commands:\n- add field for PowerBall\n- did I win in mega millions?" +
+        help_intent_card_content_line: "Here you find some usefull commands:\n- add field for PowerBall\n- did I win in EuroJackpot?" +
         "\n- what are my currently stored numbers for PowerBall?\n- what are the last drawn numbers of PowerBall?\n- delete my numbers of Euro Jackpot" +
         "\n- when is the next drawing for Euro Millions?\n- what is the current jackpot of PowerBall?",
 

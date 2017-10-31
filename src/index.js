@@ -403,7 +403,7 @@ function saveNewLottoNumbers(session, response) {
                         response.ask(getSaveSpeechOutput(session) + props.save_new_numbers_ask_super6);
                     } else if(session.attributes.currentConfig.lotteryName == skillHelper.getSuper6LotteryName() && !session.attributes.addToSpiel77) {
                         session.attributes.addToSpiel77 = true;
-                        response.ask(getSaveSpeechOutput(session) + + props.save_new_numbers_ask_spiel77);
+                        response.ask(getSaveSpeechOutput(session) + props.save_new_numbers_ask_spiel77);
                     } else {
                         if(session.attributes.currentConfig.isZusatzLottery)
                             response.tell(getSaveSpeechOutput(session));
@@ -479,19 +479,22 @@ function doLotteryNumberCheck(response, session, newNumber) {
 function checkWhatNumberIsNext(response, session, newNumber, additionalSpeechInfo) {
     //check ob weitere Zahlen hinzugefügt werden müssen
     if(lotteryFieldHasMaxLength(session)) {
-        session.attributes.newNumbersAdditional = session.attributes.newNumbersAdditional.sort((a, b) => a - b);
-        var speakOutput = "<speak>" + props.check_next_number_current_numbers;
         var numbers = [];
-        numbers[0] = session.attributes.newNumbersMain;
-        numbers[1] = session.attributes.newNumbersAdditional;
+        numbers[0] = session.attributes.newNumbersMain.slice(0);
+        numbers[1] = session.attributes.newNumbersAdditional.slice(0);
+        //sort numbers for speech output!
+        if(!session.attributes.currentConfig.isZusatzLottery)
+            numbers[0] = numbers[0].sort((a, b) => a - b);
+
+        numbers[1] = numbers[1].sort((a, b) => a - b);
+
+        var speakOutput = "<speak>" + props.check_next_number_current_numbers;
 
         speakOutput += skillHelper.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).createSSMLOutputForNumbers(numbers);
         speakOutput += props.check_next_number_ask_correct + "</speak>";
         response.ask({type:"SSML",speech: speakOutput}, props.check_next_number_ask_correct_all_numbers);
 
     } else if(session.attributes.newNumbersMain.length == session.attributes.currentConfig.numberCountMain) {
-        //sort numbers and add additional number!
-        session.attributes.newNumbersMain = session.attributes.newNumbersMain.sort((a, b) => a - b);
 
         var outPut = skillHelper.getCorrectPreWordAdditionalNumber(session.attributes.currentConfig.lotteryName) + 
                             (session.attributes.currentConfig.numberCountAdditional > 1 ? skillHelper.getCorrectNamingOfNumber((session.attributes.newNumbersAdditional.length + 1)) : "") + " " 
