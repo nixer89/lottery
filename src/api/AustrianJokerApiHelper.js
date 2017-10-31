@@ -1,16 +1,16 @@
 'use strict';
 
 var nodeFetch = require('node-fetch');
-var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/german6aus49";
-var super6Odds = {"rank1": [6,0], "rank2": [5,0], "rank3": [4,0], "rank4": [3,0], "rank5": [2,0], "rank6": [1,0]};
-var super6Prizes = {"rank1": 0, "rank2": 6666, "rank3": 666, "rank4": 66, "rank5": 6, "rank6": 2.5};
+var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/austriaLotto";
+var jokerOdds = {"rank1": [6,0], "rank2": [5,0], "rank3": [4,0], "rank4": [3,0], "rank5": [2,0], "rank6": [1,0]};
+var jokerPrizes = {"rank1": 0, "rank2": 7700, "rank3": 770, "rank4": 77, "rank5": 7, "rank6": 1.5};
 var locale="";
 
-function Super6ApiHelper(currentLocale) {
+function AustrianJokerApiHelper(currentLocale) {
     locale = currentLocale;
 
     if(!isGermanLang())
-        LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/german6aus49";
+        LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/austriaLotto";
 }
 
 function invokeBackend(url) {
@@ -30,7 +30,7 @@ function isUSLang() {
     return 'en-US' == locale;
 }
 
-Super6ApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
+AustrianJokerApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
@@ -40,7 +40,7 @@ Super6ApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
             else
                 lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
 
-            numbersAndDate[0] = stringifyArray(json.last.super6.split(""));
+            numbersAndDate[0] = stringifyArray((json.last.joker+"").split(""));
             numbersAndDate[1] = -1;
             numbersAndDate[2] = lotteryDateString;
             numbersAndDate[3] = "";//json.last.currency;
@@ -52,11 +52,11 @@ Super6ApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     });
 };
 
-Super6ApiHelper.prototype.getLastLotteryNumbers = function() {
+AustrianJokerApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbers = [];
-            numbers[0] = stringifyArray(json.last.super6.split(""));
+            numbers[0] = stringifyArray((json.last.joker+"").split(""));
             numbers[1] = "-1";
 
             return numbers;
@@ -66,14 +66,14 @@ Super6ApiHelper.prototype.getLastLotteryNumbers = function() {
     });
 };
 
-Super6ApiHelper.prototype.getCorrectArticle = function() {
+AustrianJokerApiHelper.prototype.getCorrectArticle = function() {
     if(isGermanLang())
         return "Die ";
     else
         return "The ";
 }
 
-Super6ApiHelper.prototype.getNextLotteryDrawingDate = function() {
+AustrianJokerApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             if(isGermanLang())
@@ -88,7 +88,7 @@ Super6ApiHelper.prototype.getNextLotteryDrawingDate = function() {
     });
 };
 
-Super6ApiHelper.prototype.getCurrentJackpot =function() {
+AustrianJokerApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             //return json.next.jackpot;
@@ -102,18 +102,18 @@ Super6ApiHelper.prototype.getCurrentJackpot =function() {
     });
 };
 
-Super6ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
+AustrianJokerApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
-        if(json && json.last.super6Odds && json.last.super6Odds['rank'+myRank]) {
-            if(json.last.super6Odds['rank'+myRank].prize > 0) {
-                var price = json.last.super6Odds['rank'+myRank].prize + "";
+        if(json && json.last.jokerOdds && json.last.jokerOdds['rank'+myRank]) {
+            if(json.last.jokerOdds['rank'+myRank].prize > 0) {
+                var price = json.last.jokerOdds['rank'+myRank].prize + "";
                 price = price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
                 return formatPrize(price);
             } else {
                 return null;
             }
-        }  else if(super6Prizes['rank'+myRank] && super6Prizes['rank'+myRank] > 0) { // no internet, use if not jackpot!
-            return formatPrize(super6Prizes['rank'+myRank]+"");
+        }  else if(jokerPrizes['rank'+myRank] && jokerPrizes['rank'+myRank] > 0) { // no internet, use if not jackpot!
+            return formatPrize(jokerPrizes['rank'+myRank]+"");
         } else {
             return null;
         }
@@ -129,18 +129,18 @@ function formatPrize(prize) {
     return prize + " €.";
 }
 
-Super6ApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
+AustrianJokerApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
-    for(var i = 1; i <= Object.keys(super6Odds).length; i++)
+    for(var i = 1; i <= Object.keys(jokerOdds).length; i++)
     {
-        if(super6Odds['rank'+i][0] == myRank[0] && super6Odds['rank'+i][1] == myRank[1])
+        if(jokerOdds['rank'+i][0] == myRank[0] && jokerOdds['rank'+i][1] == myRank[1])
             return i;
     }
 
     return 1000;
 };
 
-Super6ApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
+AustrianJokerApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
   var speakOutput = "";
   var mainNumbers = numbers[0];
 
@@ -150,66 +150,65 @@ Super6ApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
   return speakOutput;
 };
 
-Super6ApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
+AustrianJokerApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
     var speechOutput = "<speak>";
-    console.log("Super6 rank is: " + myRank);
 
     switch(myRank) {
         case 1000:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung Super6 von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+                speechOutput += "In der letzten Ziehung Joker von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             else
-                speechOutput += "The last drawing of Super 6 was on " + date + ". Unfortunately, you didn`t win anything. I wish you all the luck next time!";
+                speechOutput += "The last drawing of joker was on " + date + ". Unfortunately, you didn`t win anything. I wish you all the luck next time!";
             break;
         case 1:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung Super6 von " + date + " stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += "In der letzten Ziehung Joker von " + date + " stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of Super 6 was on " + date + ". And all your numbers are matching to the drawn numbers! Let´s get the party started! Congratulation! " + moneySpeech ;
+                speechOutput += "The last drawing of joker was on " + date + ". And all your numbers are matching to the drawn numbers! Let´s get the party started! Congratulation! " + moneySpeech ;
             break;
         case 6:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung Super6 von " + date + " stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += "In der letzten Ziehung Joker von " + date + " stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of Super 6 was on " + date + ". Your last number matches the drawing. Congratulation! " + moneySpeech;
+                speechOutput += "The last drawing of joker was on " + date + ". Your last number matches the drawing. Congratulation! " + moneySpeech;
             break;
         default:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung Super6 von " + date + " stimmen die letzten " + super6Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += "In der letzten Ziehung Joker von " + date + " stimmen die letzten " + jokerOdds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of Super 6 was on " + date + ". Your last " + super6Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
+                speechOutput += "The last drawing of joker was on " + date + ". Your last " + jokerOdds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
     }
 
     return speechOutput;
 };
 
-Super6ApiHelper.prototype.createLotteryWinSpeechOutputShort = function(myRank, moneySpeech, date) {
+AustrianJokerApiHelper.prototype.createLotteryWinSpeechOutputShort = function(myRank, moneySpeech, date) {
     var speechOutput = "<break time=\"500ms\"/>";
 
     switch(myRank) {
         case 1000:
             if(isGermanLang())
-                speechOutput += " In Super6 hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+                speechOutput += " In Joker hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             else
-                speechOutput += "Unfortunately, you didn`t win anything in Super 6. I wish you all the luck next time";
+                speechOutput += "Unfortunately, you didn`t win anything in joker. I wish you all the luck next time";
             break;
         case 1:
             if(isGermanLang())
-                speechOutput += " In Super6 stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += " In Joker stimmen alle deine Zahlen überein!. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Super 6, all your numbers are matching to the drawn numbers!. Let´s get the party started! Congratulation! " + moneySpeech;
+                speechOutput += " In joker, all your numbers are matching to the drawn numbers!. Let´s get the party started! Congratulation! " + moneySpeech;
             break;
         case 6:
             if(isGermanLang())
-                speechOutput += " In Super6 stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += " In Joker stimmt die letzte Zahl überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Super 6, your last number matches the drawing. Congratulation! " + moneySpeech;
+                speechOutput += " In joker, your last number matches the drawing. Congratulation! " + moneySpeech;
             break;
         default:
             if(isGermanLang())
-                speechOutput += " In Super6 stimmen die letzten " + super6Odds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += " In Joker stimmen die letzten " + jokerOdds['rank'+myRank][0] + " Zahlen überein. Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += " In Super 6, your last " + super6Odds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
+                speechOutput += " In joker, your last " + jokerOdds['rank'+myRank][0] + " numbers are matching. Congratulation! " + moneySpeech;
     }
 
     return speechOutput;
@@ -222,4 +221,4 @@ function stringifyArray(numberArray) {
     return numberArray;
 }
 
-module.exports = Super6ApiHelper;
+module.exports = AustrianJokerApiHelper;

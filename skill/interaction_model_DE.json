@@ -1,0 +1,275 @@
+{
+  "intents": [
+    {
+      "name": "AddLotteryNumbers",
+      "samples": [
+        "Feld hinzufügen für {lotteryName}",
+        "füge ein Feld für {lotteryName} hinzu",
+        "füge ein neues Feld für {lotteryName} hinzu",
+        "füge ein {lotteryName} Feld hinzu",
+        "lege neue Zahlen für {lotteryName} an"
+      ],
+      "slots": [
+        {
+          "name": "lotteryName",
+          "type": "CUSTOM_SLOT_TYPE_LotteryNames",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "AMAZON.CancelIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.HelpIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.NoIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.StopIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.YesIntent",
+      "samples": []
+    },
+    {
+      "name": "AskForLatestLotteryNumbers",
+      "samples": [
+        "was sind die Gewinnzahlen der letzten Ziehung von {lotteryName}",
+        "was sind die aktuellen Gewinnzahlen von {lotteryName}",
+        "nach den aktuellen Gewinnzahlen von {lotteryName}",
+        "nach den {lotteryName} Gewinnzahlen"
+      ],
+      "slots": [
+        {
+          "name": "lotteryName",
+          "type": "CUSTOM_SLOT_TYPE_LotteryNames",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "AskForLotteryJackpot",
+      "samples": [
+        "was ist die aktuelle Gewinnsumme in {lotteryName}",
+        "nach der aktuellen Gewinnsumme in {lotteryName}",
+        "wie hoch ist der Jackpott von {lotteryName}",
+        "nach dem Jackpott von {lotteryName}",
+        "nach dem aktuellen Jackpott von {lotteryName}"
+      ],
+      "slots": [
+        {
+          "name": "lotteryName",
+          "type": "CUSTOM_SLOT_TYPE_LotteryNames",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "AskForLotteryWinIntent",
+      "samples": [
+        "habe ich in {lotteryName} gewonnen",
+        "ob ich in {lotteryName} gewonnen habe",
+        "ob ich in der letzten {lotteryName} Ziehung gewonnen habe",
+        "ob ich in der letzten Ziehung von {lotteryName} gewonnen habe",
+        "prüfe ob ich in {lotteryName} gewonnen habe",
+        "prüfe ob ich in der letzten Ziehung von {lotteryName} gewonnen habe"
+      ],
+      "slots": [
+        {
+          "name": "lotteryName",
+          "type": "CUSTOM_SLOT_TYPE_LotteryNames",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "AskForNextLotteryDrawing",
+      "samples": [
+        "nach der nächsten Ziehung von {lotteryName}",
+        "nach der nächsten {lotteryName} Ziehung",
+        "wann ist die nächste Ziehung {lotteryName}",
+        "wann ist die nächste {lotteryName} Ziehung"
+      ],
+      "slots": [
+        {
+          "name": "lotteryName",
+          "type": "CUSTOM_SLOT_TYPE_LotteryNames",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "ChangeLotteryNumberIntent",
+      "samples": [
+        "korrigieren",
+        "ändern"
+      ],
+      "slots": []
+    },
+    {
+      "name": "EndIntent",
+      "samples": [
+        "Beenden"
+      ],
+      "slots": []
+    },
+    {
+      "name": "HelloIntent",
+      "samples": [
+        "hi",
+        "hallo"
+      ],
+      "slots": []
+    },
+    {
+      "name": "MyCurrentNumbers",
+      "samples": [
+        "wie lauten meine aktuellen Zahlen für {lotteryName}",
+        "wie lauten meine aktuellen {lotteryName} Zahlen",
+        "wie lauten meine aktuellen Gewinnzahlen für {lotteryName}",
+        "wie meine aktuellen Zahlen für {lotteryName} lauten",
+        "was meine Zahlen für {lotteryName} sind",
+        "nach meinen aktuellen Zahlen für {lotteryName}",
+        "nach meinen Zahlen für {lotteryName}",
+        "was sind meine aktuell hinterlegten Zahlen für {lotteryName}",
+        "wie lauten meine aktuell hinterlegten Zahlen für {lotteryName}"
+      ],
+      "slots": [
+        {
+          "name": "lotteryName",
+          "type": "CUSTOM_SLOT_TYPE_LotteryNames",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "NewNumber",
+      "samples": [
+        "{lotteryNumber}"
+      ],
+      "slots": [
+        {
+          "name": "lotteryNumber",
+          "type": "AMAZON.NUMBER",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "NullNumberIntent",
+      "samples": [
+        "null"
+      ],
+      "slots": []
+    },
+    {
+      "name": "RemoveLotteryNumbers",
+      "samples": [
+        "Lösche meine {lotteryName} Zahlen",
+        "Lösche meine Zahlen von {lotteryName}",
+        "Lösche alle meine {lotteryName} Zahlen",
+        "Lösche meine aktuell hinterlegten {lotteryName} Zahlen",
+        "Lösche meine aktuellen {lotteryName} Zahlen"
+      ],
+      "slots": [
+        {
+          "name": "lotteryName",
+          "type": "CUSTOM_SLOT_TYPE_LotteryNames",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "SupportedLotteries",
+      "samples": [
+        "welche Lotterien werden unterstützt",
+        "welche Lotterien kann ich verwenden",
+        "was sind die unterstützten Lotterien"
+      ],
+      "slots": []
+    },
+    {
+      "name": "ThanksIntent",
+      "samples": [
+        "Danke"
+      ],
+      "slots": []
+    }
+  ],
+  "types": [
+    {
+      "name": "CUSTOM_SLOT_TYPE_LotteryNames",
+      "values": [
+        {
+          "id": null,
+          "name": {
+            "value": "euro jackpot",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "euro millions",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "powerball",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "mega millions",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "sechs aus neun und vierzig",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "super sechs",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "spiel sieben und siebzig",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "sechs aus fünf und vierzig",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "joker",
+            "synonyms": []
+          }
+        }
+      ]
+    }
+  ]
+}

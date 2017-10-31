@@ -1,15 +1,15 @@
 'use strict';
 
 var nodeFetch = require('node-fetch');
-var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/german6aus49";
-var germanOdds = {"rank1": [6,1], "rank2": [6,0], "rank3": [5,1], "rank4": [5,0], "rank5": [4,1], "rank6": [4,0], "rank7": [3,1], "rank8": [3,0], "rank9": [2,1]};
+var LOTTOLAND_API_URL = "https://www.lottoland.com/api/drawings/austriaLotto";
+var austrianOdds = {"rank1": [6,0], "rank2": [5,1], "rank3": [5,0], "rank4": [4,1], "rank5": [4,0], "rank6": [3,1], "rank7": [3,0], "rank8": [0,1]};
 var locale="";
 
-function GermanLotteryApiHelper(currentLocale) {
+function AustrianLotteryApiHelper(currentLocale) {
     locale = currentLocale;
 
     if(!isGermanLang())
-        LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/german6aus49";
+        LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/austriaLotto";
 }
 function invokeBackend(url) {
     return nodeFetch(url)
@@ -28,7 +28,7 @@ function isUSLang() {
     return 'en-US' == locale;
 }
 
-GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
+AustrianLotteryApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbersAndDate = [];
@@ -39,7 +39,7 @@ GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
                 lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
 
             numbersAndDate[0] = stringifyArray(json.last.numbers);
-            numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.superzahl));
+            numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.Zusatzzahl[0]));
             numbersAndDate[2] = lotteryDateString;
             numbersAndDate[3] = "";//json.last.currency;
 
@@ -50,19 +50,19 @@ GermanLotteryApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
     });
 };
 
-GermanLotteryApiHelper.prototype.getCorrectArticle = function() {
+AustrianLotteryApiHelper.prototype.getCorrectArticle = function() {
     if(isGermanLang())
         return "Die ";
     else
         return "The ";
 }
 
-GermanLotteryApiHelper.prototype.getLastLotteryNumbers = function() {
+AustrianLotteryApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbers = [];
             numbers[0] = stringifyArray(json.last.numbers);
-            numbers[1] = stringifyArray(Array(1).fill(json.last.superzahl));
+            numbers[1] = stringifyArray(Array(1).fill(json.last.Zusatzzahl[0]));
 
             return numbers;
         }
@@ -71,7 +71,7 @@ GermanLotteryApiHelper.prototype.getLastLotteryNumbers = function() {
     });
 };
 
-GermanLotteryApiHelper.prototype.getNextLotteryDrawingDate = function() {
+AustrianLotteryApiHelper.prototype.getNextLotteryDrawingDate = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             if(isGermanLang())
@@ -86,7 +86,7 @@ GermanLotteryApiHelper.prototype.getNextLotteryDrawingDate = function() {
     });
 };
 
-GermanLotteryApiHelper.prototype.getCurrentJackpot =function() {
+AustrianLotteryApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             return json.next.jackpot;
@@ -96,7 +96,7 @@ GermanLotteryApiHelper.prototype.getCurrentJackpot =function() {
     });
 };
 
-GermanLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
+AustrianLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json && json.last.odds && json.last.odds['rank'+myRank]) {
             if(json.last.odds['rank'+myRank].prize > 0) {
@@ -111,18 +111,32 @@ GermanLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     });
 };
 
-GermanLotteryApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
+AustrianLotteryApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
-    for(var i = 1; i <= Object.keys(germanOdds).length; i++)
+
+    var rank = 1000;
+
+    //check including zusatzzahl for higher prices first
+    for(var i = 1; i <= Object.keys(austrianOdds).length; i++)
     {
-        if(germanOdds['rank'+i][0] == myRank[0] && germanOdds['rank'+i][1] == myRank[1])
-            return i;
+        if(austrianOdds['rank'+i][0] == myRank[0] && austrianOdds['rank'+i][1] == myRank[1])
+            rank = i;
+    }
+    console.log("rank including zusatzzahl: " + rank);
+
+    //no matches with zusatzzahl found -> check without zusatzzahl - coz it is just additionally
+    if(rank == 1000) {
+        for(var i = 1; i <= Object.keys(austrianOdds).length; i++)
+        {
+            if(austrianOdds['rank'+i][0] == myRank[0] && austrianOdds['rank'+i][1] == 0)
+                rank = i;
+        }
     }
 
-    return 1000;
+    return rank;
 };
 
-GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
+AustrianLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
     var speakOutput = "";
     var mainNumbers = numbers[0];
     var addNumbers = numbers[1];
@@ -130,35 +144,43 @@ GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) 
     for(var i = 0; i < mainNumbers.length; i++)
         speakOutput += mainNumbers[i] + "<break time=\"500ms\"/>";
     
-    if(isGermanLang())
-        speakOutput+=". Superzahl:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
-    else
-        speakOutput+=". superball:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
+    if(addNumbers[0]) {
+        if(isGermanLang())
+            speakOutput+=". Zusatzzahl:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
+        else
+            speakOutput+=". bonus number:<break time=\"200ms\"/>" + addNumbers[0] + "<break time=\"500ms\"/>";
+    }
     
     return speakOutput;
 };
 
-GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
+AustrianLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
     var speechOutput = "<speak>";
 
     switch(myRank) {
         case 1000:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung 6 aus 49 von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
+                speechOutput += "In der letzten Ziehung 6 aus 45 von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             else
-                speechOutput += "The last drawing of german lotto was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck in the future!";
+                speechOutput += "The last drawing of austrian lotto was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck in the future!";
             break;
         case 1:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung 6 aus 49 von " + date + " hast du den Jackpot geknackt! Alle Zahlen und auch die Superzahl hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += "In der letzten Ziehung 6 aus 45 von " + date + " hast du den Jackpot geknackt! Alle Zahlen hast du richtig vorhergesagt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of german lotto was on " + date + ". And you won the jackpot! You predicted all numbers and the superball correctly! Let´s get the party started! Congratulation! " + moneySpeech ;
+                speechOutput += "The last drawing of austrian lotto was on " + date + ". And you won the jackpot! You predicted all numbers correctly! Let´s get the party started! Congratulation! " + moneySpeech ;
+            break;
+        case 8:
+            if(isGermanLang())
+                speechOutput += "In der letzten Ziehung 6 aus 45 von " + date + " hast du die Zusatzzahl richtig! Herzlichen Glückwunsch! " + moneySpeech;
+            else
+                speechOutput += "The last drawing of austrian lotto was on " + date + ". You have the correct bonus number! Congratulation! " + moneySpeech ;
             break;
         default:
             if(isGermanLang())
-                speechOutput += "In der letzten Ziehung 6 aus 49 von " + date + " hast du " + germanOdds['rank'+myRank][0] + " richtige Zahlen" + (germanOdds['rank'+myRank][1] == 1 ? " und sogar die Superzahl richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
+                speechOutput += "In der letzten Ziehung 6 aus 45 von " + date + " hast du " + austrianOdds['rank'+myRank][0] + " richtige Zahlen" + (austrianOdds['rank'+myRank][1] == 1 ? " und sogar die Zusatzzahl richtig!" : "!") + " Herzlichen Glückwunsch! " + moneySpeech;
             else
-                speechOutput += "The last drawing of german lotto was on " + date + ". You have " + germanOdds['rank'+myRank][0] + " matching numbers" + (germanOdds['rank'+myRank][1] == 1 ? " and the superball does match as well!" : "!") + " Congratulation! " + moneySpeech;
+                speechOutput += "The last drawing of austrian lotto was on " + date + ". You have " + austrianOdds['rank'+myRank][0] + " matching numbers" + (austrianOdds['rank'+myRank][1] == 1 ? " and the bonus number does match as well!" : "!") + " Congratulation! " + moneySpeech;
     }
 
     return speechOutput;
@@ -171,4 +193,4 @@ function stringifyArray(numberArray) {
     return numberArray;
 }
 
-module.exports = GermanLotteryApiHelper;
+module.exports = AustrianLotteryApiHelper;
