@@ -151,7 +151,7 @@ Spiel77ApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, money
             if(isGermanLang())
                 speechOutput += "In der letzten Ziehung Spiel77 von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             else
-                speechOutput += "The last drawing of game 77 was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck next time!";
+                speechOutput += "The last drawing of game 77 was on " + date + ". Unfortunately, you didn`t win anything. I wish you all the luck next time!";
             break;
         case 1:
             if(isGermanLang())
@@ -183,7 +183,7 @@ Spiel77ApiHelper.prototype.createLotteryWinSpeechOutputShort = function(myRank, 
             if(isGermanLang())
                 speechOutput += " In Spiel77 hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
             else
-                speechOutput += "Unfortunately, you didn`t won anything in game 77. I wish you all the luck next time";
+                speechOutput += "Unfortunately, you didn`t win anything in game 77. I wish you all the luck next time";
             break;
         case 1:
             if(isGermanLang())
