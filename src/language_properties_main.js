@@ -26,7 +26,7 @@ var properties =
         welcome_reprompt: "Sage 'Hilfe' um Kommandos in der Alexa App zu sehen!",
 
         //hello intent
-        hello: "Hallo. Es werden jetzt auch Spiel77, Super6 und weitere Lotterien unterstüzt. Für mehr Informationen sage einfach: Hilfe!",
+        hello: "Hallo. Es werden jetzt auch Spiel77, Super6, 6aus45 und weitere Lotterien unterstüzt. Für mehr Informationen sage einfach: Hilfe!",
         hello_reprompt: "Hallo!",
 
         //new number intent
@@ -89,7 +89,7 @@ var properties =
         next_drawing_failed: "Bei der Abfrage nach der nächsten Ziehung ist ein Fehler aufgetreten. Bitte entschuldige.",
 
         //SupportedLotteries intent
-        supportet_lotteries: "Aktuell werden die Lotteriesysteme 6aus49, Eurojackpot, EuroMillions, PowerBall, MegaMillions und die Zusatzlotterien Spiel77 und Super6 unterstützt. Sage: Feld hinzufügen und den Lotterienamen, um deine Zahlen zu speichern oder sage: Beenden, um den Skill zu schließen.",
+        supportet_lotteries: "Aktuell werden die Lotteriesysteme 6aus49 mit Spiel77 und Super6, Eurojackpot, EuroMillions, PowerBall, MegaMillions und 6aus45 mit Joker unterstützt. Sage: Feld hinzufügen und den Lotterienamen, um deine Zahlen zu speichern oder sage: Beenden, um den Skill zu schließen.",
 
         //NullNumberIntent intent
         null_number_intent_error_1: "Wenn du deine Zahlen hinzufügen willst, musst du 'Feld hinzufügen und den Lotterie-Namen' sagen.",
@@ -230,7 +230,7 @@ var properties =
         next_drawing_failed: "I´m sorry, but the request for the next drawing failed.",
 
         //SupportedLotteries intent
-        supportet_lotteries: "Currently, following lotteries are supported: german 6 out of 49, euro jackpot, euro millions, powerBall, mega millions and german additional lottiers 'Spiel77' and 'super 6'. Say: add field and the lottery name to save your numbers or say: cancel, to close the skill",
+        supportet_lotteries: "Currently, following lotteries are supported: german lotto with additional lotteries game 77 and super6, euro jackpot, euro millions, powerBall, mega millions and austrian lotto with additional lottery joker. Say: add field and the lottery name to store your numbers or say: cancel, to close the skill",
 
         //NullNumberIntent intent
         null_number_intent_error_1: "If you want to add you numbers, you need to say: add field, and the lottery name.",
@@ -252,7 +252,7 @@ var properties =
 
         //saveNewLottoNumbers function
         save_new_numbers_ask_super6: " Are you also playing super 6?",
-        save_new_numbers_ask_spiel77: " Are you also playing spiel 77?",
+        save_new_numbers_ask_spiel77: " Are you also playing game 77?",
         save_new_numbers_failed: "I´m sorry, but I could not save your numbers. An error occured.",
 
         //getSaveSpeechOutput function
