@@ -1,203 +1,5 @@
 {
-    "intents": [
-      {
-        "name": "AddLotteryNumbers",
-        "samples": [
-          "add field for {lotteryName}",
-          "add a new field for {lotteryName}",
-          "add a {lotteryName} field",
-          "add new numbers for {lotteryName}"
-        ],
-        "slots": [
-          {
-            "name": "lotteryName",
-            "type": "CUSTOM_SLOT_TYPE_LotteryNames",
-            "samples": []
-          }
-        ]
-      },
-      {
-        "name": "AMAZON.CancelIntent",
-        "samples": []
-      },
-      {
-        "name": "AMAZON.HelpIntent",
-        "samples": []
-      },
-      {
-        "name": "AMAZON.NoIntent",
-        "samples": []
-      },
-      {
-        "name": "AMAZON.StopIntent",
-        "samples": []
-      },
-      {
-        "name": "AMAZON.YesIntent",
-        "samples": []
-      },
-      {
-        "name": "AskForLatestLotteryNumbers",
-        "samples": [
-          "what are the numbers in the last drawing of {lotteryName}",
-          "what are the drawn numbers for {lotteryName}",
-          "for the latest drawn numbers of {lotteryName}"
-        ],
-        "slots": [
-          {
-            "name": "lotteryName",
-            "type": "CUSTOM_SLOT_TYPE_LotteryNames",
-            "samples": []
-          }
-        ]
-      },
-      {
-        "name": "AskForLotteryJackpot",
-        "samples": [
-          "what is the current jackpot for {lotteryName}",
-          "for the current jackpot of {lotteryName}",
-          "how big is the jackpot of {lotteryName}",
-          "for the jackpot of {lotteryName}"
-        ],
-        "slots": [
-          {
-            "name": "lotteryName",
-            "type": "CUSTOM_SLOT_TYPE_LotteryNames",
-            "samples": []
-          }
-        ]
-      },
-      {
-        "name": "AskForLotteryWinIntent",
-        "samples": [
-          "did I win in {lotteryName}",
-          "if I did win in {lotteryName}",
-          "if I won in the last drawing of {lotteryName}",
-          "check if I won in {lotteryName}",
-          "check if I won in the last drawing of {lotteryName}"
-        ],
-        "slots": [
-          {
-            "name": "lotteryName",
-            "type": "CUSTOM_SLOT_TYPE_LotteryNames",
-            "samples": []
-          }
-        ]
-      },
-      {
-        "name": "AskForNextLotteryDrawing",
-        "samples": [
-          "for the next drawing of {lotteryName}",
-          "when is the next drawing of {lotteryName}",
-          "when the next drawing of {lotteryName} is",
-          "when is the next {lotteryName} drawing"
-        ],
-        "slots": [
-          {
-            "name": "lotteryName",
-            "type": "CUSTOM_SLOT_TYPE_LotteryNames",
-            "samples": []
-          }
-        ]
-      },
-      {
-        "name": "ChangeLotteryNumberIntent",
-        "samples": [
-          "correct last number",
-          "correct",
-          "change",
-          "revise"
-        ],
-        "slots": []
-      },
-      {
-        "name": "EndIntent",
-        "samples": [
-          "Beenden"
-        ],
-        "slots": []
-      },
-      {
-        "name": "HelloIntent",
-        "samples": [
-          "hi",
-          "hello"
-        ],
-        "slots": []
-      },
-      {
-        "name": "MyCurrentNumbers",
-        "samples": [
-          "what are my currently stored numbers for {lotteryName}",
-          "what are my currently saved numbers for {lotteryName}",
-          "what my currently saved numbers for {lotteryName} are",
-          "what my currently stored numbers for {lotteryName} are",
-          "for my {lotteryName} numbers"
-        ],
-        "slots": [
-          {
-            "name": "lotteryName",
-            "type": "CUSTOM_SLOT_TYPE_LotteryNames",
-            "samples": []
-          }
-        ]
-      },
-      {
-        "name": "NewNumber",
-        "samples": [
-          "{lotteryNumber}"
-        ],
-        "slots": [
-          {
-            "name": "lotteryNumber",
-            "type": "AMAZON.NUMBER",
-            "samples": []
-          }
-        ]
-      },
-      {
-        "name": "NullNumberIntent",
-        "samples": [
-          "null",
-          "zero",
-          "oh"
-        ],
-        "slots": []
-      },
-      {
-        "name": "RemoveLotteryNumbers",
-        "samples": [
-          "delete my {lotteryName} numbers",
-          "delete my numbers for {lotteryName}",
-          "delete all my {lotteryName} numbers",
-          "delete all my currently stored numbers for {lotteryName}",
-          "delete my current numbers for {lotteryName}"
-        ],
-        "slots": [
-          {
-            "name": "lotteryName",
-            "type": "CUSTOM_SLOT_TYPE_LotteryNames",
-            "samples": []
-          }
-        ]
-      },
-      {
-        "name": "SupportedLotteries",
-        "samples": [
-          "which lotteries are supported",
-          "which lotteries can I use",
-          "what are the supported lotteries"
-        ],
-        "slots": []
-      },
-      {
-        "name": "ThanksIntent",
-        "samples": [
-          "Thanks"
-        ],
-        "slots": []
-      }
-    ],
+  "languageModel": {
     "types": [
       {
         "name": "CUSTOM_SLOT_TYPE_LotteryNames",
@@ -267,5 +69,198 @@
           }
         ]
       }
-    ]
+    ],
+    "intents": [
+      {
+        "name": "AddLotteryNumbers",
+        "samples": [
+          "add field for {lotteryName}",
+          "add a new field for {lotteryName}",
+          "add a {lotteryName} field",
+          "add new numbers for {lotteryName}"
+        ],
+        "slots": [
+          {
+            "name": "lotteryName",
+            "type": "CUSTOM_SLOT_TYPE_LotteryNames"
+          }
+        ]
+      },
+      {
+        "name": "AMAZON.CancelIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.HelpIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.NoIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.StopIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.YesIntent",
+        "samples": []
+      },
+      {
+        "name": "AskForLatestLotteryNumbers",
+        "samples": [
+          "what are the numbers in the last drawing of {lotteryName}",
+          "what are the drawn numbers for {lotteryName}",
+          "for the latest drawn numbers of {lotteryName}"
+        ],
+        "slots": [
+          {
+            "name": "lotteryName",
+            "type": "CUSTOM_SLOT_TYPE_LotteryNames"
+          }
+        ]
+      },
+      {
+        "name": "AskForLotteryJackpot",
+        "samples": [
+          "what is the current jackpot for {lotteryName}",
+          "for the current jackpot of {lotteryName}",
+          "how big is the jackpot of {lotteryName}",
+          "for the jackpot of {lotteryName}"
+        ],
+        "slots": [
+          {
+            "name": "lotteryName",
+            "type": "CUSTOM_SLOT_TYPE_LotteryNames"
+          }
+        ]
+      },
+      {
+        "name": "AskForLotteryWinIntent",
+        "samples": [
+          "did I win in {lotteryName}",
+          "if I did win in {lotteryName}",
+          "if I won in the last drawing of {lotteryName}",
+          "check if I won in {lotteryName}",
+          "check if I won in the last drawing of {lotteryName}"
+        ],
+        "slots": [
+          {
+            "name": "lotteryName",
+            "type": "CUSTOM_SLOT_TYPE_LotteryNames"
+          }
+        ]
+      },
+      {
+        "name": "AskForNextLotteryDrawing",
+        "samples": [
+          "for the next drawing of {lotteryName}",
+          "when is the next drawing of {lotteryName}",
+          "when the next drawing of {lotteryName} is",
+          "when is the next {lotteryName} drawing"
+        ],
+        "slots": [
+          {
+            "name": "lotteryName",
+            "type": "CUSTOM_SLOT_TYPE_LotteryNames"
+          }
+        ]
+      },
+      {
+        "name": "ChangeLotteryNumberIntent",
+        "samples": [
+          "correct last number",
+          "correct",
+          "change",
+          "revise"
+        ],
+        "slots": []
+      },
+      {
+        "name": "EndIntent",
+        "samples": [
+          "Beenden"
+        ],
+        "slots": []
+      },
+      {
+        "name": "HelloIntent",
+        "samples": [
+          "hi",
+          "hello"
+        ],
+        "slots": []
+      },
+      {
+        "name": "MyCurrentNumbers",
+        "samples": [
+          "what are my currently stored numbers for {lotteryName}",
+          "what are my currently saved numbers for {lotteryName}",
+          "what my currently saved numbers for {lotteryName} are",
+          "what my currently stored numbers for {lotteryName} are",
+          "for my {lotteryName} numbers"
+        ],
+        "slots": [
+          {
+            "name": "lotteryName",
+            "type": "CUSTOM_SLOT_TYPE_LotteryNames"
+          }
+        ]
+      },
+      {
+        "name": "NewNumber",
+        "samples": [
+          "{lotteryNumber}"
+        ],
+        "slots": [
+          {
+            "name": "lotteryNumber",
+            "type": "AMAZON.NUMBER"
+          }
+        ]
+      },
+      {
+        "name": "NullNumberIntent",
+        "samples": [
+          "null",
+          "zero",
+          "oh"
+        ],
+        "slots": []
+      },
+      {
+        "name": "RemoveLotteryNumbers",
+        "samples": [
+          "delete my {lotteryName} numbers",
+          "delete my numbers for {lotteryName}",
+          "delete all my {lotteryName} numbers",
+          "delete all my currently stored numbers for {lotteryName}",
+          "delete my current numbers for {lotteryName}"
+        ],
+        "slots": [
+          {
+            "name": "lotteryName",
+            "type": "CUSTOM_SLOT_TYPE_LotteryNames"
+          }
+        ]
+      },
+      {
+        "name": "SupportedLotteries",
+        "samples": [
+          "which lotteries are supported",
+          "which lotteries can I use",
+          "what are the supported lotteries"
+        ],
+        "slots": []
+      },
+      {
+        "name": "ThanksIntent",
+        "samples": [
+          "Thanks"
+        ],
+        "slots": []
+      }
+    ],
+    "invocationName": "my lottery"
+  }
 }
