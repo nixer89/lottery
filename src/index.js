@@ -14,8 +14,8 @@ var APP_ID = process.env.APP_ID;
  * The AlexaSkill prototype and helper functions
  */
 var AlexaSkill = require('./AlexaSkill');
-var skillHelperPrototype = require('./SkillHelper');
 var language_properties = require('./language_properties_main');
+var skillHelperPrototype = require('./SkillHelper');
 var skillHelper;
 var props = "";
 

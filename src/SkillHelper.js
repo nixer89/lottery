@@ -85,7 +85,31 @@ function SkillHelper(currentLocale) {
     austrianLottoApi = new AustrianLotteryApi(locale);
     austrianJokerApi = new AustrianJokerApi(locale);
 
-    if(!this.isGermanLang()) {
+    if(this.isGermanLang()) {
+        console.log("it is german language! " + locale);
+        GERMAN_LOTTERY = "sechs aus neun und vierzig";
+        GermanLottoConfig.lotteryName = GERMAN_LOTTERY;
+        GermanLottoConfig.speechLotteryName = GERMAN_LOTTERY;
+        GermanLottoConfig.additionalNumberName = "Superzahl";
+
+        SPIEL77 = "spiel sieben und siebzig";
+        Spiel77Config.lotteryName = SPIEL77;
+        Spiel77Config.speechLotteryName = SPIEL77;
+
+        SUPER6 = "super sechs";
+        Super6Config.lotteryName = SUPER6;
+        Super6Config.speechLotteryName = SUPER6;
+
+        EuroJackpotConfig.additionalNumberName = "Eurozahl";
+        EuroMillionsConfig.additionalNumberName = "Sternzahl";
+
+        AUSTRIAN_LOTTERY = "sechs aus fünf und vierzig";
+        AustrianLottoConfig.lotteryName = AUSTRIAN_LOTTERY;
+        AustrianLottoConfig.speechLotteryName = AUSTRIAN_LOTTERY;
+
+        supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS, AUSTRIAN_LOTTERY, AUSTRIAN_JOKER];
+    } else {
+        console.log("it is not german language! " + locale);
         GERMAN_LOTTERY = "german lotto";
         GermanLottoConfig.lotteryName = GERMAN_LOTTERY;
         GermanLottoConfig.speechLotteryName = GERMAN_LOTTERY;
@@ -95,7 +119,7 @@ function SkillHelper(currentLocale) {
         Spiel77Config.lotteryName = SPIEL77;
         Spiel77Config.speechLotteryName = SPIEL77;
 
-        SUPER6 = "super 6";
+        SUPER6 = "super sechs";
         Super6Config.lotteryName = SUPER6;
         Super6Config.speechLotteryName = SUPER6;
 
@@ -115,6 +139,10 @@ SkillHelper.prototype.isGermanLang = function() {
 }
 
 SkillHelper.prototype.isLotteryNameSupported = function(lotteryName) {
+    console.log("verstandene lotterie: " + lotteryName);
+    console.log("supported lotteries: " + JSON.stringify(supportedLotteries));
+    console.log("current locale: " + locale);
+
     return supportedLotteries.indexOf(lotteryName.toLowerCase()) != -1;
 }
 
