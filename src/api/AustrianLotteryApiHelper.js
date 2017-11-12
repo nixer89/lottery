@@ -1,7 +1,7 @@
 'use strict';
 
 var nodeFetch = require('node-fetch');
-var LOTTOLAND_API_URL = "https://www.lottoland.com/api/drawings/austriaLotto";
+var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/austriaLotto";
 var austrianOdds = {"rank1": [6,0], "rank2": [5,1], "rank3": [5,0], "rank4": [4,1], "rank5": [4,0], "rank6": [3,1], "rank7": [3,0], "rank8": [0,1]};
 var locale="";
 
@@ -10,6 +10,8 @@ function AustrianLotteryApiHelper(currentLocale) {
 
     if(!isGermanLang())
         LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/austriaLotto";
+    else
+        LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/austriaLotto";
 }
 function invokeBackend(url) {
     return nodeFetch(url)
