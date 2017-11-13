@@ -10,6 +10,8 @@ function EuroMillionsApiHelper(currentLocale) {
 
     if(!isGermanLang())
         LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/euroMillions";
+    else
+        LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/euroMillions";
 }
 
 function invokeBackend(url) {

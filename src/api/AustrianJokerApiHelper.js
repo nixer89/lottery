@@ -11,6 +11,8 @@ function AustrianJokerApiHelper(currentLocale) {
 
     if(!isGermanLang())
         LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/austriaLotto";
+    else
+        LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/austriaLotto";
 }
 
 function invokeBackend(url) {

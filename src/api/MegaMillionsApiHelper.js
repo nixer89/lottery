@@ -11,6 +11,8 @@ function MegaMillionsApiHelper(currentLocale) {
 
     if(!isGermanLang())
         LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/megaMillions";
+    else
+        LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/megaMillions";
 }
 
 function invokeBackend(url) {

@@ -10,6 +10,8 @@ function GermanLotteryApiHelper(currentLocale) {
 
     if(!isGermanLang())
         LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/german6aus49";
+    else
+        LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/german6aus49";
 }
 function invokeBackend(url) {
     return nodeFetch(url)

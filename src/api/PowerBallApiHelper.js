@@ -11,6 +11,8 @@ function PowerBallApiHelper(currentLocale) {
 
     if(!isGermanLang())
         LOTTOLAND_API_URL = "https://lottoland.com/en/api/drawings/powerBall";
+    else
+        LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/powerBall";
 }
 
 function invokeBackend(url) {
