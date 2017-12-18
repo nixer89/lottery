@@ -15,7 +15,7 @@ var properties =
     de_DE: {
         //general
         you_are_wrong_here: "Entschuldige, ich habe dich nicht verstanden. Sage: Hilfe, um dir Kommandos an die Alexa App schicken zu lassen.",
-        unknown_lottery: "Tut mir leid, diese Lotterie kenne ich nicht. Frage mich, welche Lotterien unterstützt werden, um eine Übersicht in der Alexa App zu erhalten",
+        unknown_lottery: "Tut mir leid, diese Lotterie kenne ich nicht. Frage mich, welche Lotterien unterstützt werden, um eine Übersicht in der Alexa App zu erhalten. Du musst immer die Lotterie mit angeben, für welche ich die Aktion ausführen soll.",
         ok: "Okay.",
         ok_your: "Ok, deine ",
         without_guarantee: "Alle Angaben wie immer ohne Gewähr.",
@@ -26,7 +26,7 @@ var properties =
         welcome_reprompt: "Sage 'Hilfe' um Kommandos in der Alexa App zu sehen!",
 
         //hello intent
-        hello: "Hallo. Es werden jetzt auch Spiel77, Super6, 6aus45 und weitere Lotterien unterstüzt. Für mehr Informationen sage einfach: Hilfe!",
+        hello: "Hallo. Es wird jetzt auch das österreichische Lotto mit Joker unterstüzt. Für mehr Informationen sage einfach: Hilfe!",
         hello_reprompt: "Hallo!",
 
         //new number intent
@@ -106,7 +106,7 @@ var properties =
         help_intent_repromt_line: "Sage: Feld hinzufügen und den Lotterienamen, um deine Lottozahlen zu hinterlegen.",
         help_intent_card_title_line: "MeinLotto Kommandos",
         help_intent_card_content_line: "Hier sind ein paar nützliche Kommandos:\n- füge ein Feld für 6aus49 hinzu\n- habe ich in Euro Jackpot gewonnen?" +
-        "\n- was sind meine aktuell hinterlegten Zahlen für 6aus49\n- was sind die aktuellen Gewinnzahlen von PowerBall\n- lösche meine Zahlen von Euro Jackpot" +
+        "\n- was sind meine aktuell hinterlegten Zahlen für 6aus45\n- was sind die aktuellen Gewinnzahlen von PowerBall\n- lösche meine Zahlen von Euro Jackpot" +
         "\n- wann ist die nächste Ziehung EuroMillions?\n- wie hoch ist der Jackpott von 6aus49",
 
         //saveNewLottoNumbers function

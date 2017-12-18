@@ -35,13 +35,21 @@ AustrianLotteryApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
         if(json) {
             var numbersAndDate = [];
             var lotteryDateString = "";
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+            
             if(isUSLang())
-                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.month + "." + json.last.date.day + "." + json.last.date.year;
+                lotteryDateString = lastLottery.date.dayOfWeek + ", " + lastLottery.date.month + "." + lastLottery.date.day + "." + lastLottery.date.year;
             else
-                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+                lotteryDateString = lastLottery.date.dayOfWeek + ", " + lastLottery.date.day + "." + lastLottery.date.month + "." + lastLottery.date.year;
 
-            numbersAndDate[0] = stringifyArray(json.last.numbers);
-            numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.Zusatzzahl[0]));
+            numbersAndDate[0] = stringifyArray(lastLottery.numbers);
+            numbersAndDate[1] = stringifyArray(Array(1).fill(lastLottery.Zusatzzahl[0]));
             numbersAndDate[2] = lotteryDateString;
             numbersAndDate[3] = "";//json.last.currency;
 
@@ -62,9 +70,17 @@ AustrianLotteryApiHelper.prototype.getCorrectArticle = function() {
 AustrianLotteryApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+
             var numbers = [];
-            numbers[0] = stringifyArray(json.last.numbers);
-            numbers[1] = stringifyArray(Array(1).fill(json.last.Zusatzzahl[0]));
+            numbers[0] = stringifyArray(lastLottery.numbers);
+            numbers[1] = stringifyArray(Array(1).fill(lastLottery.Zusatzzahl[0]));
 
             return numbers;
         }
@@ -91,7 +107,10 @@ AustrianLotteryApiHelper.prototype.getNextLotteryDrawingDate = function() {
 AustrianLotteryApiHelper.prototype.getCurrentJackpot =function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
-            return json.next.jackpot;
+            if(json.next)
+                return json.next.jackpot;
+            else
+                return json.last.jackpot;
         }
     }).catch(function(err) {
         console.log(err);
@@ -100,13 +119,25 @@ AustrianLotteryApiHelper.prototype.getCurrentJackpot =function() {
 
 AustrianLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
-        if(json && json.last.odds && json.last.odds['rank'+myRank]) {
-            if(json.last.odds['rank'+myRank].prize > 0) {
-                var price = json.last.odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " €.";
+        if(json) {
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
             } else {
-                return null;
+                lastLottery = json.past;
             }
+
+            if(lastLottery.odds && lastLottery.odds['rank'+myRank]) {
+                if(lastLottery.odds['rank'+myRank].prize > 0) {
+                    var price = lastLottery.odds['rank'+myRank].prize + "";
+                    return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " €.";
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            return null;
         }
     }).catch(function(err) {
         console.log(err);

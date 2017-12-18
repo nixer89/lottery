@@ -37,12 +37,20 @@ Spiel77ApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
         if(json) {
             var numbersAndDate = [];
             var lotteryDateString = "";
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+            
             if(isUSLang())
-                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.month + "." + json.last.date.day + "." + json.last.date.year;
+                lotteryDateString = lastLottery.date.dayOfWeek + ", " + lastLottery.date.month + "." + lastLottery.date.day + "." + lastLottery.date.year;
             else
-                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+                lotteryDateString = lastLottery.date.dayOfWeek + ", " + lastLottery.date.day + "." + lastLottery.date.month + "." + lastLottery.date.year;
 
-            numbersAndDate[0] = stringifyArray(json.last.spiel77.split(""));
+            numbersAndDate[0] = stringifyArray(lastLottery.spiel77.split(""));
             numbersAndDate[1] = -1;
             numbersAndDate[2] = lotteryDateString;
             numbersAndDate[3] = "";//json.last.currency;
@@ -58,7 +66,15 @@ Spiel77ApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbers = [];
-            numbers[0] = stringifyArray(json.last.spiel77.split(""));
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+
+            numbers[0] = stringifyArray(lastLottery.spiel77.split(""));
             numbers[1] = "-1";
 
             return numbers;
@@ -106,15 +122,27 @@ Spiel77ApiHelper.prototype.getCurrentJackpot =function() {
 
 Spiel77ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
-        if(json && json.last.spiel77Odds && json.last.spiel77Odds['rank'+myRank]) {
-            if(json.last.spiel77Odds['rank'+myRank].prize > 0) { //check the internet
-                var price = json.last.spiel77Odds['rank'+myRank].prize + "";
-                return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " €.";
+        if(json) {
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+
+            if(lastLottery.spiel77Odds && lastLottery.spiel77Odds['rank'+myRank]) {
+                if(lastLottery.spiel77Odds['rank'+myRank].prize > 0) { //check the internet
+                    var price = lastLottery.spiel77Odds['rank'+myRank].prize + "";
+                    return price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2) + " €.";
+                } else {
+                    return null;
+                }
+            } else if(spiel77Prizes['rank'+myRank] && spiel77Prizes['rank'+myRank] > 0) { // no internet, use if not jackpot!
+                return spiel77Prizes['rank'+myRank] + " €.";
             } else {
                 return null;
             }
-        } else if(spiel77Prizes['rank'+myRank] && spiel77Prizes['rank'+myRank] > 0) { // no internet, use if not jackpot!
-            return spiel77Prizes['rank'+myRank] + " €.";
         } else {
             return null;
         }
