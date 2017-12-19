@@ -37,12 +37,20 @@ Super6ApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
         if(json) {
             var numbersAndDate = [];
             var lotteryDateString = "";
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+            
             if(isUSLang())
-                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.month + "." + json.last.date.day + "." + json.last.date.year;
+                lotteryDateString = lastLottery.date.dayOfWeek + ", " + lastLottery.date.month + "." + lastLottery.date.day + "." + lastLottery.date.year;
             else
-                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+                lotteryDateString = lastLottery.date.dayOfWeek + ", " + lastLottery.date.day + "." + lastLottery.date.month + "." + lastLottery.date.year;
 
-            numbersAndDate[0] = stringifyArray(json.last.super6.split(""));
+            numbersAndDate[0] = stringifyArray(lastLottery.super6.split(""));
             numbersAndDate[1] = -1;
             numbersAndDate[2] = lotteryDateString;
             numbersAndDate[3] = "";//json.last.currency;
@@ -58,7 +66,15 @@ Super6ApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbers = [];
-            numbers[0] = stringifyArray(json.last.super6.split(""));
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+
+            numbers[0] = stringifyArray(lastLottery.super6.split(""));
             numbers[1] = "-1";
 
             return numbers;
@@ -106,16 +122,28 @@ Super6ApiHelper.prototype.getCurrentJackpot =function() {
 
 Super6ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
-        if(json && json.last.super6Odds && json.last.super6Odds['rank'+myRank]) {
-            if(json.last.super6Odds['rank'+myRank].prize > 0) {
-                var price = json.last.super6Odds['rank'+myRank].prize + "";
-                price = price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
-                return formatPrize(price);
+        if(json) {
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+
+            if(lastLottery.super6Odds && lastLottery.super6Odds['rank'+myRank]) {
+                if(lastLottery.super6Odds['rank'+myRank].prize > 0) {
+                    var price = lastLottery.super6Odds['rank'+myRank].prize + "";
+                    price = price.substring(0, price.length-2) + (isGermanLang() ? "," : ".") + price.substring(price.length-2);
+                    return formatPrize(price);
+                } else {
+                    return null;
+                }
+            }  else if(super6Prizes['rank'+myRank] && super6Prizes['rank'+myRank] > 0) { // no internet, use if not jackpot!
+                return formatPrize(super6Prizes['rank'+myRank]+"");
             } else {
                 return null;
             }
-        }  else if(super6Prizes['rank'+myRank] && super6Prizes['rank'+myRank] > 0) { // no internet, use if not jackpot!
-            return formatPrize(super6Prizes['rank'+myRank]+"");
         } else {
             return null;
         }

@@ -2,6 +2,7 @@
 
 var nodeFetch = require('node-fetch');
 var LOTTOLAND_API_URL = "https://lottoland.com/api/drawings/megaMillions";
+var CURRENCY_EXCHANGE_API_URL_EUR = "https://api.fixer.io/latest?base=EUR";
 var megaMillionsOdds = {"rank1": [5,1], "rank2": [5,0], "rank3": [4,1], "rank4": [4,0], "rank5": [3,1], "rank6": [3,0], "rank7": [2,1], "rank8": [1,1], "rank9": [0,1]};
 var megaMillionsPrizes = {"rank1": 0 , "rank2": 100000000, "rank3": 500000, "rank4": 50000, "rank5": 5000, "rank6": 500, "rank7": 500, "rank8": 200, "rank9": 100};
 var locale="";
@@ -37,17 +38,25 @@ MegaMillionsApiHelper.prototype.getLastLotteryDateAndNumbers = function() {
         if(json) {
             var numbersAndDate = [];
             var lotteryDateString = "";
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+            
             if(isUSLang())
-                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.month + "." + json.last.date.day + "." + json.last.date.year;
+                lotteryDateString = lastLottery.date.dayOfWeek + ", " + lastLottery.date.month + "." + lastLottery.date.day + "." + lastLottery.date.year;
             else
-                lotteryDateString = json.last.date.dayOfWeek + ", " + json.last.date.day + "." + json.last.date.month + "." + json.last.date.year;
+                lotteryDateString = lastLottery.date.dayOfWeek + ", " + lastLottery.date.day + "." + lastLottery.date.month + "." + lastLottery.date.year;
 
-            numbersAndDate[0] = stringifyArray(json.last.numbers);
-            numbersAndDate[1] = stringifyArray(Array(1).fill(json.last.megaballs));
+            numbersAndDate[0] = stringifyArray(lastLottery.numbers);
+            numbersAndDate[1] = stringifyArray(Array(1).fill(lastLottery.megaballs));
             numbersAndDate[2] = lotteryDateString;
             numbersAndDate[3] = "";//json.last.currency;
             numbersAndDate[4] = "megaplier";
-            numbersAndDate[5] = json.last.megaplier;
+            numbersAndDate[5] = lastLottery.megaplier;
 
             return numbersAndDate;
         }
@@ -60,10 +69,18 @@ MegaMillionsApiHelper.prototype.getLastLotteryNumbers = function() {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json){
         if(json) {
             var numbers = [];
-            numbers[0] = stringifyArray(json.last.numbers);
-            numbers[1] = stringifyArray(Array(1).fill(json.last.megaballs));
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+
+            numbers[0] = stringifyArray(lastLottery.numbers);
+            numbers[1] = stringifyArray(Array(1).fill(lastLottery.megaballs));
             numbers[2] = "megaplier";
-            numbers[3] = json.last.megaplier;
+            numbers[3] = lastLottery.megaplier;
 
             return numbers;
         }
@@ -95,13 +112,24 @@ MegaMillionsApiHelper.prototype.getNextLotteryDrawingDate = function() {
 };
 
 MegaMillionsApiHelper.prototype.getCurrentJackpot =function() {
-    return invokeBackend(LOTTOLAND_API_URL).then(function(json){
-        if(json) {
-            //return json.next.jackpot;
-            if(isGermanLang())
-                return "Der aktuelle Jackpot kann nicht bestimmt werden.";
-            else
-                return "The current jackpot cannot be determined";
+    return invokeBackend(LOTTOLAND_API_URL).then(function(jsonJackpot){
+        if(jsonJackpot) {
+            return invokeBackend(CURRENCY_EXCHANGE_API_URL_EUR).then(function(exchangeRate){
+                var currentJackpot = 0;
+                if(jsonJackpot.next)
+                    currentJackpot = jsonJackpot.next.jackpot;
+                else
+                    currentJackpot = jsonJackpot.last.jackpot;
+                
+                if(exchangeRate && exchangeRate.rates.USD) {
+                    currentJackpot = Math.round(currentJackpot * exchangeRate.rates.USD);
+                }
+
+                if(isGermanLang())
+                    return "Der aktuelle Jackpott von MegaMillions beträgt etwa " + currentJackpot + " Millionen $";
+                else
+                    return "The current jackpot of MegaMillions is around  " + currentJackpot + " million $";
+            });
         }
     }).catch(function(err) {
         console.log(err);
@@ -111,10 +139,18 @@ MegaMillionsApiHelper.prototype.getCurrentJackpot =function() {
 MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     return invokeBackend(LOTTOLAND_API_URL).then(function(json) {
         if(json) {
-            if(isGermanLang() && json.last.odds && json.last.odds['rank'+myRank] && json.last.odds['rank'+myRank].prize > 0) {
-                return formatPrize(json.last.odds['rank'+myRank].prize, json.last.megaplier, myRank);
+            var lastLottery = null;
+            
+            if(json.last.numbers && json.last.numbers.length > 0) {
+                lastLottery = json.last;
+            } else {
+                lastLottery = json.past;
+            }
+
+            if(isGermanLang() && lastLottery.odds && lastLottery.odds['rank'+myRank] && lastLottery.odds['rank'+myRank].prize > 0) {
+                return formatPrize(lastLottery.odds['rank'+myRank].prize, lastLottery.megaplier, myRank);
             } else if(!isGermanLang() && megaMillionsPrizes['rank'+myRank] && megaMillionsPrizes['rank'+myRank].prize > 0){ //no odds yet -> check if rank is in known prize
-                return formatPrize(megaMillionsPrizes['rank'+myRank], json.last.megaplier, myRank);
+                return formatPrize(megaMillionsPrizes['rank'+myRank], lastLottery.megaplier, myRank);
             } else {
                 return null;
             }
