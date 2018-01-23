@@ -13,7 +13,7 @@ var APP_ID = process.env.APP_ID;
 /**
  * The AlexaSkill prototype and helper functions
  */
-var AlexaSkill = require('./AlexaSkill');
+var AlexaSkill = require('alexa-sdk');
 var language_properties = require('./language_properties_main');
 var skillHelperPrototype = require('./SkillHelper');
 var skillHelper;
@@ -25,57 +25,31 @@ var props = "";
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
  */
-var Lotto = function () {
-    AlexaSkill.call(this, APP_ID);
-};
-
-// Extend AlexaSkill
-Lotto.prototype = Object.create(AlexaSkill.prototype);
-Lotto.prototype.constructor = Lotto;
 
 // Create the handler that responds to the Alexa Request.
 exports.handler = function (event, context) {
     // Create an instance of the Lotto skill.
-    var lotto = new Lotto();
+    var lotto = Alexa.handler(event, context);
+    lotto.appId = APP_ID;
+    lotto.resources = language_properties.getLanguageProperties();
+    lotto.registerHandlers(intent_Handler);
+    lotto.execute();
 
-    var locale = event.request.locale
-
-    if (locale == 'en-US')
-        props = language_properties.getEnglishProperties();
-    else if(locale == 'en-GB')
-        props = language_properties.getEnglishProperties();
-    else if(locale == 'en-IN')
-        props = language_properties.getEnglishProperties();
-    else
-        props = language_properties.getGermanProperties();
-
+    var locale = event.request.locale;
     skillHelper = new skillHelperPrototype(locale);
-
-    lotto.intentHandlers = Intent_Handler; //register intent handler
-
-    lotto.execute(event, context);
 };
 
-Lotto.prototype.eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
-    console.log("Lotto onSessionStarted requestId: " + sessionStartedRequest.requestId + ", sessionId: " + session.sessionId);
-    // any initialization logic goes here
-};
-
-Lotto.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
-    response.ask(props.welcome, props.welcome_reprompt);
-};
-
-Lotto.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, session) {
-    console.log("Lotto onSessionEnded requestId: " + sessionEndedRequest.requestId + ", sessionId: " + session.sessionId);
-    // any cleanup logic goes here
-};
-
-var Intent_Handler  = {
+var intent_Handler  = {
+    "LaunchRequest": function () {
+        this.response.speak(this.t('welcome')).listen(this.t('welcome_reprompt'));
+        this.emit(':responseReady');
+    },
     // register custom intent handlers
     "HelloIntent": function (intent, session, response) {
         if(!checkIntentStatus(session,response)) return;
 
-        response.ask(props.hello, props.hello_reprompt);
+        this.response.speak(this.t('hello')).listen(this.t('hello_reprompt'));
+        this.emit(':responseReady');
     },
     "NewNumber": function (intent, session, response) {
         if(!checkRemoveNumbersIntent(session, response)) return;
@@ -87,9 +61,11 @@ var Intent_Handler  = {
         } else if(session.attributes.isAddingField && intent.slots.lotteryNumber.value && session.attributes.currentConfig && !session.attributes.currentConfig.isZusatzLottery) {
             doLotteryNumberCheck(response, session, intent.slots.lotteryNumber.value);
         } else if(intent.slots.lotteryNumber.value && !session.attributes.isAddingField) {
-            response.ask(props.add_numbers);
+            this.response.speak(this.t('add_numbers')).listen();
+            this.emit(':responseReady');
         }else {
-            response.ask(props.not_recognized_number);
+            this.response.speak(this.t('not_recognized_number')).listen();
+            this.emit(':responseReady');
         }
     },
     "ChangeLotteryNumberIntent": function (intent, session, response) {
@@ -103,11 +79,14 @@ var Intent_Handler  = {
 
             checkWhatNumberIsNext(response, session, null, props.corrected_number);
         } else if(session.attributes.isAddingField && (!session.attributes.newNumbers || session.attributes.newNumbers.length == 0)) {
-            response.ask(props.add_number_before_changing);
+            this.response.speak(this.t('add_number_before_changing')).listen();
+            this.emit(':responseReady');
         } else if(!session.attributes.isAddingField) {
-            response.ask(props.add_numbers);
+            this.response.speak(this.t('props.add_numbers')).listen();
+            this.emit(':responseReady');
         } else {
-            response.ask(props.you_are_wrong_here);
+            this.response.speak(this.t('you_are_wrong_here')).listen();
+            this.emit(':responseReady');
         }
     },
     "AddLotteryNumbers": function (intent, session, response) {
