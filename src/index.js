@@ -94,13 +94,13 @@ var intent_Handler  = {
 
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             setUpForNewField(session, intent.slots.lotteryName.value);
-            var speechStart = props.speech_first_part + session.attributes.currentConfig.speechLotteryName + props.speech_second_part;
+            var speechStart = this.t('props.speech_first_part') + session.attributes.currentConfig.speechLotteryName + this.t('props.speech_second_part');
             if(session.attributes.currentConfig.isZusatzLottery)
-                response.ask(speechStart + props.speech_third_part_additional_lottery, props.add_lottery_number_reprompt);
+                this.response.speak(speechStart + this.t('props.speech_third_part_additional_lottery')).listen(this.t('props.add_lottery_number_reprompt'));
             else
-                response.ask(speechStart + props.speech_third_part_normal, props.add_lottery_number_reprompt);
+                this.response.speak(speechStart + this.t('props.speech_third_part_normal')).listen(this.t('props.add_lottery_number_reprompt'));
         } else {
-            response.ask(props.unknown_lottery);
+            this.response.speak('props.unknown_lottery').listen();
         }
     },
     "RemoveLotteryNumbers": function (intent, session, response) {
@@ -109,9 +109,9 @@ var intent_Handler  = {
         if(intent.slots.lotteryName.value && skillHelper.isLotteryNameSupported(intent.slots.lotteryName.value)) {
             session.attributes.currentConfig = skillHelper.getConfigByUtterance(intent.slots.lotteryName.value);
             session.attributes.isRemovingNumbers = true;
-            response.ask(props.remove_first_part + session.attributes.currentConfig.speechLotteryName + props.remove_second_part);
+            this.response.speak(this.t('props.remove_first_part') + session.attributes.currentConfig.speechLotteryName + this.t('props.remove_second_part')).listen();
         } else {
-             response.ask(props.unknown_lottery);
+            this.response.speak(this.t('props.unknown_lottery')).listen();
         }
     },
     "AMAZON.YesIntent": function (intent, session, response) {
@@ -120,12 +120,12 @@ var intent_Handler  = {
             //also add spiel77 number to super6
             session.attributes.currentConfig = skillHelper.getConfigByUtterance(skillHelper.getSuper6LotteryName());
             session.attributes.addToSpiel77 = true;
-            saveNewLottoNumbers(session, response);
+            saveNewLottoNumbers(session, this.response);
         } else if(session.attributes.addToSpiel77 && session.attributes.isAddingField && lotteryFieldHasMaxLength(session)) {
             //also add super6 to spiel77
             session.attributes.currentConfig = skillHelper.getConfigByUtterance(skillHelper.getSpiel77LotteryName());
             session.attributes.addToSuper6 = true;
-            saveNewLottoNumbers(session, response);
+            saveNewLottoNumbers(session, this.response);
         } else if(session.attributes.isAddingField && lotteryFieldHasMaxLength(session)) {
             //add new field
             saveNewLottoNumbers(session, response);
