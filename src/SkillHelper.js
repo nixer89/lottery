@@ -320,21 +320,21 @@ function sortLotteryNumbersSub(lotteryNumbers) {
     return sortedLotteryArray;
 }
 
-SkillHelper.prototype.getRank = function(session, lotteryNumbersAndDate, myNumbers) {
+SkillHelper.prototype.getRank = function(attributes, lotteryNumbersAndDate, myNumbers) {
     var numberOfMatchesMain = 0;
     var numberOfMatchesAdditional= 0;
     var rank = 1000;
 
     for(var i = 0; i < myNumbers.length; i++) {
-        var numberOfMatchesMainTmp = getMatchingNumbers(session, lotteryNumbersAndDate[0], myNumbers[i][0]).length;
+        var numberOfMatchesMainTmp = getMatchingNumbers(attributes, lotteryNumbersAndDate[0], myNumbers[i][0]).length;
         var numberOfMatchesAdditionalTmp;
 
-        if(session.attributes.currentConfig.lotteryName == AUSTRIAN_LOTTERY)
-            numberOfMatchesAdditionalTmp = getMatchingNumbers(session, lotteryNumbersAndDate[1], myNumbers[i][0]).length;
+        if(attributes.currentConfig.lotteryName == AUSTRIAN_LOTTERY)
+            numberOfMatchesAdditionalTmp = getMatchingNumbers(attributes, lotteryNumbersAndDate[1], myNumbers[i][0]).length;
         else
-            numberOfMatchesAdditionalTmp = getMatchingNumbers(session, lotteryNumbersAndDate[1], myNumbers[i][1]).length;
+            numberOfMatchesAdditionalTmp = getMatchingNumbers(attributes, lotteryNumbersAndDate[1], myNumbers[i][1]).length;
 
-        var rankTemp = this.getLotteryApiHelper(session.attributes.currentConfig.lotteryName).getLotteryOddRank(numberOfMatchesMainTmp,numberOfMatchesAdditionalTmp);
+        var rankTemp = this.getLotteryApiHelper(attributes.currentConfig.lotteryName).getLotteryOddRank(numberOfMatchesMainTmp,numberOfMatchesAdditionalTmp);
 
         if(rankTemp < rank) {
             rank = rankTemp;
@@ -347,8 +347,8 @@ SkillHelper.prototype.getRank = function(session, lotteryNumbersAndDate, myNumbe
     return rank;
 }
 
-function getMatchingNumbers(session, gewinnZahlen, myNumbers) {
-    if(!session.attributes.currentConfig.isZusatzLottery) {
+function getMatchingNumbers(attributes, gewinnZahlen, myNumbers) {
+    if(!attributes.currentConfig.isZusatzLottery) {
         return gewinnZahlen.filter(n => myNumbers.indexOf(n) != -1);
     } else {
         var equalNumbers = [];
@@ -374,8 +374,8 @@ function getMatchingNumbers(session, gewinnZahlen, myNumbers) {
     }
 }
 
-//SkillHelper.prototype.generateOverAllWinOutput = function(session, response) {
-//    overAllHelper.generateOverAllWinOutput(session, response);
+//SkillHelper.prototype.generateOverAllWinOutput = function(alexaSkill, response) {
+//    overAllHelper.generateOverAllWinOutput(alexaSkill, response);
 //}
 
 module.exports = SkillHelper;
