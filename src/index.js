@@ -199,7 +199,7 @@ var intent_Handler  = {
                             skillHelper.getLotteryApiHelper(this.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
                                 var moneySpeech = ""
                                 if(money && money.length > 0)
-                                    moneySpeech = this.t('amount_you_won') + money + " " + lotteryNumbersAndDate[3];
+                                    moneySpeech = this.t('amount_you_won') + money;
                                 else
                                     moneySpeech = this.t('no_amount_set_yet');
                                     
