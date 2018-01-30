@@ -8,6 +8,17 @@ exports.getLanguageProperties = function() {
 var properties = {
     'de-DE': {
         'translation': {
+            //lottery stuff
+            'autrian_joker_name': "joker",
+            'autrian_lottery_name': "sechs aus fünf und vierzig",
+            'euro_jackpot_name': "eurojackpot",
+            'euro_millions_name': "euro milltions",
+            'german_lottery_name': "sechs aus neun und vierzig",
+            'mega_millions_name': "mega millions",
+            'power_ball_name': "powerball",
+            'spiel_77_name': "spiel sieben und siebzig",
+            'super_6_name': "super sechs",
+
             //general
             'you_are_wrong_here': "Entschuldige, ich habe dich nicht verstanden. Sage: Hilfe, um dir Kommandos an die Alexa App schicken zu lassen.",
             'unknown_lottery': "Tut mir leid, diese Lotterie kenne ich nicht. Frage mich, welche Lotterien unterstützt werden, um eine Übersicht in der Alexa App zu erhalten. Du musst immer die Lotterie mit angeben, für welche ich die Aktion ausführen soll.",

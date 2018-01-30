@@ -4,6 +4,7 @@
 //var overAllHelper = new overAllWinHelperPrototype();
 
 var locale = "";
+var alexa;
 
 //LOTTERY CONFIG START
 var GermanLotteryApi = require('./api/GermanLotteryApiHelper');
@@ -72,8 +73,8 @@ var austrianJokerConfig = { "lotteryName": AUSTRIAN_JOKER, "speechLotteryName": 
 
 var supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS, AUSTRIAN_LOTTERY, AUSTRIAN_JOKER];
 
-function SkillHelper(currentLocale) {
-    locale = currentLocale;
+function SkillHelper(alexaSkill) {
+    alexa = alexaSkill;
 
     germanLottoApi = new GermanLotteryApi(locale);
     spiel77Api = new Spiel77Api(locale);
