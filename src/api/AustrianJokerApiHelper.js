@@ -181,7 +181,7 @@ AustrianJokerApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) 
 };
 
 AustrianJokerApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
-    var speechOutput = "<speak>";
+    var speechOutput = "";
 
     switch(myRank) {
         case 1000:
@@ -243,6 +243,10 @@ AustrianJokerApiHelper.prototype.createLotteryWinSpeechOutputShort = function(my
 
     return speechOutput;
 };
+
+AustrianJokerApiHelper.prototype.getOdds = function() {
+    return jokerOdds;
+}
 
 function stringifyArray(numberArray) {
     for(var i = 0; i < numberArray.length; i++) {

@@ -178,7 +178,7 @@ EuroMillionsApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
 };
 
 EuroMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
-    var speechOutput = "<speak>";
+    var speechOutput = "";
 
     switch(myRank) {
         case 1000:

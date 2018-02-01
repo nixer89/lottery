@@ -152,6 +152,10 @@ Super6ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     });
 };
 
+Super6ApiHelper.prototype.getOdds = function() {
+    return super6Odds;
+};
+
 function formatPrize(prize) {
     if(isGermanLang())
         prize = prize.replace('.',',');
@@ -181,8 +185,7 @@ Super6ApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
 };
 
 Super6ApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
-    var speechOutput = "<speak>";
-    console.log("Super6 rank is: " + myRank);
+    var speechOutput = "";
 
     switch(myRank) {
         case 1000:

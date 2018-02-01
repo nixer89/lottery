@@ -9,16 +9,20 @@ var properties = {
     'de-DE': {
         'translation': {
             //lottery stuff
-            'autrian_joker_name': "joker",
-            'autrian_lottery_name': "sechs aus fünf und vierzig",
-            'euro_jackpot_name': "eurojackpot",
-            'euro_millions_name': "euro milltions",
-            'german_lottery_name': "sechs aus neun und vierzig",
-            'mega_millions_name': "mega millions",
-            'power_ball_name': "powerball",
-            'spiel_77_name': "spiel sieben und siebzig",
-            'super_6_name': "super sechs",
+            'autrian_joker_name': " joker ",
+            'autrian_lottery_name': " sechs aus fünf und vierzig ",
+            'austrian_lottery_additional_name' : " Zusatzzahl ",
 
+            'euro_jackpot_name': " eurojackpot ",
+            'euro_millions_name': " euro milltions ",
+            'german_lottery_name': " sechs aus neun und vierzig ",
+            'mega_millions_name': " mega millions ",
+            'power_ball_name': " powerball ",
+            'spiel_77_name': " spiel sieben und siebzig ",
+            'super_6_name': " super sechs ",
+
+            //lottery win speech output
+            
             //general
             'you_are_wrong_here': "Entschuldige, ich habe dich nicht verstanden. Sage: Hilfe, um dir Kommandos an die Alexa App schicken zu lassen.",
             'unknown_lottery': "Tut mir leid, diese Lotterie kenne ich nicht. Frage mich, welche Lotterien unterstützt werden, um eine Übersicht in der Alexa App zu erhalten. Du musst immer die Lotterie mit angeben, für welche ich die Aktion ausführen soll.",
@@ -168,6 +172,20 @@ var properties = {
             'ok_your': "Okay, your ",
             'without_guarantee': "All statements without guarantee.",
             'is_connector': " is ",
+
+            //lottery stuff
+            'autrian_joker_name': "joker",
+            'autrian_lottery_name': "german lotto",
+            'euro_jackpot_name': "euro jackpot",
+            'euro_millions_name': "euro milltions",
+            'german_lottery_name': "austrian lotto",
+            'mega_millions_name': "mega millions",
+            'power_ball_name': "powerball",
+            'spiel_77_name': "game seventy seven",
+            'super_6_name': "super six",
+
+            //lottery win speech output
+            'lottery_no_win': "The last drawing of %lotteryName was on %date. Unfortunately, you didn`t won anything. I wish you all the luck in the future!",
 
             //welcome prompt
             'welcome': "Welcome to my lottery! Say: 'add field', and the lottery name, to save your lottery numbers. Say: help, to view more commands in the alexa app.",

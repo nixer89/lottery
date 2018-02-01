@@ -151,6 +151,10 @@ Spiel77ApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     });
 };
 
+Spiel77ApiHelper.prototype.getOdds = function() {
+    return spiel77Odds;
+};
+
 Spiel77ApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
     
@@ -174,7 +178,7 @@ Spiel77ApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
 };
 
 Spiel77ApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
-    var speechOutput = "<speak>";
+    var speechOutput = "";
 
     switch(myRank) {
         case 1000:

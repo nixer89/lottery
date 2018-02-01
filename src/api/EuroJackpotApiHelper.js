@@ -178,7 +178,7 @@ EuroJackpotApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
 };
 
 EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
-    var speechOutput = "<speak>";
+    var speechOutput = "";
 
     switch(myRank) {
         case 1000:
@@ -212,6 +212,10 @@ EuroJackpotApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, m
 
     return speechOutput;
 };
+
+EuroJackpotApiHelper.prototype.getOdds = function() {
+    return euroJackpotOdds;
+}
 
 function stringifyArray(numberArray) {
     for(var i = 0; i < numberArray.length; i++) {

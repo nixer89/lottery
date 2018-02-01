@@ -197,20 +197,20 @@ var intent_Handler  = {
                             var rank = skillHelper.getRank(this.attributes, lotteryNumbersAndDate, myNumbers);
 
                             skillHelper.getLotteryApiHelper(this.attributes.currentConfig.lotteryName).getLastPrizeByRank(rank).then(function(money) {
-                                var moneySpeech = ""
+                                var moneySpeech;
                                 if(money && money.length > 0)
                                     moneySpeech = this.t('amount_you_won') + money;
                                 else
                                     moneySpeech = this.t('no_amount_set_yet');
                                     
-                                var speechOutput = skillHelper.getLotteryApiHelper(this.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutput(rank, moneySpeech, lotteryNumbersAndDate[2]);
+                                    var speechOutput = skillHelper.getLotteryApiHelper(this.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutput(rank, moneySpeech, lotteryNumbersAndDate[2]);
 
                                 if(this.attributes.currentConfig.lotteryName == skillHelper.getGermanLotteryName()) {
                                     checkForSpiel77(speechOutput);
                                 } else if(this.attributes.currentConfig.lotteryName == skillHelper.getAustrianLotteryName()) {
                                     checkForJoker(speechOutput);
                                 } else {
-                                    speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee') + "</speak>";
+                                    speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee');
                                     this.response.speak(speechOutput);
                                     this.emit(':responseReady');
                                 }
@@ -249,14 +249,13 @@ var intent_Handler  = {
 
             readLotteryNumbers().then(function(myNumbers) {
                 if(myNumbers && myNumbers.length > 0) {
-                    var speakOutput = "<speak>"+ this.t('current_numbers_1') + config.speechLotteryName + this.t('current_numbers_2') + "<break time=\"200ms\"/>";
+                    var speakOutput = this.t('current_numbers_1') + config.speechLotteryName + this.t('current_numbers_2') + "<break time=\"200ms\"/>";
 
                     for(var i = 0; i < myNumbers.length; i++) {
                         speakOutput += (myNumbers.length > 1 ? (this.attributes.currentConfig.isZusatzLottery ? this.t('current_numbers_lottery_ticket_number') : this.t('current_numbers_field')) + (i+1) : "") + ": <break time=\"500ms\"/>";
                         speakOutput += skillHelper.getLotteryApiHelper(this.attributes.currentConfig.lotteryName).createSSMLOutputForNumbers(myNumbers[i]);
                         speakOutput += ". ";
                     }
-                    speakOutput += "</speak>";
 
                     this.response.speak(speakOutput);
                     this.emit(':responseReady');
@@ -280,9 +279,9 @@ var intent_Handler  = {
             
             skillHelper.getLotteryApiHelper(config.lotteryName).getLastLotteryDateAndNumbers().then(function(numbers) {
                 if(numbers) {
-                    var speakOutput = "<speak>" + this.t('latest_lottery_drawing_numbers') + config.speechLotteryName + this.t('latest_lottery_numbers_from') + numbers[2] + ". <break time=\"500ms\"/>";
+                    var speakOutput = this.t('latest_lottery_drawing_numbers') + config.speechLotteryName + this.t('latest_lottery_numbers_from') + numbers[2] + ". <break time=\"500ms\"/>";
                     speakOutput += skillHelper.getLotteryApiHelper(config.lotteryName).createSSMLOutputForNumbers(numbers);
-                    speakOutput += ". <break time=\"200ms\"/>" + this.t('without_guarantee') + "</speak>";
+                    speakOutput += ". <break time=\"200ms\"/>" + this.t('without_guarantee');
 
                     this.response.speak(speakOutput);
                     this.emit(':responseReady');
@@ -532,10 +531,10 @@ function checkWhatNumberIsNext(newNumber, additionalSpeechInfo) {
 
         numbers[1] = numbers[1].sort((a, b) => a - b);
 
-        var speakOutput = "<speak>" + this.t('check_next_number_current_numbers');
+        var speakOutput = this.t('check_next_number_current_numbers');
 
         speakOutput += skillHelper.getLotteryApiHelper(this.attributes.currentConfig.lotteryName).createSSMLOutputForNumbers(numbers);
-        speakOutput += this.t('check_next_number_ask_correct') + "</speak>";
+        speakOutput += this.t('check_next_number_ask_correct');
         this.response.speak(speakOutput).listen(this.t('check_next_number_ask_correct_all_numbers'));
         this.emit(':responseReady');
 
@@ -547,7 +546,7 @@ function checkWhatNumberIsNext(newNumber, additionalSpeechInfo) {
 
         if(newNumber) {
             var speechOutputPost = this.t('check_next_number_ask_next_number_start_1') + outPut;
-            var speechOutput = "<speak>" + newNumber + "<break time=\"200ms\"/>" + speechOutputPost + "</speak>";
+            var speechOutput = newNumber + "<break time=\"200ms\"/>" + speechOutputPost;
 
             this.response.speak(speechOutput).listen(speechOutputPost);
             this.emit(':responseReady');
@@ -557,7 +556,7 @@ function checkWhatNumberIsNext(newNumber, additionalSpeechInfo) {
         }
     } else {
         if(newNumber || newNumber == 0) {
-            var speechOutput = "<speak>" + (newNumber == 0 ? this.t('check_next_number_is_zero') : newNumber)+ "<break time=\"200ms\"/>" + skillHelper.getCorrectNamingOfNumber((this.attributes.newNumbersMain.length + 1)) + this.t('check_next_number_ask_for_number') +"</speak>"
+            var speechOutput = (newNumber == 0 ? this.t('check_next_number_is_zero') : newNumber)+ "<break time=\"200ms\"/>" + skillHelper.getCorrectNamingOfNumber((this.attributes.newNumbersMain.length + 1)) + this.t('check_next_number_ask_for_number');
             this.response.speak(speechOutput).listen(this.t('check_next_number_ask_next_number_start_2') + skillHelper.getCorrectNamingOfNumber((this.attributes.newNumbersMain.length + 1)) + this.t('check_next_number_ask_for_number'));
             this.emit(':responseReady');
         } else {
@@ -680,7 +679,7 @@ function appendSuper6Win(speechOutput) {
                             
                         speechOutput += skillHelper.getLotteryApiHelper(this.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutputShort(rank, moneySpeech, lotteryNumbersAndDate[2]);
 
-                        speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee') + "</speak>";
+                        speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee');
                         this.response.speak(speechOutput);
                         this.emit(':responseReady');
                     }).catch(function(err) {
@@ -693,7 +692,7 @@ function appendSuper6Win(speechOutput) {
                 }
             });
         } else {
-            speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee') + "</speak>";
+            speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee');
             this.response.speak(speechOutput);
             this.emit(':responseReady');
         }
@@ -719,7 +718,7 @@ function checkForJoker(speechOutput) {
                             
                         speechOutput += skillHelper.getLotteryApiHelper(this.attributes.currentConfig.lotteryName).createLotteryWinSpeechOutputShort(rank, moneySpeech, lotteryNumbersAndDate[2]);
 
-                        speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee') + "</speak>";
+                        speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee');
                         this.response.speak(speechOutput);
                         this.emit(':responseReady');
                     }).catch(function(err) {
@@ -732,7 +731,7 @@ function checkForJoker(speechOutput) {
                 }
             });
         } else {
-            speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee') + "</speak>";
+            speechOutput += "<break time=\"200ms\"/>" + this.t('without_guarantee');
             this.response.speak(speechOutput);
             this.emit(':responseReady');
         }

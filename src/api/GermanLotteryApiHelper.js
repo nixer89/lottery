@@ -144,6 +144,10 @@ GermanLotteryApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     });
 };
 
+GermanLotteryApiHelper.prototype.getOdds = function() {
+    return germanOdds;
+};
+
 GermanLotteryApiHelper.prototype.getLotteryOddRank = function(numberOfMatchesMain, numberOfMatchesAdditional) {
     var myRank = [numberOfMatchesMain, numberOfMatchesAdditional];
     for(var i = 1; i <= Object.keys(germanOdds).length; i++)
@@ -172,7 +176,7 @@ GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) 
 };
 
 GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
-    var speechOutput = "<speak>";
+    var speechOutput = "";
 
     switch(myRank) {
         case 1000:

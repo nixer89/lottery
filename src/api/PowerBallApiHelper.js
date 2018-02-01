@@ -163,6 +163,10 @@ PowerBallApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     });
 };
 
+PowerBallApiHelper.prototype.getOdds = function() {
+    return powerBallOdds;
+};
+
 function formatPrize(prize, powerplay, myRank) {
     var output = ""
     var prizeNoPowerPlay = prize+"";
@@ -215,7 +219,7 @@ PowerBallApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
 };
 
 PowerBallApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
-    var speechOutput = "<speak>";
+    var speechOutput = "";
 
     switch(myRank) {
         case 1000:

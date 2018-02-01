@@ -162,6 +162,10 @@ MegaMillionsApiHelper.prototype.getLastPrizeByRank = function(myRank) {
     });
 };
 
+MegaMillionsApiHelper.prototype.getOdds = function() {
+    return megaMillionsOdds;
+};
+
 function formatPrize(prize, megaplier, myRank) {
     var output = ""
     var prizeNoMegaPlier = prize+"";
@@ -210,7 +214,7 @@ MegaMillionsApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) {
 };
 
 MegaMillionsApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
-    var speechOutput = "<speak>";
+    var speechOutput = "";
 
     switch(myRank) {
         case 1000:
