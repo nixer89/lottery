@@ -175,21 +175,15 @@ GermanLotteryApiHelper.prototype.createSSMLOutputForNumbers = function(numbers) 
     return speakOutput;
 };
 
-GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date) {
+GermanLotteryApiHelper.prototype.createLotteryWinSpeechOutput = function(myRank, moneySpeech, date, alexa) {
     var speechOutput = "";
 
     switch(myRank) {
         case 1000:
-            if(isGermanLang())
-                speechOutput += "In der letzten Ziehung 6 aus 49 von " + date + " hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!";
-            else
-                speechOutput += "The last drawing of german lotto was on " + date + ". Unfortunately, you didn`t won anything. I wish you all the luck in the future!";
+            speechOutput += alexa.t('lottery_no_win_general', alexa.t(alexa.attributes.currentConfig.lotterySpeechName),date);
             break;
         case 1:
-            if(isGermanLang())
-                speechOutput += "In der letzten Ziehung 6 aus 49 von " + date + " hast du den Jackpot geknackt! Alle Zahlen und auch die Superzahl hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! " + moneySpeech;
-            else
-                speechOutput += "The last drawing of german lotto was on " + date + ". And you won the jackpot! You predicted all numbers and the superball correctly! Let´s get the party started! Congratulation! " + moneySpeech ;
+            speechOutput += alexa.t('lottery_jackpot_win_general', alexa.t(alexa.attributes.currentConfig.lotterySpeechName),date ,alexa.t(alexa.attributes.currentConfig.additionalNumberName)) + moneySpeech;
             break;
         default:
             if(isGermanLang())

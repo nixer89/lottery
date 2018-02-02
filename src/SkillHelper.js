@@ -12,7 +12,7 @@ var GermanLotteryDb = require('./db/GermanLotteryDbHelper');
 var germanLottoApi;
 var germanLottoDb = new GermanLotteryDb();
 var GERMAN_LOTTERY = "sechs aus neun und vierzig";
-var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "german_lottery_name", "additionalNumberName": "Superzahl", "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 49, "minRangeAdditional": 0, "maxRangeAdditional": 9};
+var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "german_lottery_name", "additionalNumberName": "german_lottery_additional_name", "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 49, "minRangeAdditional": 0, "maxRangeAdditional": 9};
 
 var Spiel77Api = require('./api/Spiel77ApiHelper');
 var Spiel77Db = require('./db/Spiel77DbHelper');

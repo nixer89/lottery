@@ -9,19 +9,25 @@ var properties = {
     'de-DE': {
         'translation': {
             //lottery stuff
+            'german_lottery_name': " sechs aus neun und vierzig ",
+            'german_lottery_additional_name': "Superzahl",
+            'spiel_77_name': " spiel sieben und siebzig ",
+            'super_6_name': " super sechs ",
+
+
             'autrian_joker_name': " joker ",
             'autrian_lottery_name': " sechs aus fünf und vierzig ",
             'austrian_lottery_additional_name' : " Zusatzzahl ",
 
             'euro_jackpot_name': " eurojackpot ",
             'euro_millions_name': " euro milltions ",
-            'german_lottery_name': " sechs aus neun und vierzig ",
+            
             'mega_millions_name': " mega millions ",
             'power_ball_name': " powerball ",
-            'spiel_77_name': " spiel sieben und siebzig ",
-            'super_6_name': " super sechs ",
 
             //lottery win speech output
+            'lottery_no_win_general': "In der letzten Ziehung %lotteryName von %date hast du leider nichts gewonnen. Dennoch wünsche ich dir weiterhin viel Glück!",
+            'lottery_jackpot_win_general': "In der letzten Ziehung %lotteryName von %date hast du den Jackpot geknackt! Alle Zahlen und auch die %additionalNumberName hast du richtig getippt. Jetzt kannst du es richtig krachen lassen! Herzlichen Glückwunsch! ",
             
             //general
             'you_are_wrong_here': "Entschuldige, ich habe dich nicht verstanden. Sage: Hilfe, um dir Kommandos an die Alexa App schicken zu lassen.",
@@ -186,6 +192,7 @@ var properties = {
 
             //lottery win speech output
             'lottery_no_win': "The last drawing of %lotteryName was on %date. Unfortunately, you didn`t won anything. I wish you all the luck in the future!",
+            'lottery_jackpot_win_general': "The last drawing of %lotteryName was on %date. And you won the jackpot! You predicted all numbers and the %additionalNumberName correctly! Let´s get the party started! Congratulation! ",
 
             //welcome prompt
             'welcome': "Welcome to my lottery! Say: 'add field', and the lottery name, to save your lottery numbers. Say: help, to view more commands in the alexa app.",
