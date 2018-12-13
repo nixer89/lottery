@@ -29,7 +29,7 @@ var props = "";
 // Create the handler that responds to the Alexa Request.
 exports.handler = function (event, context) {
     // Create an instance of the Lotto skill.
-    var lotto = Alexa.handler(event, context);
+    var lotto = AlexaSkill.handler(event, context);
     lotto.appId = APP_ID;
     lotto.resources = language_properties.getLanguageProperties();
     lotto.registerHandlers(intent_Handler);
