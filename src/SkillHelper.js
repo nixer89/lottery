@@ -53,7 +53,7 @@ var MegaMillionsDb = require('./db/MegaMillionsDbHelper');
 var megaMillionsApi;
 var megaMillionsDb = new MegaMillionsDb();
 var MEGAMILLIONS = "mega millions";
-var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "mega millions", "additionalNumberName": "Megaball", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 75,"minRangeAdditional": 1, "maxRangeAdditional": 15};
+var MegaMillionsConfig = { "lotteryName": MEGAMILLIONS, "speechLotteryName": "mega millions", "additionalNumberName": "Megaball", "isZusatzLottery": false, "numberCountMain": 5, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 70,"minRangeAdditional": 1, "maxRangeAdditional": 25};
 
 var AustrianLotteryApi = require('./api/AustrianLotteryApiHelper');
 var AustrianLotteryDb = require('./db/AustrianLotteryDbHelper');
