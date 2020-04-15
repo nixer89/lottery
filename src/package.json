@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/nixer89/lottery_v2#readme",
   "dependencies": {
-    "dynasty": "^0.2.6",
-    "node-fetch": "^1.6.3"
+    "dynasty": "^0.3.15",
+    "node-fetch": "^2.6.0"
   }
 }

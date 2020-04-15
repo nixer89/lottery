@@ -152,7 +152,7 @@ var Intent_Handler  = {
             saveNewLottoNumbers(session, response);
         } else if (session.attributes.isRemovingNumbers && session.attributes.currentConfig) {
             //remove all numbers
-            skillHelper.getLotteryDbHelper(session.attributes.currentConfig.lotteryName).removeLotteryNumbers(session.user.userId).then(function(result) {
+            skillHelper.getLotteryDbHelper(session.attributes.currentConfig.lotteryName).updateLotteryNumbers(session.user.userId, []).then(function(result) {
                 if(result) {
                     response.tell(props.remove_first_part + session.attributes.currentConfig.speechLotteryName + props.remove_success);
                 }

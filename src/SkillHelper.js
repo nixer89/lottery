@@ -11,21 +11,21 @@ var GermanLotteryDb = require('./db/GermanLotteryDbHelper');
 var germanLottoApi;
 var germanLottoDb = new GermanLotteryDb();
 var GERMAN_LOTTERY = "sechs aus neun und vierzig";
-var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "6aus49", "additionalNumberName": "Superzahl", "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 49, "minRangeAdditional": 0, "maxRangeAdditional": 9};
+var GermanLottoConfig = { "lotteryName": GERMAN_LOTTERY, "speechLotteryName": "6 aus 49", "additionalNumberName": "Superzahl", "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 1, "minRangeMain": 1, "maxRangeMain": 49, "minRangeAdditional": 0, "maxRangeAdditional": 9};
 
 var Spiel77Api = require('./api/Spiel77ApiHelper');
 var Spiel77Db = require('./db/Spiel77DbHelper');
 var spiel77Api;
 var spiel77Db = new Spiel77Db();
 var SPIEL77 = "spiel sieben und siebzig";
-var Spiel77Config = { "lotteryName": SPIEL77, "speechLotteryName": SPIEL77, "additionalNumberName": "", "isZusatzLottery": true, "numberCountMain": 7, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
+var Spiel77Config = { "lotteryName": SPIEL77, "speechLotteryName": "spiel 77", "additionalNumberName": "", "isZusatzLottery": true, "numberCountMain": 7, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
 
 var Super6Api = require('./api/Super6ApiHelper');
 var Super6Db = require('./db/Super6DbHelper');
 var super6Api;
 var super6Db = new Super6Db();
 var SUPER6 = "super sechs";
-var Super6Config = { "lotteryName": SUPER6, "speechLotteryName": SUPER6, "additionalNumberName": "", "isZusatzLottery": true, "numberCountMain": 7, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
+var Super6Config = { "lotteryName": SUPER6, "speechLotteryName": "super 6", "additionalNumberName": "", "isZusatzLottery": true, "numberCountMain": 7, "numberCountAdditional": 0, "minRangeMain": 0, "maxRangeMain": 9, "minRangeAdditional": 0, "maxRangeAdditional": 0};
 
 var EuroJackpotApi = require('./api/EuroJackpotApiHelper');
 var EuroJackpotDb = require('./db/EuroJackpotDbHelper');
@@ -60,7 +60,7 @@ var AustrianLotteryDb = require('./db/AustrianLotteryDbHelper');
 var austrianLottoApi;
 var austrianLottoDb = new AustrianLotteryDb();
 var AUSTRIAN_LOTTERY = "sechs aus fünf und vierzig";
-var AustrianLottoConfig = { "lotteryName": AUSTRIAN_LOTTERY, "speechLotteryName": "6aus45", "additionalNumberName": "Zusatzzahl", "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 0, "minRangeMain": 1, "maxRangeMain": 45, "minRangeAdditional": 0, "maxRangeAdditional": 0};
+var AustrianLottoConfig = { "lotteryName": AUSTRIAN_LOTTERY, "speechLotteryName": "6 aus 45", "additionalNumberName": "Zusatzzahl", "isZusatzLottery": false, "numberCountMain": 6, "numberCountAdditional": 0, "minRangeMain": 1, "maxRangeMain": 45, "minRangeAdditional": 0, "maxRangeAdditional": 0};
 
 var AustrianJokerApi = require('./api/AustrianJokerApiHelper');
 var AustrianJokerDb = require('./db/AustrianJokerDbHelper');
@@ -71,6 +71,7 @@ var austrianJokerConfig = { "lotteryName": AUSTRIAN_JOKER, "speechLotteryName": 
 //LOTTERY CONFIG END
 
 var supportedLotteries = [GERMAN_LOTTERY, SPIEL77, SUPER6, EUROJACKPOT, EUROMILLIONS, POWERBALL, MEGAMILLIONS, AUSTRIAN_LOTTERY, AUSTRIAN_JOKER];
+var specialNames = ["6 aus 49", "spiel 77", "super 6", "6 aus 45"];
 
 function SkillHelper(currentLocale) {
     locale = currentLocale;
@@ -115,7 +116,7 @@ SkillHelper.prototype.isGermanLang = function() {
 }
 
 SkillHelper.prototype.isLotteryNameSupported = function(lotteryName) {
-    return supportedLotteries.indexOf(lotteryName.toLowerCase()) != -1;
+    return supportedLotteries.indexOf(lotteryName.toLowerCase()) != -1 || specialNames.indexOf(lotteryName.toLowerCase()) != -1;
 }
 
 SkillHelper.prototype.getCorrectNamingOfNumber = function(number) {
@@ -180,13 +181,17 @@ SkillHelper.prototype.getCorrectPreWordAdditionalNumber = function(lotteryName) 
 SkillHelper.prototype.getConfigByUtterance = function(lotteryName) {
     switch(lotteryName.toLowerCase()) {
         case GERMAN_LOTTERY: return GermanLottoConfig;
+        case "6 aus 49": return GermanLottoConfig;
         case SPIEL77: return Spiel77Config;
+        case "spiel 77": return Spiel77Config;
         case SUPER6: return Super6Config;
+        case "super 6": return Super6Config;
         case EUROJACKPOT: return EuroJackpotConfig;
         case EUROMILLIONS: return EuroMillionsConfig;
         case POWERBALL: return PowerBallConfig;
         case MEGAMILLIONS: return MegaMillionsConfig;
         case AUSTRIAN_LOTTERY: return AustrianLottoConfig;
+        case "6 aus 45": return AustrianLottoConfig;
         case AUSTRIAN_JOKER: return austrianJokerConfig;
         default: return "";
     }
@@ -195,13 +200,17 @@ SkillHelper.prototype.getConfigByUtterance = function(lotteryName) {
 SkillHelper.prototype.getLotteryApiHelper = function(lotteryName) {
     switch(lotteryName.toLowerCase()) {
         case GERMAN_LOTTERY: return germanLottoApi;
+        case "6 aus 49": return germanLottoApi;
         case SPIEL77: return spiel77Api;
+        case "spiel 77": return spiel77Api;
         case SUPER6: return super6Api;
+        case "super 6": return super6Api;
         case EUROJACKPOT: return euroJackPottApi;
         case EUROMILLIONS: return euroMillionsApi;
         case POWERBALL: return powerBallApi;
         case MEGAMILLIONS: return megaMillionsApi;
         case AUSTRIAN_LOTTERY: return austrianLottoApi;
+        case "6 aus 45": return austrianLottoApi;
         case AUSTRIAN_JOKER: return austrianJokerApi;
         default: return "";
     }
@@ -210,13 +219,17 @@ SkillHelper.prototype.getLotteryApiHelper = function(lotteryName) {
 SkillHelper.prototype.getLotteryDbHelper = function(lotteryName) {
     switch(lotteryName.toLowerCase()) {
         case GERMAN_LOTTERY: return germanLottoDb;
+        case "6 aus 49": return germanLottoDb;
         case SPIEL77: return spiel77Db;
+        case "spiel 77": return spiel77Db;
         case SUPER6: return super6Db;
+        case "super 6": return super6Db;
         case EUROJACKPOT: return euroJackPottDb;
         case EUROMILLIONS: return euroMillionsDb;
         case POWERBALL: return powerBallDb;
         case MEGAMILLIONS: return megaMillionsDb;
         case AUSTRIAN_LOTTERY: return austrianLottoDb;
+        case "6 aus 45": return austrianLottoDb;
         case AUSTRIAN_JOKER: return austrienJokerDb;
         default: return "";
     }

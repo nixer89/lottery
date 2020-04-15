@@ -1,45 +1,69 @@
 'use strict';
+const AWS = require('aws-sdk');
+AWS.config.update({region: "eu-west-1"});
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-var _ = require('lodash');
 var LOTTO_DATA_TABLE_NAME = process.env.DB_TABLE;
 
-var credentials = {
-    accessKeyId: process.env.DB_ACCESS_KEY_ID,
-    secretAccessKey: process.env.DB_SECRET_ACCESS_KEY,
-    region: 'eu-west-1'
-};
-
-var dynasty = require('dynasty')(credentials);
-
 function AustrianLotteryDbHelper() {}
-  
-var lottoDbTable = function() {
-    return dynasty.table(LOTTO_DATA_TABLE_NAME);
-};
 
-AustrianLotteryDbHelper.prototype.readLotteryNumbers = function(userId) {
-  return lottoDbTable().find(userId).then(function(result) {
-    if(result)
-      return result.austrian6aus45;
-    else
-      return null;
+AustrianLotteryDbHelper.prototype.readLotteryNumbers = (echoUserId) => {
+  return new Promise((resolve, reject) => {
+    const params = {
+        TableName: LOTTO_DATA_TABLE_NAME,
+        KeyConditionExpression: "#echoUserId = :echoUserId",
+        ExpressionAttributeNames: {
+            "#echoUserId": "echoUserId"
+        },
+        ExpressionAttributeValues: {
+            ":echoUserId": echoUserId
+        }
+    }
+    dynamoDb.query(params, (err, data) => {
+        if (err) {
+            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+            return reject(JSON.stringify(err, null, 2))
+        } 
+        console.log("GetItem succeeded:", JSON.stringify(data.Items[0], null, 2));
+        resolve(data.Items[0].austrian6aus45)
+    })
   });
 };
 
-AustrianLotteryDbHelper.prototype.updateLotteryNumbers = function(userId, lottoNumbersValue) {
-  return lottoDbTable().update(userId,{ austrian6aus45: lottoNumbersValue}).catch(function(error) {
-    return lottoDbTable().insert({
-      echoUserId: userId,
-      austrian6aus45: lottoNumbersValue
-    });
-  });
-};
+AustrianLotteryDbHelper.prototype.updateLotteryNumbers = (echoUserId, lottoNumbersValue) => {
+  return new Promise((resolve, reject) => {
+    var params = {
+      TableName: LOTTO_DATA_TABLE_NAME,
+      Key: {
+        'echoUserId' : echoUserId
+      },
+      UpdateExpression: 'set austrian6aus45 = :t',
+      ExpressionAttributeValues: {
+        ':t' : lottoNumbersValue
+      }
+    };
 
-AustrianLotteryDbHelper.prototype.removeLotteryNumbers = function(userId) {
-  return lottoDbTable().update(userId,{ austrian6aus45: []}).catch(function(error) {
-    return lottoDbTable().insert({
-      echoUserId: userId,
-      austrian6aus45: []
+    dynamoDb.update(params, (err, data) => {
+      if (err) {
+        console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+          const params = {
+            TableName: tableName,
+            Item: {
+              'echoUserId' : echoUserId,
+              'austrian6aus45': lottoNumbersValue
+            }
+          };
+          dynamoDb.put(params, (err, data) => {
+              if (err) {
+                  console.log("Unable to insert =>", JSON.stringify(err))
+                  return reject("Unable to insert");
+              }
+              console.log("Saved Data, ", JSON.stringify(data));
+              resolve(data);
+          });
+      } 
+      console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+      resolve(data)
     });
   });
 };

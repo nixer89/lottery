@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
 var LOTTO_DATA_TABLE_NAME = process.env.DB_TABLE;
 
 var credentials = {

@@ -1,53 +1,77 @@
 'use strict';
+const AWS = require('aws-sdk');
+AWS.config.update({region: "eu-west-1"});
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-var _ = require('lodash');
 var LOTTO_DATA_TABLE_NAME = process.env.DB_TABLE;
 
-var credentials = {
-    accessKeyId: process.env.DB_ACCESS_KEY_ID,
-    secretAccessKey: process.env.DB_SECRET_ACCESS_KEY,
-    region: 'eu-west-1'
-};
-
-var dynasty = require('dynasty')(credentials);
-
 function Spiel77DbHelper() {}
-  
-var lottoDbTable = function() {
-    return dynasty.table(LOTTO_DATA_TABLE_NAME);
-};
 
-Spiel77DbHelper.prototype.readLotteryNumbers = function(userId) {
-  return lottoDbTable().find(userId).then(function(result) {
-    if(result && result.spiel77)
-      return convertTippscheinnummern(result.spiel77);
-    else
-      return [];
+Spiel77DbHelper.prototype.readLotteryNumbers = (echoUserId) => {
+  return new Promise((resolve, reject) => {
+    const params = {
+        TableName: LOTTO_DATA_TABLE_NAME,
+        KeyConditionExpression: "#echoUserId = :echoUserId",
+        ExpressionAttributeNames: {
+            "#echoUserId": "echoUserId"
+        },
+        ExpressionAttributeValues: {
+            ":echoUserId": echoUserId
+        }
+    }
+    dynamoDb.query(params, (err, data) => {
+        if (err) {
+            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+            return reject(JSON.stringify(err, null, 2))
+        } 
+        console.log("GetItem succeeded:", JSON.stringify(data.Items[0], null, 2));
+        resolve(data.Items[0].spiel77)
+    })
   });
 };
 
-Spiel77DbHelper.prototype.updateLotteryNumbers = function(userId, lottoNumbersValue) {
+Spiel77DbHelper.prototype.updateLotteryNumbers = (echoUserId, lottoNumbersValue) => {
   for(var i = 0; i < lottoNumbersValue.length; i++)
     for(var j = 0; j < lottoNumbersValue[i].length; j++) {
       lottoNumbersValue[i][0] = [lottoNumbersValue[i][0].join("")];
       lottoNumbersValue[i][1] = ["-1"];
     }
 
-  return lottoDbTable().update(userId,{ spiel77: lottoNumbersValue}).catch(function(error) {
-    return lottoDbTable().insert({
-      echoUserId: userId,
-      spiel77: lottoNumbersValue
+    return new Promise((resolve, reject) => {
+      var params = {
+        TableName: LOTTO_DATA_TABLE_NAME,
+        Key: {
+          'echoUserId' : echoUserId
+        },
+        UpdateExpression: 'set spiel77 = :t',
+        ExpressionAttributeValues: {
+          ':t' : lottoNumbersValue
+        }
+      };
+  
+      dynamoDb.update(params, (err, data) => {
+        if (err) {
+          console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+            const params = {
+              TableName: tableName,
+              Item: {
+                'echoUserId' : echoUserId,
+                'spiel77': lottoNumbersValue
+              }
+            };
+            dynamoDb.put(params, (err, data) => {
+                if (err) {
+                    console.log("Unable to insert =>", JSON.stringify(err))
+                    return reject("Unable to insert");
+                }
+                console.log("Saved Data, ", JSON.stringify(data));
+                resolve(data);
+            });
+        } 
+        console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+        resolve(data)
+      });
     });
-  });
-};
-
-Spiel77DbHelper.prototype.removeLotteryNumbers = function(userId) {
-  return lottoDbTable().update(userId,{ spiel77: []}).catch(function(error) {
-    return lottoDbTable().insert({
-      echoUserId: userId,
-      spiel77: []
-    });
-  });
 };
 
 function convertTippscheinnummern(lotteryNumbers) {
