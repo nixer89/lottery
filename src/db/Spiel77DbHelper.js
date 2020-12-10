@@ -25,7 +25,11 @@ Spiel77DbHelper.prototype.readLotteryNumbers = (echoUserId) => {
             return reject(JSON.stringify(err, null, 2))
         } 
         console.log("GetItem succeeded:", JSON.stringify(data.Items[0], null, 2));
-        resolve(data.Items[0].spiel77)
+
+        if(data.Items[0])
+          resolve(data.Items[0].spiel77);
+        else
+          resolve(null);
     })
   });
 };
